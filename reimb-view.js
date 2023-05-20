@@ -178,8 +178,6 @@ function addBattlesToTable(data) {
   for (b of data.battles) {
     let row = document.createElement('tr');
 
-    let idCell = document.createElement('td');
-    idCell.innerHTML = b[0];
     let playerName = document.createElement('td');
     playerName.innerHTML = `<select name="accept-challenge-in-row" class="filter-in-row"> <option class="my-class dropdown-item" value=1` +
       `>` + b[1] + `</option> <option class="my-class dropdown-item" value="` + b[0] + `">Accept Challenge</option>`;    // playerName.innerHTML = b[1];
@@ -210,7 +208,6 @@ function addBattlesToTable(data) {
     // aElement.innerText = 'view receipt'
     // imageCell.appendChild(aElement);
 
-    row.appendChild(idCell);
     row.appendChild(playerName);
     row.appendChild(defenseSize);
     row.appendChild(skySize);
