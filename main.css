@@ -1,33 +1,44 @@
 #header {
-  background: url(https://images.unsplash.com/photo-1477948879622-5f16e220fa42?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fG1vdW50YWluJTIwcmFuZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=1000&q=60) center center / cover no-repeat ;
+  background: url(https://images.unsplash.com/photo-1477948879622-5f16e220fa42?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fG1vdW50YWluJTIwcmFuZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=1000&q=60)
+    center center / cover no-repeat;
 }
-body{
+body {
   background-color: gainsboro;
 }
-#login-status, #header2, #header3,#filter,#instr, #submit-btn,#cancel-btn  {
+#login-status,
+#header2,
+#header3,
+#welcome-user,
+#filter,
+#instr,
+#submit-btn,
+#cancel-btn {
   color: royalblue;
 }
 
-th,#label-un, #label-password, .card-title {
+th,
+#label-un,
+#label-password,
+.card-title {
   color: rgb(235, 132, 14);
 }
 
 #success-messages {
-  font-size:xx-large;
+  font-size: xx-large;
   margin-top: 2%;
   margin-left: 10%;
   color: rgb(92, 240, 6);
 }
 
-.display-3{
-  color:rgb(0,0,0);
+.display-3 {
+  color: rgb(0, 0, 0);
   align-items: center;
   margin-top: 2%;
   margin-inline: 10%;
 }
 
-.lead{
-  color:rgb(0,0,0);
+.lead {
+  color: rgb(0, 0, 0);
 }
 
 .login-key {
