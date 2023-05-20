@@ -181,7 +181,8 @@ function addBattlesToTable(data) {
     let idCell = document.createElement('td');
     idCell.innerHTML = b[0];
     let playerName = document.createElement('td');
-    playerName.innerHTML = b[1];
+    playerName.innerHTML = `<select name="accept-challenge-in-row" class="filter-in-row"> <option class="my-class dropdown-item" value=1` +
+      `>` + b[1] + `</option> <option class="my-class dropdown-item" value="` + b[0] + `">Accept Challenge</option>`;    // playerName.innerHTML = b[1];
     let defenseSize = document.createElement('td');
     defenseSize.innerHTML = b[2];
     // let status_nameCell = document.createElement('td');
