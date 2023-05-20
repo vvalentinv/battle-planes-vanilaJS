@@ -1,5 +1,6 @@
 
 let welcome = document.getElementById('welcome');
+let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
 let header3 = document.getElementById('header3');
 let header2 = document.getElementById('header2');
@@ -9,17 +10,18 @@ let submitButton = document.getElementById('submit-btn');
 let cancelButton = document.getElementById('cancel-btn');
 let filter = document.getElementById('filter');
 let error = document.getElementById('error-message');
+let serverError = document.getElementById('sever-error');
 let success = document.getElementById('success-messages');
 let amount = document.getElementById('amount');
 let description = document.getElementById('description');
 let category = document.getElementById('category');
 let receipt = document.getElementById('receipt');
-let url = "http://127.0.0.1:8080/reimbursement"
+let url = `http://127.0.0.1:5000`
 let data = null;
 
 const grabDataAndFeedtoPage = async () => {
   try {
-    let res = await fetch(url + 's?status=' + filter.value, {
+    let res = await fetch(url + '/battles', {
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -29,20 +31,21 @@ const grabDataAndFeedtoPage = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
+      console.log(data);
       if (data.role == 1) {
         header3.removeAttribute('hidden');
       }
-      welcome.innerText = "Welcome back, " + data.user + "!"
-      addReimbursementsToTable(data);
+      welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
+      addBattlesToTable(data);
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      welcome.innerText = "Server unreachable: contact IT Admin";
-      welcome.style.color = 'red';
-      welcome.style.fontWeight = 'bold';
+      serverError.innerText = "Server unreachable: contact IT Admin";
+      serverError.style.color = 'red';
+      serverError.style.fontWeight = 'bold';
     }
     else {
       console.log(err)
@@ -55,7 +58,7 @@ window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
 
 loginStatusButton.addEventListener('click', async () => {
-  let res = await fetch('http://127.0.0.1:8080/logout', {
+  let res = await fetch(url + '/logout', {
     'credentials': 'include',
     'method': 'POST',
     'headers': {
@@ -150,8 +153,8 @@ filter.addEventListener('change', async (e) => {
     tbody.removeChild(tbody.lastChild);
   }
   try {
-    let res = await fetch(url + "s?status=" + filter.value, {
-      'credentials': 'same-origin',
+    let res = await fetch(url + "reimbursements?status=" + filter.value, {
+      // 'credentials': 'same-origin',
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -171,49 +174,45 @@ filter.addEventListener('change', async (e) => {
 });
 
 
-function addReimbursementsToTable(data) {
-  for (reimb of data.reimbursements) {
+function addBattlesToTable(data) {
+  for (b of data.battles) {
     let row = document.createElement('tr');
 
     let idCell = document.createElement('td');
-    idCell.innerHTML = reimb.r_id;
-    let amountCell = document.createElement('td');
-    amountCell.innerHTML = reimb.amount;
-    let submittedCell = document.createElement('td');
-    submittedCell.innerHTML = reimb.submitted;
-    let status_nameCell = document.createElement('td');
+    idCell.innerHTML = b[0];
+    let playerName = document.createElement('td');
+    playerName.innerHTML = b[1];
+    let defenseSize = document.createElement('td');
+    defenseSize.innerHTML = b[2];
+    // let status_nameCell = document.createElement('td');
 
-    if (reimb.status_name == "pending") {
-      status_nameCell.innerHTML = reimb.status_name;
-    } else if (reimb.status_name == "denied") {
-      status_nameCell.innerHTML = reimb.status_name;
-      status_nameCell.style.color = 'red';
-    } else if (reimb.status_name == "approved") {
-      status_nameCell.innerHTML = reimb.status_name;
-      status_nameCell.style.color = 'green';
-    }
-    let r_nameCell = document.createElement('td');
-    r_nameCell.innerHTML = reimb.r_name;
-    let descriptionCell = document.createElement('td');
-    descriptionCell.innerHTML = reimb.description;
-    let resolverCell = document.createElement('td');
-    if (reimb.resolver)
-      resolverCell.innerHTML = reimb.resolver;
-    let imageCell = document.createElement('td');
-    let aElement = document.createElement('a');
-    aElement.setAttribute('href', reimb.receipt);
-    aElement.setAttribute('target', "_Blank");
-    aElement.innerText = 'view receipt'
-    imageCell.appendChild(aElement);
+    // if (reimb.status_name == "pending") {
+    //   status_nameCell.innerHTML = reimb.status_name;
+    // } else if (reimb.status_name == "denied") {
+    //   status_nameCell.innerHTML = reimb.status_name;
+    //   status_nameCell.style.color = 'red';
+    // } else if (reimb.status_name == "approved") {
+    //   status_nameCell.innerHTML = reimb.status_name;
+    //   status_nameCell.style.color = 'green';
+    // }
+    let skySize = document.createElement('td');
+    skySize.innerHTML = b[3];
+    // let descriptionCell = document.createElement('td');
+    // descriptionCell.innerHTML = reimb.description;
+    // let resolverCell = document.createElement('td');
+    // if (reimb.resolver)
+    //   resolverCell.innerHTML = reimb.resolver;
+    // let imageCell = document.createElement('td');
+    // let aElement = document.createElement('a');
+    // aElement.setAttribute('href', reimb.receipt);
+    // aElement.setAttribute('target', "_Blank");
+    // aElement.innerText = 'view receipt'
+    // imageCell.appendChild(aElement);
 
     row.appendChild(idCell);
-    row.appendChild(amountCell);
-    row.appendChild(submittedCell);
-    row.appendChild(status_nameCell);
-    row.appendChild(r_nameCell);
-    row.appendChild(descriptionCell);
-    row.appendChild(imageCell);
-    row.appendChild(resolverCell);
+    row.appendChild(playerName);
+    row.appendChild(defenseSize);
+    row.appendChild(skySize);
 
     tbody.appendChild(row);
   }

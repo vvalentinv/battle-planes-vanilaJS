@@ -12,16 +12,18 @@
   <body>
     <nav id="nav" class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <a id="header1" class="navbar-brand" href="index.html">ERS</a>
-        <a id="header2" class="navbar-brand" href="#">Add Reimbursement</a>
+        <img id="header1" class="navbar-brand" src="/static/logo-flat.png"/>
+        <a id="header2" class="navbar-brand" href="#">New Challenge</a>
         <a id="header3" class="navbar-brand" href="/handle-reimb.html" hidden>Deny or Approve Reimbursements</a>
+      
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <nav class="navbar bg-light">
           <div class="container-fluid">
-            <span id="welcome" class="navbar-brand"></span>
+            <span id="welcome" class="navbar-brand">
+            </span>
             <a id="login-status" class="navbar-brand" href="#">Logout</a>
           </div>
         </nav>  
@@ -66,31 +68,25 @@
       </div>   
     </section>
     <div id="fil" class="container-fluid dropdown-center">
+      <p id="server-error"></p>
       <p>
-        This system view allows you to filter your requests history by reimbursement <u>status</u>.
+        Selecting a player accepts an open challenge.
       </p>
-      
         <select name="status" id="filter">
-          <option class="dropdown-item" value="0">Any Status</option>
-          <option class="dropdown-item" value="1">Pending</option>
-          <option class="dropdown-item" value="2">Approved</option>
-          <option class="dropdown-item" value="3">Denied</option>
-        </select>
-        
-
+          <option class="dropdown-item" value="0">Unchallenged Battles </option>
+          <option class="dropdown-item" value="1">Defense Size</option>
+          <option class="dropdown-item" value="2">Sky Size</option>
+          <option class="dropdown-item" value="3" hidden>Denied</option>
+        </select><span> Filter list by number of planes or the size of the sky </span>
     </div>
     <section>
       <table id="reimb-tbl" class="table">
         <thead>
           <tr>
-            <th scope="col">Reimbursement ID</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Created ON</th>
-            <th scope="col">Status</th>
-            <th scope="col">Type</th>
-            <th scope="col">Description</th>
-            <th scope="col">Receipt</th>
-            <th scope="col">Resolver</th>
+            <th scope="col">Battle ID</th>
+            <th scope="col">Player Name</th>
+            <th scope="col">Defense Size</th>
+            <th scope="col">Sky Size</th>
           </tr>
         </thead>
         <tbody id="reimb-tbl-tbody">
