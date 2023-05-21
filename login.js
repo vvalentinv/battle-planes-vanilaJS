@@ -19,7 +19,7 @@ loginSubmitButton.addEventListener('click', async (e) => {
       })
     })
     if (res.status == 200) {
-      window.location.href = '/reimb-view.html';
+      window.location.href = '/lobby.html';
     } else if (res.status == 401) {
       let data = await res.json();
       let errorElement = document.createElement('p');

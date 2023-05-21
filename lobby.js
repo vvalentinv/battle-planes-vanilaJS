@@ -5,7 +5,7 @@ let loginStatusButton = document.getElementById('login-status');
 let header3 = document.getElementById('header3');
 let header2 = document.getElementById('header2');
 let newReimb = document.getElementById('new-reimb');
-let tbody = document.getElementById('reimb-tbl-tbody');
+let tbody = document.getElementById('battle-tbl-tbody');
 let submitButton = document.getElementById('submit-btn');
 let cancelButton = document.getElementById('cancel-btn');
 let filter = document.getElementById('filter');
@@ -67,7 +67,7 @@ loginStatusButton.addEventListener('click', async () => {
   })
   if (res.status == 200) {
     success.removeAttribute('hidden');
-    success.innerText += "Thank you for using the Employee Reimbursement Management System!";
+    success.innerText += "Thank you for playing!";
     success.innerHTML += '<br><br>'
     success.innerText += "Logging you out ";
     success.innerHTML += '<br><br>'
