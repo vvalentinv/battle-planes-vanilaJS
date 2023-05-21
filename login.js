@@ -2,11 +2,12 @@ let usernameInput = document.getElementById('username');
 let passwordInput = document.getElementById('password');
 let loginSubmitButton = document.getElementById('login-submit-btn');
 let loginErrorMessageDiv = document.getElementById('login-error-message')
+let url = 'http://127.0.0.1:5000/login';
 
 loginSubmitButton.addEventListener('click', async (e) => {
   e.preventDefault();
   try {
-    let res = await fetch('http://127.0.0.1:8080/login', {
+    let res = await fetch(url, {
       'credentials': 'include',
       'method': 'POST',
       'headers': {
@@ -18,7 +19,7 @@ loginSubmitButton.addEventListener('click', async (e) => {
       })
     })
     if (res.status == 200) {
-      window.location.href = '/reimb-view.html';
+      window.location.href = '/lobby.html';
     } else if (res.status == 401) {
       let data = await res.json();
       let errorElement = document.createElement('p');
