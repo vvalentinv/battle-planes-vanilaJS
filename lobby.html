@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battle-Planes Lobby</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <script defer type="text/javascript" src="/reimb-view.js"></script>
+    <script defer type="text/javascript" src="/lobby.js"></script>
     <link rel="stylesheet" href="/main.css">
   </head>
   <body>
@@ -14,7 +14,7 @@
       <div class="container-fluid">
         <img id="header1" class="navbar-brand" src="/static/logo-flat.png"/>
         <a id="header2" class="navbar-brand" href="#">New Challenge</a>
-        <a id="header3" class="navbar-brand" href="/handle-reimb.html" hidden>Deny or Approve Reimbursements</a>
+        <a id="header3" class="navbar-brand" href="/lobby.html" hidden>Deny or Approve Reimbursements</a>
       
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,11 +31,11 @@
       </div>
     </nav>
     <div id="success-messages" hidden></div>
-    <section id="new-reimb" hidden>
+    <section id="set-defense" hidden>
       <div class="card" style="width: 40rem;">
         <div class="card-body">
-          <h5 class="card-title">New Reimbursement Request</h5><br><br>
-          <p class="card-text">Please add the accurate details including a photo or a scan of your receipt.</p>
+          <h5 class="card-title">Add plane to your defense</h5><br><br>
+          <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
           
             <form>
               <div class="mb-3">
@@ -67,6 +67,7 @@
         </div>
       </div>   
     </section>
+    <section  id="unchallenged-battles">
     <div id="fil" class="container-fluid dropdown-center">
       <p id="server-error"></p>
       <p>
@@ -79,7 +80,7 @@
           <option class="dropdown-item" value="3" hidden>Denied</option>
         </select><span> Filter list by number of planes or the size of the sky </span>
     </div>
-    <section>
+    
       <table id="battle-tbl" class="table">
         <thead>
           <tr>
