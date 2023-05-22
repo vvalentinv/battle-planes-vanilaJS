@@ -32,35 +32,31 @@
     </nav>
     <div id="success-messages" hidden></div>
     <section id="set-defense" hidden>
-      <div class="card" style="width: 40rem;">
+      <div class="card" style="width: 50rem;height:vph 100%">
         <div class="card-body">
           <h5 class="card-title">Add plane to your defense</h5><br><br>
           <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
-          
             <form>
               <div class="mb-3">
-                <label for="amount" class="form-label">Enter Amount</label>
-                <input type="text" class="form-control" id="amount" >
-              </div>
-              <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description">
-              </div>
-              <div>
-                <label for="receipt">Upload Receipt:</label>
-                <input type="file" enctype="multipart/form-data" class="form-control" id="receipt" name="receipt"><br><br>
-              </div>
-              <div>
-                <label for="receipt">Select the Expense Category:</label>
-                <select name="status" id="category">
-                  <option class="dropdown-item" value="0">Click here to make a selection</option>
-                  <option class="dropdown-item" value="1">Lodging</option>
-                  <option class="dropdown-item" value="2">Travel</option>
-                  <option class="dropdown-item" value="3">Food</option>
-                  <option class="dropdown-item" value="4">Other</option>
+                <label for="cockpit-coordinates">Cockpit Coordinates:</label>
+                <input type=text id="cockpit-coordinates" size="3">
+                <input type=text id="cockpit-value" size="3" hidden>
+                
+              
+                <label for="flight-direction">Select the flight direction:</label>
+                <select name="flight-direction" id="flight-direction">
+                  <option class="dropdown-item" value="0">Direction</option>
+                  <option class="dropdown-item" value="1">North</option>
+                  <option class="dropdown-item" value="2">East</option>
+                  <option class="dropdown-item" value="3">South</option>
+                  <option class="dropdown-item" value="4">West</option>
                 </select>
-              </div><br><br>
-              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit Reimbursement Request</a>
+              </div>
+              <br><br><br><br><br><br><br><br><br><br><br><br><br>
+              <br><br><br><br><br><br><br><br><br><br><br><br><br>
+              
+              <div id="defense-sky"></div>
+              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placementt</a>
               <a id="cancel-btn" href="#" class="btn btn-outline-light btn-lg px-5">Cancel</a>
               <div id="error-message"></div>
             </form>
