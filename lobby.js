@@ -21,9 +21,12 @@ let cockpitCoordinates = document.getElementById('cockpit-coordinates');
 let skyCells = document.getElementsByClassName('grid-cell');
 let unchallengedList = document.getElementById('unchallenged-list');
 let testPlane = document.getElementById('test-plane');
+let planeMessage = document.getElementById('plane-message');
 let url = `http://127.0.0.1:5000`
 let data = null;
 let nIntervId = null;
+let skySize = null;
+let defenseSize = null;
 
 
 
@@ -49,10 +52,13 @@ const grabDataAndFeedtoPage = async () => {
       data = await res.json();
       console.log(data);
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
-        unchallengedBattles.innerHTML = '';
+        unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
         console.log(data.battles.battles);
         defense(data.battles.battles)
+        defenseSize = data.battles.battles[0][2];
+        skySize = data.battles.battles[0][3];
+        console.log(skySize);
       }
       welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
       addBattlesToTable(data.battles);
@@ -75,7 +81,7 @@ const grabDataAndFeedtoPage = async () => {
 
 window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
-unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
+unchallengedList.addEventListener("click", window.location.reload.bind(window.location));
 
 
 
@@ -296,3 +302,44 @@ function defense(b) {
 
 
 }
+
+testPlane.addEventListener('click', (e) => {
+  e.preventDefault();
+  let planeLength = 4;
+  let cockpit = cockpitValue.value;
+  console.log(cockpit);
+  let direction = flightDirection.value;
+  console.log(direction);
+  let message = '';
+  switch (direction) {
+    case '1':
+      if (2 < cockpit % skySize < skySize - 2 && cockpit < skySize * (skySize - planeLength - 1) - 1) {
+        message += 'Valid in the sky';
+      }
+      break;
+    case '2':
+      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
+        message += 'Valid in the sky';
+      }
+      break;
+    case '3':
+      if (2 < cockpit % skySize < skySize - 2 && (planeLength - 1) * skySize + 2 <= cockpit < skySize * skySize) {
+        message += 'Valid in the sky';
+      }
+      break;
+    case '4':
+      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
+        message += 'Valid in the sky';
+      }
+      break;
+    default:
+      message += 'Invalid plane placement in the sky';
+      break;
+  }
+  if (message == 'Valid in the sky') {
+    planeMessage.style.color = 'green';
+  } else {
+    planeMessage.style.color = 'red';
+  }
+  planeMessage.innerText = message;
+})
