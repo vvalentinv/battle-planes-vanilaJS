@@ -48,6 +48,10 @@ th,
   cursor: pointer;
 }
 
+.grid-cell:hover {
+  background-color: red;
+}
+
 .grid-cell-outer-top {
   width: 50px;
   text-align-last: center;
