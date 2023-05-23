@@ -32,18 +32,19 @@
     </nav>
     <div id="success-messages" hidden></div>
     <section id="set-defense" hidden>
-      <div class="card" style="width: 50rem;height:vph 100%">
+      <div class="card" style="width: 80rem;">
         <div class="card-body">
           <h5 class="card-title">Add plane to your defense</h5><br><br>
           <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
-            <form>
+            <form id="add-plane">
               <div class="mb-3">
                 <label for="cockpit-coordinates">Cockpit Coordinates:</label>
                 <input type=text id="cockpit-coordinates" size="3">
                 <input type=text id="cockpit-value" size="3" hidden>
                 
-              
-                <label for="flight-direction">Select the flight direction:</label>
+              </div>
+              <div class="mb-3">
+                <label for="flight-direction">Flight direction:</label>
                 <select name="flight-direction" id="flight-direction">
                   <option class="dropdown-item" value="0">Direction</option>
                   <option class="dropdown-item" value="1">North</option>
@@ -52,11 +53,13 @@
                   <option class="dropdown-item" value="4">West</option>
                 </select>
               </div>
+              <div class="mb-3">
+                <a id="test-plane" href="#" class="btn btn-outline-light">Test plane placement</a>
               <br><br><br><br><br><br><br><br><br><br><br><br><br>
-              <br><br><br><br><br><br><br><br><br><br><br><br><br>
+              <br><br><br><br>
               
               <div id="defense-sky"></div>
-              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placementt</a>
+              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placement</a>
               <a id="cancel-btn" href="#" class="btn btn-outline-light btn-lg px-5">Cancel</a>
               <div id="error-message"></div>
             </form>
@@ -74,7 +77,7 @@
           <option class="dropdown-item" value="1">Defense Size</option>
           <option class="dropdown-item" value="2">Sky Size</option>
           <option class="dropdown-item" value="3" hidden>Denied</option>
-        </select><span> Filter list by number of planes or the size of the sky </span>
+        </select><span> Filter or <a id="unchallenged-list" href="#" >refresh this list</a>  !</span>
     </div>
     
       <table id="battle-tbl" class="table">

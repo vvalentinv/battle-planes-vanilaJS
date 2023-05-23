@@ -19,10 +19,20 @@ let flightDirection = document.getElementById('flight-direction');
 let cockpitValue = document.getElementById('cockpit-value');
 let cockpitCoordinates = document.getElementById('cockpit-coordinates');
 let skyCells = document.getElementsByClassName('grid-cell');
+let unchallengedList = document.getElementById('unchallenged-list');
 let url = `http://127.0.0.1:5000`
 let data = null;
+let nIntervId = null;
+
+
 
 const grabDataAndFeedtoPage = async () => {
+  while (tbody.hasChildNodes()) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  while (defenseSky.hasChildNodes()) {
+    tbody.removeChild(defenseSky.lastChild);
+  }
   try {
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
@@ -59,9 +69,12 @@ const grabDataAndFeedtoPage = async () => {
   }
 };
 
-window.addEventListener('popstate', grabDataAndFeedtoPage);
 
+// window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
+unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
+
+
 
 loginStatusButton.addEventListener('click', async () => {
   let res = await fetch(url + '/logout', {
@@ -218,6 +231,8 @@ document.addEventListener('click', (e) => {
     cockpitValue.value = e.target.getAttribute('data-value');
   }
 })
+
+
 
 function addBattlesToTable(data) {
   for (b of data.battles) {
