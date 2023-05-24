@@ -79,9 +79,9 @@ const grabDataAndFeedtoPage = async () => {
 };
 
 
-window.addEventListener('popstate', grabDataAndFeedtoPage);
+// window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
-unchallengedList.addEventListener("click", window.location.reload.bind(window.location));
+unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
 
 
@@ -308,28 +308,34 @@ testPlane.addEventListener('click', (e) => {
   let planeLength = 4;
   let cockpit = cockpitValue.value;
   console.log(cockpit);
+  console.log("skySize", skySize);
   let direction = flightDirection.value;
   console.log(direction);
   let message = '';
   switch (direction) {
     case '1':
-      if (2 < cockpit % skySize < skySize - 2 && cockpit < skySize * (skySize - planeLength - 1) - 1) {
+      if (2 < cockpit % skySize && cockpit % skySize < skySize - 2 && cockpit < skySize * (skySize - planeLength - 1) - 1) {
         message += 'Valid in the sky';
+      } else {
+        message += 'Invalid plane placement in the sky';
       }
       break;
     case '2':
       if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
         message += 'Valid in the sky';
+        console.log('case 2');
       }
       break;
     case '3':
       if (2 < cockpit % skySize < skySize - 2 && (planeLength - 1) * skySize + 2 <= cockpit < skySize * skySize) {
         message += 'Valid in the sky';
+        console.log('case 3');
       }
       break;
     case '4':
       if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
         message += 'Valid in the sky';
+        console.log('case 4');
       }
       break;
     default:
@@ -343,3 +349,38 @@ testPlane.addEventListener('click', (e) => {
   }
   planeMessage.innerText = message;
 })
+
+// flightDirection.addEventListener('change', (e) => {
+//   cockpit = cockpitValue.value;
+//   direction = flightDirection.value;
+//   console.log("cockpit direction", cockpit, direction);
+//   if (cockpit && direction != 0) {
+//     // document.getElementsByClassName('grid-cell').hasAttribute('data-value').setAttribute('style', 'background-color: red');
+//     // let cockpit = document.querySelector('[data-value=cockpitValue]');
+//     // cockpit.setAttribute('style', 'background-color: blue');
+//     let sky = document.getElementsByClassName('grid-cell');
+//     console.log("target", e.target);
+//     let currentSelection = [];
+//     for (el of sky) {
+//       if (flightDirection.value = 1) {
+//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
+//           el.setAttribute('style', 'background-color: green');
+//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//       } else if (flightDirection.value = 2) {
+//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
+//           el.setAttribute('style', 'background-color: green');
+//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//       }
+//     }
+//   }
+// })
