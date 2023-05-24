@@ -25,10 +25,11 @@ th,
   color: rgb(235, 132, 14);
 }
 
-#success-messages {
+#success-messages,
+#plane-message {
   font-size: xx-large;
   margin-top: 2%;
-  margin-left: 10%;
+  margin-left: 2%;
   color: rgb(92, 240, 6);
 }
 
