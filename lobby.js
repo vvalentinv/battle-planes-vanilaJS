@@ -19,10 +19,26 @@ let flightDirection = document.getElementById('flight-direction');
 let cockpitValue = document.getElementById('cockpit-value');
 let cockpitCoordinates = document.getElementById('cockpit-coordinates');
 let skyCells = document.getElementsByClassName('grid-cell');
+let unchallengedList = document.getElementById('unchallenged-list');
+let testPlane = document.getElementById('test-plane');
+let planeMessage = document.getElementById('plane-message');
 let url = `http://127.0.0.1:5000`
 let data = null;
+let nIntervId = null;
+let skySize = null;
+let defenseSize = null;
+
+
 
 const grabDataAndFeedtoPage = async () => {
+  while (tbody.hasChildNodes()) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  while (defenseSky.hasChildNodes()) {
+    defenseSky.removeChild(defenseSky.lastChild);
+  }
+
+
   try {
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
@@ -36,10 +52,13 @@ const grabDataAndFeedtoPage = async () => {
       data = await res.json();
       console.log(data);
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
-        unchallengedBattles.innerHTML = '';
+        unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
         console.log(data.battles.battles);
         defense(data.battles.battles)
+        defenseSize = data.battles.battles[0][2];
+        skySize = data.battles.battles[0][3];
+        console.log(skySize);
       }
       welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
       addBattlesToTable(data.battles);
@@ -59,9 +78,12 @@ const grabDataAndFeedtoPage = async () => {
   }
 };
 
-window.addEventListener('popstate', grabDataAndFeedtoPage);
 
+// window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
+unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
+
+
 
 loginStatusButton.addEventListener('click', async () => {
   let res = await fetch(url + '/logout', {
@@ -89,14 +111,12 @@ loginStatusButton.addEventListener('click', async () => {
 
 
 cancelButton.addEventListener('click', () => {
-  newReimb.setAttribute('hidden', true);
-  receipt.value = '';
-  description.value = '';
-  amount.value = '';
-  category.value = 0;
-  while (tbody.hasChildNodes()) {
-    tbody.removeChild(tbody.lastChild);
-  }
+  setDefense.setAttribute('hidden', true);
+  cockpitCoordinates.value = '';
+  cockpitValue.value = '';
+  flightDirection.value = 0;
+  grabDataAndFeedtoPage;
+  unchallengedBattles.removeAttribute('hidden');
 })
 
 submitButton.addEventListener('click', async () => {
@@ -219,6 +239,8 @@ document.addEventListener('click', (e) => {
   }
 })
 
+
+
 function addBattlesToTable(data) {
   for (b of data.battles) {
     let row = document.createElement('tr');
@@ -280,3 +302,85 @@ function defense(b) {
 
 
 }
+
+testPlane.addEventListener('click', (e) => {
+  e.preventDefault();
+  let planeLength = 4;
+  let cockpit = cockpitValue.value;
+  console.log(cockpit);
+  console.log("skySize", skySize);
+  let direction = flightDirection.value;
+  console.log(direction);
+  let message = '';
+  switch (direction) {
+    case '1':
+      if (2 < cockpit % skySize && cockpit % skySize < skySize - 2 && cockpit < skySize * (skySize - planeLength - 1) - 1) {
+        message += 'Valid in the sky';
+      } else {
+        message += 'Invalid plane placement in the sky';
+      }
+      break;
+    case '2':
+      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
+        message += 'Valid in the sky';
+        console.log('case 2');
+      }
+      break;
+    case '3':
+      if (2 < cockpit % skySize < skySize - 2 && (planeLength - 1) * skySize + 2 <= cockpit < skySize * skySize) {
+        message += 'Valid in the sky';
+        console.log('case 3');
+      }
+      break;
+    case '4':
+      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
+        message += 'Valid in the sky';
+        console.log('case 4');
+      }
+      break;
+    default:
+      message += 'Invalid plane placement in the sky';
+      break;
+  }
+  if (message == 'Valid in the sky') {
+    planeMessage.style.color = 'green';
+  } else {
+    planeMessage.style.color = 'red';
+  }
+  planeMessage.innerText = message;
+})
+
+// flightDirection.addEventListener('change', (e) => {
+//   cockpit = cockpitValue.value;
+//   direction = flightDirection.value;
+//   console.log("cockpit direction", cockpit, direction);
+//   if (cockpit && direction != 0) {
+//     // document.getElementsByClassName('grid-cell').hasAttribute('data-value').setAttribute('style', 'background-color: red');
+//     // let cockpit = document.querySelector('[data-value=cockpitValue]');
+//     // cockpit.setAttribute('style', 'background-color: blue');
+//     let sky = document.getElementsByClassName('grid-cell');
+//     console.log("target", e.target);
+//     let currentSelection = [];
+//     for (el of sky) {
+//       if (flightDirection.value = 1) {
+//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
+//           el.setAttribute('style', 'background-color: green');
+//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//       } else if (flightDirection.value = 2) {
+//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
+//           el.setAttribute('style', 'background-color: green');
+//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
+//           el.setAttribute('style', 'background-color: green');
+//         }
+//       }
+//     }
+//   }
+// })

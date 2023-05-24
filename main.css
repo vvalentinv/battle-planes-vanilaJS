@@ -12,7 +12,9 @@ body {
 #filter,
 #instr,
 #submit-btn,
-#cancel-btn {
+#cancel-btn,
+#unchallenged-list,
+#test-plane {
   color: royalblue;
 }
 
@@ -23,16 +25,17 @@ th,
   color: rgb(235, 132, 14);
 }
 
-#success-messages {
+#success-messages,
+#plane-message {
   font-size: xx-large;
   margin-top: 2%;
-  margin-left: 10%;
+  margin-left: 2%;
   color: rgb(92, 240, 6);
 }
 
 #defense-sky {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 45%;
   transform: translate(-50%, -50%);
   display: grid;
@@ -46,11 +49,14 @@ th,
   cursor: pointer;
 }
 
+.grid-cell:hover {
+  background-color: red;
+}
+
 .grid-cell-outer-top {
   width: 50px;
   text-align-last: center;
   height: 50px;
-  cursor: pointer;
 }
 
 .grid-cell-outer-side {
@@ -58,7 +64,6 @@ th,
   text-align: right;
   width: 50px;
   height: 50px;
-  cursor: pointer;
 }
 
 .display-3 {
@@ -72,11 +77,11 @@ th,
   color: rgb(0, 0, 0);
 }
 
-form {
-  height: 800px;
+#add-plane {
+  height: 600px;
 }
 
-form .login-key {
+.login-key {
   height: 100px;
   font-size: 80px;
   line-height: 100px;
