@@ -399,6 +399,24 @@ testPlane.addEventListener('click', (e) => {
       case '4':
         if (cockpit % skySize < skySize - (planeLength - 1) && cockpit > skySize * wingSpan - 1 && cockpit < skySize * (skySize - wingSpan)) {
           message += 'Valid in the sky';
+          nextPlanePart = parseInt(cockpit) - parseInt(skySize) * 2 + 1;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart = parseInt(cockpit) + 2;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart = parseInt(cockpit) - parseInt(skySize) + 3;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart += parseInt(skySize);
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
         } else {
           message += 'Invalid plane placement in the sky';
         }
