@@ -303,6 +303,8 @@ function defense(b) {
 
 }
 
+// document.querySelectorAll(".grid-cell").forEach(el => el.addEventListener("click", (e) => { //selectCockpit));
+
 testPlane.addEventListener('click', (e) => {
   e.preventDefault();
   let planeLength = 4;
@@ -312,14 +314,18 @@ testPlane.addEventListener('click', (e) => {
   let message = '';
   let plane = [];
   let nextPlanePart = null;
-  plane.push(document.querySelector(`[data-value="` + cockpit + `"]`));
-  let sky = document.querySelectorAll('.grid-cell');
-  for (s of sky) {
-    s.setAttribute('style', 'background-color: none;');
-  }
-  if (!cockpit) {
-    message += 'Please select a cockpit placement';
+  planeMessage.style.color = 'red';
+  if (direction == '0') {
+    message += 'Please select a flight direction first';
+  } else if (!cockpit) {
+    message += 'Please click to select cockpit placement';
   } else {
+    plane.push(document.querySelector(`[data-value="` + cockpit + `"]`));
+    let sky = document.querySelectorAll('.grid-cell');
+    for (s of sky) {
+      s.setAttribute('style', 'background-color: none;');
+    }
+
     switch (direction) {
       case '1':
         if (wingSpan <= cockpit % skySize && cockpit % skySize < skySize - wingSpan && cockpit < skySize * (skySize - (planeLength - 1))) {
@@ -428,54 +434,17 @@ testPlane.addEventListener('click', (e) => {
         message += 'Invalid plane placement in the sky';
         break;
     }
-  }
-  plane[0].setAttribute('style', 'background-color: red');
-  if (message == 'Valid in the sky') {
-    planeMessage.style.color = 'green';
-    if (plane.length > 1) {
-      for (p in plane) {
-        if (p != 0) {
-          plane[p].setAttribute('style', 'background-color: green');
+    plane[0].setAttribute('style', 'background-color: red');
+    if (message == 'Valid in the sky') {
+      planeMessage.style.color = 'green';
+      if (plane.length > 1) {
+        for (p in plane) {
+          if (p != 0) {
+            plane[p].setAttribute('style', 'background-color: green');
+          }
         }
       }
     }
-  } else {
-    planeMessage.style.color = 'red';
   }
   planeMessage.innerText = message;
-})
-
-// flightDirection.addEventListener('change', (e) => {
-//   cockpit = cockpitValue.value;
-//   direction = flightDirection.value;
-//   console.log("cockpit direction", cockpit, direction);
-//   if (cockpit && direction != 0) {
-//     // document.getElementsByClassName('grid-cell').hasAttribute('data-value').setAttribute('style', 'background-color: red');
-//     // let cockpit = document.querySelector('[data-value=cockpitValue]');
-//     // cockpit.setAttribute('style', 'background-color: blue');
-//     let sky = document.getElementsByClassName('grid-cell');
-//     console.log("target", e.target);
-//     let currentSelection = [];
-//     for (el of sky) {
-//       if (flightDirection.value = 1) {
-//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
-//           el.setAttribute('style', 'background-color: green');
-//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
-//           el.setAttribute('style', 'background-color: green');
-//         }
-//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
-//           el.setAttribute('style', 'background-color: green');
-//         }
-//       } else if (flightDirection.value = 2) {
-//         if (cockpitValue + skySize - 2 < el.getAttribute('data-value') < cockpitValue + skySize + 2) {
-//           el.setAttribute('style', 'background-color: green');
-//         } else if (el.getAttribute('data-value') == cockpitValue + 2 * skySize) {
-//           el.setAttribute('style', 'background-color: green');
-//         }
-//         else if (cockpitValue + 3 * skySize - 1 < el.getAttribute('data-value') < cockpitValue + 3 * skySize + 1) {
-//           el.setAttribute('style', 'background-color: green');
-//         }
-//       }
-//     }
-//   }
-// })
+});

@@ -40,12 +40,7 @@
           <h5 class="card-title">Add plane to your defense</h5><br><br>
           <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
             <form id="add-plane">
-              <div class="mb-3">
-                <label for="cockpit-coordinates">Cockpit Coordinates:</label>
-                <input type=text id="cockpit-coordinates" size="3">
-                <input type=text id="cockpit-value" size="3" hidden>
-                
-              </div>
+              
               <div class="mb-3 container-fluid dropdown-center">
                 <label for="flight-direction">Flight direction:</label>
                 <select name="flight-direction" id="flight-direction">
@@ -55,6 +50,12 @@
                   <option class="dropdown-item" value="3">South</option>
                   <option class="dropdown-item" value="4">West</option>
                 </select>
+              </div>
+              <div class="mb-3">
+                <label for="cockpit-coordinates">Cockpit Coordinates:</label>
+                <input type=text id="cockpit-coordinates" size="3">
+                <input type=text id="cockpit-value" size="3" hidden>
+                
               </div>
               <div class="mb-3">
                 <a id="test-plane" href="#" class="btn btn-outline-light">Test plane placement</a>
