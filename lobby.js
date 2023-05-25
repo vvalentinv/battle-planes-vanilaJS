@@ -306,44 +306,89 @@ function defense(b) {
 testPlane.addEventListener('click', (e) => {
   e.preventDefault();
   let planeLength = 4;
+  let wingSpan = 2;
   let cockpit = cockpitValue.value;
   console.log(cockpit);
   console.log("skySize", skySize);
   let direction = flightDirection.value;
   console.log(direction);
   let message = '';
-  switch (direction) {
-    case '1':
-      if (2 < cockpit % skySize && cockpit % skySize < skySize - 2 && cockpit < skySize * (skySize - planeLength - 1) - 1) {
-        message += 'Valid in the sky';
-      } else {
-        message += 'Invalid plane placement in the sky';
-      }
-      break;
-    case '2':
-      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
-        message += 'Valid in the sky';
-        console.log('case 2');
-      }
-      break;
-    case '3':
-      if (2 < cockpit % skySize < skySize - 2 && (planeLength - 1) * skySize + 2 <= cockpit < skySize * skySize) {
-        message += 'Valid in the sky';
-        console.log('case 3');
-      }
-      break;
-    case '4':
-      if (planeLength - 1 < cockpit % skySize < skySize && cockpit < skySize * (skySize - 2)) {
-        message += 'Valid in the sky';
-        console.log('case 4');
-      }
-      break;
-    default:
-      message += 'Invalid plane placement in the sky';
-      break;
+  let plane = [];
+  let nextPlanePart = null;
+  plane.push(document.querySelector(`[data-value="` + cockpit + `"]`));
+  let sky = document.querySelectorAll('.grid-cell');
+  for (s of sky) {
+    s.setAttribute('style', 'background-color: none;');
   }
+  if (!cockpit) {
+    message += 'Please select a cockpit placement';
+  } else {
+    switch (direction) {
+      case '1':
+        if (wingSpan <= cockpit % skySize && cockpit % skySize < skySize - wingSpan && cockpit < skySize * (skySize - (planeLength - 1))) {
+          message += 'Valid in the sky';
+          nextPlanePart = parseInt(cockpit) + parseInt(skySize) - wingSpan;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart = parseInt(cockpit) + parseInt(skySize) * 2;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart = parseInt(cockpit) + parseInt(skySize) * 3 - 1;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          nextPlanePart++;
+          plane.push(document.querySelector(`[data-value="` + nextPlanePart + `"]`));
+          console.log(plane);
+        } else {
+          message += 'Invalid plane placement in the sky';
+        }
+        break;
+      case '2':
+        if (planeLength - 1 <= cockpit % skySize && cockpit % skySize < skySize && cockpit > skySize * wingSpan && cockpit < skySize * (skySize - wingSpan)) {
+          message += 'Valid in the sky';
+        } else {
+          message += 'Invalid plane placement in the sky';
+        }
+        break;
+      case '3':
+        if (wingSpan <= cockpit % skySize && cockpit % skySize < skySize - wingSpan && (planeLength - 1) * skySize + wingSpan <= cockpit && cockpit < skySize * skySize) {
+          message += 'Valid in the sky';
+        } else {
+          message += 'Invalid plane placement in the sky';
+        }
+        break;
+      case '4':
+        if (cockpit % skySize < skySize - (planeLength - 1) && cockpit > skySize * wingSpan - 1 && cockpit < skySize * (skySize - wingSpan)) {
+          message += 'Valid in the sky';
+        } else {
+          message += 'Invalid plane placement in the sky';
+        }
+        break;
+      case '0':
+        message += 'Select a flight direction first';
+        break;
+      default:
+        message += 'Invalid plane placement in the sky';
+        break;
+    }
+  }
+  plane[0].setAttribute('style', 'background-color: red');
   if (message == 'Valid in the sky') {
     planeMessage.style.color = 'green';
+    if (plane.length > 1) {
+      for (p in plane) {
+        if (p != 0) {
+          plane[p].setAttribute('style', 'background-color: green');
+        }
+      }
+    }
   } else {
     planeMessage.style.color = 'red';
   }
