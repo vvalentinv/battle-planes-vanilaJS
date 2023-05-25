@@ -110,12 +110,12 @@ loginStatusButton.addEventListener('click', async () => {
 
 
 cancelButton.addEventListener('click', () => {
-  setDefense.setAttribute('hidden', true);
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
   flightDirection.value = 0;
   grabDataAndFeedtoPage;
-  unchallengedBattles.removeAttribute('hidden');
+  planeMessage.innerText = data.battles.message;
+  planeMessage.style.color = 'red';
 })
 
 submitButton.addEventListener('click', async () => {
