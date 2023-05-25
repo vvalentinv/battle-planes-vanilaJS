@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battle-Planes Lobby</title>
+    <link rel="icon" href="/static/logo-removebg-preview.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script> -->
@@ -39,12 +40,7 @@
           <h5 class="card-title">Add plane to your defense</h5><br><br>
           <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
             <form id="add-plane">
-              <div class="mb-3">
-                <label for="cockpit-coordinates">Cockpit Coordinates:</label>
-                <input type=text id="cockpit-coordinates" size="3">
-                <input type=text id="cockpit-value" size="3" hidden>
-                
-              </div>
+              
               <div class="mb-3 container-fluid dropdown-center">
                 <label for="flight-direction">Flight direction:</label>
                 <select name="flight-direction" id="flight-direction">
@@ -56,12 +52,18 @@
                 </select>
               </div>
               <div class="mb-3">
+                <label for="cockpit-coordinates">Cockpit Coordinates:</label>
+                <input type=text id="cockpit-coordinates" size="3">
+                <input type=text id="cockpit-value" size="3" hidden>
+                
+              </div>
+              <div class="mb-3">
                 <a id="test-plane" href="#" class="btn btn-outline-light">Test plane placement</a>
-              <br><br><br>
+              <br><br>
               <div>
                 <p id="plane-message"></p>
               </div><br><br><br><br><br><br><br><br><br>
-              <br><br><br><br>
+              <br>
               
               <div id="defense-sky"></div>
               <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placement</a>

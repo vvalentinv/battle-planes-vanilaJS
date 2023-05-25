@@ -27,6 +27,7 @@ th,
 
 #success-messages,
 #plane-message {
+  width: 8em;
   font-size: xx-large;
   margin-top: 2%;
   margin-left: 2%;
