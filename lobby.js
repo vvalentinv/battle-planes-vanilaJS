@@ -37,8 +37,6 @@ const grabDataAndFeedtoPage = async () => {
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
   }
-
-
   try {
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
@@ -58,6 +56,7 @@ const grabDataAndFeedtoPage = async () => {
         defense(data.battles.battles)
         defenseSize = data.battles.battles[0][2];
         skySize = data.battles.battles[0][3];
+        [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       }
       welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
@@ -303,13 +302,11 @@ function defense(b) {
 
 }
 
-// document.querySelectorAll(".grid-cell").forEach(el => el.addEventListener("click", (e) => { //selectCockpit));
-
-testPlane.addEventListener('click', (e) => {
+const testPlacement = (e) => {
   e.preventDefault();
   let planeLength = 4;
   let wingSpan = 2;
-  let cockpit = cockpitValue.value;
+  let cockpit = e.target.getAttribute('data-value');
   let direction = flightDirection.value;
   let message = '';
   let plane = [];
@@ -447,4 +444,4 @@ testPlane.addEventListener('click', (e) => {
     }
   }
   planeMessage.innerText = message;
-});
+};
