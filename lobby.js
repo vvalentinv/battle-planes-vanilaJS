@@ -56,20 +56,15 @@ const grabDataAndFeedtoPage = async () => {
         console.log(data.battles.battles);
         defense(data.battles.battles)
         existingDefense = data.battles.battles[0][1];
-        //for (e of existingDefense){
-          console.log("array",Array.from(skyCells));
-          Array.from(skyCells)
-          .filter(el => existingDefense.includes(el.dataset.value))
-          .forEach(el => el.setAttribute('style', 'background-color: grey'));
-        //}
-        console.log("existingDefense",existingDefense);
+        displayDefense(existingDefense);
+        console.log("existingDefense", existingDefense);
         defenseSize = data.battles.battles[0][2];
         skySize = data.battles.battles[0][3];
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       }
       welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
-      addBattlesToTable(data.battles);
+      addBattlesToTable(data);
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -91,7 +86,15 @@ const grabDataAndFeedtoPage = async () => {
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
 unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
-
+const displayDefense = (defense) => {
+  if (defense.length > 0) {
+    for (arr of defense) {
+      Array.from(skyCells)
+        .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
+        .forEach(el => el.setAttribute('style', 'background-color: grey'));
+    }
+  }
+}
 
 loginStatusButton.addEventListener('click', async () => {
   let res = await fetch(url + '/logout', {
@@ -122,8 +125,8 @@ cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
   flightDirection.value = 0;
-  grabDataAndFeedtoPage;
-  planeMessage.innerText = data.battles.message;
+  window.location.reload();
+  planeMessage.innerText = "Finish setting up your defense within the timeframe!";
   planeMessage.style.color = 'red';
 })
 
@@ -153,9 +156,26 @@ submitButton.addEventListener('click', async () => {
       })
       if (res.status == 200) {
         let data = await res.json();
-        success.removeAttribute('hidden');
-        success.innerText = data.message;
-        setTimeout(() => { window.location.reload(); }, 3000)
+        if (data.message != "Defense setup complete!") {
+          success.removeAttribute('hidden');
+          success.innerText = data.message;
+          setTimeout(() => {
+            window.location.reload();
+            if (!data.message == "done") {
+
+            }
+          }, 3000)
+        } else {
+          window.location.href = '/game.html';
+        }
+      } else if (res.status < 500) {
+        let data = await res.json();
+        planeMessage.innerText = data.message;
+        planeMessage.style.color = 'red';
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000)
+
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
@@ -174,7 +194,6 @@ filter.addEventListener('change', async (e) => {
   }
   try {
     let res = await fetch(url + "reimbursements?status=" + filter.value, {
-      // 'credentials': 'same-origin',
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -229,14 +248,14 @@ document.addEventListener('click', (e) => {
 })
 
 function addBattlesToTable(data) {
-  for (b of data.battles) {
+  for (b of data.battles.battles) {
     let row = document.createElement('tr');
 
     let playerName = document.createElement('td');
     playerName.innerHTML = `<select name="accept-challenge-in-row" class="filter-in-row"> <option class="accepted dropdown-item" value=1` +
-      `>` + b[1] + `</option> <option class="accepted dropdown-item" value="` + b[0] + `">Accept Challenge</option>`;    // playerName.innerHTML = b[1];
+      `>` + b[2] + `</option> <option class="accepted dropdown-item" value="` + b[0] + `">Accept Challenge</option>`;    // playerName.innerHTML = b[1];
     let defenseSize = document.createElement('td');
-    defenseSize.innerHTML = b[2];
+    defenseSize.innerHTML = b[1];
     let skySize = document.createElement('td');
     skySize.innerHTML = b[3];
 
@@ -298,10 +317,15 @@ const testPlacement = (e) => {
   cockpitValue.value = cockpit;
   cockpitCoordinates.value = e.target.innerText;
   let direction = flightDirection.value;
+  currentDefense = existingDefense;
+  displayDefense(currentDefense);
   let message = '';
   let plane = [];
   let nextPlanePart = null;
+  let overlap = false;
+  let overlapingDivs = [];
   planeMessage.style.color = 'red';
+
   if (direction == '0') {
     message += 'Please select a flight direction first';
   } else if (!cockpit) {
@@ -421,8 +445,20 @@ const testPlacement = (e) => {
         message += 'Invalid plane placement in the sky';
         break;
     }
-    plane[0].setAttribute('style', 'background-color: red');
-    if (message == 'Valid in the sky') {
+    for (p of currentDefense) {
+      console.log(p);
+      for (div of plane) {
+        if (p.includes(parseInt(div.getAttribute('data-value')))) {
+          overlapingDivs.push(div);
+          overlap = true;
+        }
+      }
+    }
+    overlap ? message += ', but overlaps other plane' : message += ' and current defense';
+
+    if (message == 'Valid in the sky and current defense') {
+      displayDefense(existingDefense);
+      plane[0].setAttribute('style', 'background-color: red');
       planeMessage.style.color = 'green';
       if (plane.length > 1) {
         for (p in plane) {
@@ -431,7 +467,18 @@ const testPlacement = (e) => {
           }
         }
       }
+    } else {
+      displayDefense(existingDefense);
+      plane[0].setAttribute('style', 'background-color: red');
+      for (p in plane) {
+        if (p != 0) {
+          plane[p].setAttribute('style', 'background-color: green');
+        }
+      }
+      for (div of overlapingDivs) {
+        div.setAttribute('style', 'background-color: purple');
+      }
     }
+    planeMessage.innerText = message;
   }
-  planeMessage.innerText = message;
 };
