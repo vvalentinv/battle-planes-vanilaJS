@@ -25,6 +25,7 @@ let planeMessage = document.getElementById('plane-message');
 let url = `http://127.0.0.1:5000`
 let data = null;
 let nIntervId = null;
+let existingDefense = null;
 let skySize = null;
 let defenseSize = null;
 
@@ -37,8 +38,6 @@ const grabDataAndFeedtoPage = async () => {
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
   }
-
-
   try {
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
@@ -56,8 +55,17 @@ const grabDataAndFeedtoPage = async () => {
         setDefense.removeAttribute('hidden');
         console.log(data.battles.battles);
         defense(data.battles.battles)
+        existingDefense = data.battles.battles[0][1];
+        //for (e of existingDefense){
+          console.log("array",Array.from(skyCells));
+          Array.from(skyCells)
+          .filter(el => existingDefense.includes(el.dataset.value))
+          .forEach(el => el.setAttribute('style', 'background-color: grey'));
+        //}
+        console.log("existingDefense",existingDefense);
         defenseSize = data.battles.battles[0][2];
         skySize = data.battles.battles[0][3];
+        [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       }
       welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
@@ -111,59 +119,47 @@ loginStatusButton.addEventListener('click', async () => {
 
 
 cancelButton.addEventListener('click', () => {
-  setDefense.setAttribute('hidden', true);
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
   flightDirection.value = 0;
   grabDataAndFeedtoPage;
-  unchallengedBattles.removeAttribute('hidden');
+  planeMessage.innerText = data.battles.message;
+  planeMessage.style.color = 'red';
 })
 
 submitButton.addEventListener('click', async () => {
-
+  console.log("coockpitCoords cockpitVal Direction", cockpitCoordinates.value, cockpitValue.value, flightDirection.value);
   if (!cockpitCoordinates.value || !cockpitValue.value || flightDirection.value == 0) {
 
-    error.innerText = "flight direction and cockpit coordinates are required fields!";
-    error.style.color = 'red';
-    error.style.fontWeight = 'bold';
+    planeMessage.innerText = "flight direction and cockpit coordinates are required fields!";
+    planeMessage.style.color = 'red';
   } else {
-    error.innerText = '';
-    const formData = new FormData();
-    formData.append("receipt", receipt.files[0])
-    formData.append("description", description.value)
-    formData.append("amount", amount.value)
-    formData.append("type_id", category.value)
-    console.log(...formData)
+    while (defenseSky.hasChildNodes()) {
+      defenseSky.removeChild(defenseSky.lastChild);
+    }
     try {
-      let res = await fetch(url, {
+      let res = await fetch(url + `/battles/` + data.battles.battles[0][0] + `?defense=True`, {
         'credentials': 'include',
-        'method': 'POST',
-        'body': formData
+        'method': 'PUT',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Credentials': 'true'
+        },
+        'body': JSON.stringify({
+          "cockpit": cockpitValue.value,
+          "direction": flightDirection.value,
+          "sky": data.battles.battles[0][3]
+        })
       })
-      console.log(res);
-      while (tbody.hasChildNodes()) {
-        tbody.removeChild(tbody.lastChild);
-      }
-      receipt.value = '';
-      description.value = '';
-      amount.value = '';
-      category.value = 0;
-      data = await res.json();
-      addReimbursementsToTable(data);
-      newReimb.setAttribute('hidden', true);
-      if (res.status == 201) {
-
-        console.log(data);
+      if (res.status == 200) {
+        let data = await res.json();
         success.removeAttribute('hidden');
-        if (data.message == 'Request resolve status: True')
-          success.innerText = 'The reimbursement request has been added successfully!';
-        setTimeout(() => {
-          success.setAttribute('hidden', true);
-        }, 5000)
+        success.innerText = data.message;
+        setTimeout(() => { window.location.reload(); }, 3000)
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
-        welcome.innerText = "Server unreachable: contact IT Admin";
+        welcome.innerHTML = "Server unreachable: contact IT Admin";
         welcome.style.color = 'red';
         welcome.style.fontWeight = 'bold';
       }
@@ -232,15 +228,6 @@ document.addEventListener('click', (e) => {
   })
 })
 
-document.addEventListener('click', (e) => {
-  if (e.target.hasAttribute('data-value')) {
-    cockpitCoordinates.value = e.target.innerText;
-    cockpitValue.value = e.target.getAttribute('data-value');
-  }
-})
-
-
-
 function addBattlesToTable(data) {
   for (b of data.battles) {
     let row = document.createElement('tr');
@@ -303,13 +290,13 @@ function defense(b) {
 
 }
 
-// document.querySelectorAll(".grid-cell").forEach(el => el.addEventListener("click", (e) => { //selectCockpit));
-
-testPlane.addEventListener('click', (e) => {
+const testPlacement = (e) => {
   e.preventDefault();
   let planeLength = 4;
   let wingSpan = 2;
-  let cockpit = cockpitValue.value;
+  let cockpit = e.target.getAttribute('data-value');
+  cockpitValue.value = cockpit;
+  cockpitCoordinates.value = e.target.innerText;
   let direction = flightDirection.value;
   let message = '';
   let plane = [];
@@ -447,4 +434,4 @@ testPlane.addEventListener('click', (e) => {
     }
   }
   planeMessage.innerText = message;
-});
+};
