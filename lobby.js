@@ -125,8 +125,8 @@ cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
   flightDirection.value = 0;
-  grabDataAndFeedtoPage;
-  planeMessage.innerText = data.battles.message;
+  window.location.reload();
+  planeMessage.innerText = "Finish setting up your defense within the timeframe!";
   planeMessage.style.color = 'red';
 })
 
@@ -156,9 +156,26 @@ submitButton.addEventListener('click', async () => {
       })
       if (res.status == 200) {
         let data = await res.json();
-        success.removeAttribute('hidden');
-        success.innerText = data.message;
-        setTimeout(() => { window.location.reload(); }, 3000)
+        if (data.message != "Defense setup complete!") {
+          success.removeAttribute('hidden');
+          success.innerText = data.message;
+          setTimeout(() => {
+            window.location.reload();
+            if (!data.message == "done") {
+
+            }
+          }, 3000)
+        } else {
+          window.location.href = '/game.html';
+        }
+      } else if (res.status < 500) {
+        let data = await res.json();
+        planeMessage.innerText = data.message;
+        planeMessage.style.color = 'red';
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000)
+
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
@@ -177,7 +194,6 @@ filter.addEventListener('change', async (e) => {
   }
   try {
     let res = await fetch(url + "reimbursements?status=" + filter.value, {
-      // 'credentials': 'same-origin',
       'credentials': 'include',
       'method': 'GET',
       'headers': {
