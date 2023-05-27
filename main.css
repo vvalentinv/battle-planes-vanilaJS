@@ -10,7 +10,8 @@ nav {
   background-color: gainsboro;
 }
 
-form .login {
+form .login,
+#add-plane {
   background-color: gainsboro;
 }
 
@@ -18,14 +19,18 @@ img {
   background-color: gainsboro;
 }
 
-.dropdown {
-  background-color: gainsboro;
-}
 ul .dropdown-menu {
   background-color: gainsboro;
 }
 
-div #filter {
+select,
+input,
+textarea {
+  background-color: gainsboro;
+}
+
+div #filter,
+.card-body {
   background-color: gainsboro;
 }
 
