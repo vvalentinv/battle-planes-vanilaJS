@@ -18,6 +18,17 @@ img {
   background-color: gainsboro;
 }
 
+.dropdown {
+  background-color: gainsboro;
+}
+ul .dropdown-menu {
+  background-color: gainsboro;
+}
+
+div #filter {
+  background-color: gainsboro;
+}
+
 #login-status,
 #header2,
 #change-email,
