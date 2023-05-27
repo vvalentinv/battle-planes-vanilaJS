@@ -62,6 +62,8 @@ const grabDataAndFeedtoPage = async () => {
         skySize = data.battles.battles[0][3];
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
+      } else if (data.battles.message == 'Please resume battle screen') {
+        window.location.href = '/game.html';
       }
       welcome.innerHTML = `Hi  <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
       addBattlesToTable(data);

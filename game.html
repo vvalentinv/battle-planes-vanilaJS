@@ -61,17 +61,6 @@
               </a>
               <ul class="dropdown-menu">
                 <li>
-                  <a id="change-email" class="dropdown-item" href="#"
-                    >Change Email</a
-                  >
-                </li>
-                <li>
-                  <a id="change-email" class="dropdown-item" href="#"
-                    >Change Password</a
-                  >
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
                   <a id="login-status" class="dropdown-item" href="#">Logout</a>
                 </li>
               </ul>
@@ -83,7 +72,7 @@
                 class="nav-link active"
                 aria-current="page"
                 href="#"
-                >New Challenge</a
+                >Concede Battle</a
               >
             </li>
           </ul>
@@ -91,29 +80,35 @@
       </div>
     </nav>
     <div id="success-messages" hidden></div>
-    <section id="player-defense" hidden>
-      <div class="card" style="width: 80rem">
-        <div class="card-body">
-          <h5 class="card-title">Defending Sky</h5>
-          <br /><br />
-          <div id="defense-sky"></div>
-          <div>
-            <p id="defense-messages"></p>
+    <div class="d-flex justify-content-center flex-wrap">
+      <div class="column">
+        <section id="player-defense">
+          <div class="card" style="width: 30rem">
+            <div class="card-body">
+              <h5 class="card-title">Defending Sky</h5>
+              <br /><br />
+              <div id="defense-sky"></div>
+              <div>
+                <p id="defense-messages"></p>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
-    <section id="player-attack" hidden>
-      <div class="card" style="width: 80rem">
-        <div class="card-body">
-          <h5 class="card-title">Opponent's Defending Sky</h5>
-          <br /><br />
-          <div id="attack-sky"></div>
-          <div>
-            <p id="attack-messages"></p>
+      <div class="column">
+        <section id="player-attack">
+          <div class="card" style="width: 30rem">
+            <div class="card-body">
+              <h5 class="card-title">Opponent's Defending Sky</h5>
+              <br /><br />
+              <div id="attack-sky"></div>
+              <div>
+                <p id="attack-messages"></p>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
+    </div>
   </body>
 </html>
