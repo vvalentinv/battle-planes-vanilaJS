@@ -5,8 +5,15 @@
 body {
   background-color: gainsboro;
 }
+
+nav {
+  background-color: gainsboro;
+}
+
 #login-status,
 #header2,
+#change-email,
+#change-password,
 #header3,
 #welcome-user,
 #filter,

@@ -63,7 +63,7 @@ const grabDataAndFeedtoPage = async () => {
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       }
-      welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
+      welcome.innerHTML = `Hi  <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
       addBattlesToTable(data);
     }
     if (res.status == 401) {
