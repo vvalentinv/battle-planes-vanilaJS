@@ -10,6 +10,14 @@ nav {
   background-color: gainsboro;
 }
 
+form .login {
+  background-color: gainsboro;
+}
+
+img {
+  background-color: gainsboro;
+}
+
 #login-status,
 #header2,
 #change-email,
