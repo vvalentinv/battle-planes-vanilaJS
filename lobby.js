@@ -30,7 +30,6 @@ let skySize = null;
 let defenseSize = null;
 
 
-
 const grabDataAndFeedtoPage = async () => {
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
@@ -457,9 +456,9 @@ const testPlacement = (e) => {
         }
       }
     }
-    overlap ? message += ', but overlaps other plane' : message += ' and current defense';
+    overlap ? message += ', but overlaps other plane(s)!' : message += ' and current defense!';
 
-    if (message == 'Valid in the sky and current defense') {
+    if (message == 'Valid in the sky and current defense!') {
       displayDefense(existingDefense);
       plane[0].setAttribute('style', 'background-color: red');
       planeMessage.style.color = 'green';

@@ -51,6 +51,8 @@ div #filter,
 
 th,
 #label-un,
+#label-email,
+#label-confirm-password,
 #label-password,
 .card-title {
   color: rgb(235, 132, 14);
