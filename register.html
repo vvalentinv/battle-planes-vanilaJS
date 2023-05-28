@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Register</title>
     <link
       rel="icon"
       href="/static/logo-removebg-preview.png"
@@ -20,7 +20,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
       rel="stylesheet"
     />
-    <script defer src="/login.js"></script>
+    <script defer src="/register.js"></script>
     <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
@@ -34,13 +34,16 @@
                   <div class="col-lg-12 login-key">
                     <img src="/static/logo-flat.png" />
                   </div>
-                  <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-                  <p id="login-error-message" class="text-white-50 mb-5"></p>
+                  <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
+                  <p id="register-error-message" class="text-white-50 mb-5"></p>
+                  <p
+                    id="register-username-email"
+                    class="text-white-50 mb-5"
+                  ></p>
                   <p id="register-instr" class="text-white-50 mb-5">
-                    <a href="/register.html">Register</a> if you don't have an
-                    account.
+                    Already have an account? <a href="/login.html">Login</a>
                   </p>
-                  <form class="login">
+                  <form class="register">
                     <div class="form-outline form-white mb-4">
                       <input
                         type="text"
@@ -50,6 +53,17 @@
                       />
                       <label id="label-un" class="form-label" for="username"
                         >Username</label
+                      >
+                    </div>
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="text"
+                        id="email"
+                        autocomplete="email"
+                        class="form-control form-control-lg"
+                      />
+                      <label id="label-email" class="form-label" for="email"
+                        >Email</label
                       >
                     </div>
                     <div class="form-outline form-white mb-4">
@@ -66,12 +80,26 @@
                         >Password</label
                       >
                     </div>
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="password"
+                        id="confirm-password"
+                        autocomplete="current-password"
+                        class="form-control form-control-lg"
+                      />
+                      <label
+                        id="label-confirm-password"
+                        class="form-label"
+                        for="confirm-password"
+                        >Confirm Password</label
+                      >
+                    </div>
                     <button
-                      id="login-submit-btn"
+                      id="register-submit-btn"
                       class="btn btn-outline-light btn-lg px-5"
                       type="submit"
                     >
-                      Login
+                      Register
                     </button>
                   </form>
                 </div>

@@ -5,8 +5,39 @@
 body {
   background-color: gainsboro;
 }
+
+nav {
+  background-color: gainsboro;
+}
+
+form .login,
+#add-plane {
+  background-color: gainsboro;
+}
+
+img {
+  background-color: gainsboro;
+}
+
+ul .dropdown-menu {
+  background-color: gainsboro;
+}
+
+select,
+input,
+textarea {
+  background-color: gainsboro;
+}
+
+div #filter,
+#card-body-defense {
+  background-color: gainsboro;
+}
+
 #login-status,
 #header2,
+#change-email,
+#change-password,
 #header3,
 #welcome-user,
 #filter,
@@ -20,6 +51,8 @@ body {
 
 th,
 #label-un,
+#label-email,
+#label-confirm-password,
 #label-password,
 .card-title {
   color: rgb(235, 132, 14);

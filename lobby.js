@@ -30,7 +30,6 @@ let skySize = null;
 let defenseSize = null;
 
 
-
 const grabDataAndFeedtoPage = async () => {
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
@@ -62,8 +61,10 @@ const grabDataAndFeedtoPage = async () => {
         skySize = data.battles.battles[0][3];
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
+      } else if (data.battles.message == 'Please resume battle screen') {
+        window.location.href = '/game.html';
       }
-      welcome.innerHTML = `Welcome back <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
+      welcome.innerHTML = `Hi  <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
       addBattlesToTable(data);
     }
     if (res.status == 401) {
@@ -71,9 +72,10 @@ const grabDataAndFeedtoPage = async () => {
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      serverError.innerText = "Server unreachable: contact IT Admin";
-      serverError.style.color = 'red';
-      serverError.style.fontWeight = 'bold';
+      success.removeAttribute('hidden');
+      success.innerText = "Server unreachable: contact IT Admin";
+      success.style.color = 'red';
+      success.style.fontWeight = 'bold';
     }
     else {
       console.log(err)
@@ -81,8 +83,6 @@ const grabDataAndFeedtoPage = async () => {
   }
 };
 
-
-// window.addEventListener('popstate', grabDataAndFeedtoPage);
 document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
 unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
@@ -110,7 +110,7 @@ loginStatusButton.addEventListener('click', async () => {
     success.innerHTML += '<br><br>'
     success.innerText += "Logging you out ";
     success.innerHTML += '<br><br>'
-    for (let i = 0; i < 1500; i += 200) {
+    for (let i = 0; i < 1500; i += 300) {
       setTimeout(() => { success.innerText += "."; }, i)
     }
 
@@ -125,7 +125,7 @@ cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
   flightDirection.value = 0;
-  window.location.reload();
+  grabDataAndFeedtoPage();
   planeMessage.innerText = "Finish setting up your defense within the timeframe!";
   planeMessage.style.color = 'red';
 })
@@ -160,11 +160,9 @@ submitButton.addEventListener('click', async () => {
           success.removeAttribute('hidden');
           success.innerText = data.message;
           setTimeout(() => {
-            window.location.reload();
-            if (!data.message == "done") {
-
-            }
-          }, 3000)
+            cancelButton.click();
+            success.setAttribute('hidden', true);
+          }, 1000)
         } else {
           window.location.href = '/game.html';
         }
@@ -173,8 +171,8 @@ submitButton.addEventListener('click', async () => {
         planeMessage.innerText = data.message;
         planeMessage.style.color = 'red';
         setTimeout(() => {
-          window.location.reload();
-        }, 3000)
+          cancelButton.click();
+        }, 2000)
 
       }
     } catch (err) {
@@ -238,9 +236,13 @@ document.addEventListener('click', (e) => {
         }
       } catch (err) {
         if (err.message == "Failed to fetch") {
-          welcome.innerHTML = "Server unreachable: contact IT Admin";
-          welcome.style.color = 'red';
-          welcome.style.fontWeight = 'bold';
+          success.removeAttribute('hidden');
+          success.innerText = "Server unreachable: contact IT Admin";
+          success.style.color = 'red';
+          success.style.fontWeight = 'bold';
+        }
+        else {
+          console.log(err)
         }
       }
     }
@@ -252,7 +254,7 @@ function addBattlesToTable(data) {
     let row = document.createElement('tr');
 
     let playerName = document.createElement('td');
-    playerName.innerHTML = `<select name="accept-challenge-in-row" class="filter-in-row"> <option class="accepted dropdown-item" value=1` +
+    playerName.innerHTML = `<select name="accept-challenge-in-row" class="filter-in-row" style="background: gainsboro;"> <option class="accepted dropdown-item" value=1` +
       `>` + b[2] + `</option> <option class="accepted dropdown-item" value="` + b[0] + `">Accept Challenge</option>`;    // playerName.innerHTML = b[1];
     let defenseSize = document.createElement('td');
     defenseSize.innerHTML = b[1];
@@ -454,9 +456,9 @@ const testPlacement = (e) => {
         }
       }
     }
-    overlap ? message += ', but overlaps other plane' : message += ' and current defense';
+    overlap ? message += ', but overlaps other plane(s)!' : message += ' and current defense!';
 
-    if (message == 'Valid in the sky and current defense') {
+    if (message == 'Valid in the sky and current defense!') {
       displayDefense(existingDefense);
       plane[0].setAttribute('style', 'background-color: red');
       planeMessage.style.color = 'green';
