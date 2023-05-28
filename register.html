@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link
+      rel="icon"
+      href="/static/logo-removebg-preview.png"
+      type="image/x-icon"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script defer src="/register.js"></script>
+    <link rel="stylesheet" href="/main.css" />
+  </head>
+  <body>
+    <section class="vh-100 gradient-custom">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card bg-dark text-white" style="border-radius: 1rem">
+              <div class="card-body p-5 text-center">
+                <div class="mb-md-5 mt-md-4 pb-5">
+                  <div class="col-lg-12 login-key">
+                    <img src="/static/logo-flat.png" />
+                  </div>
+                  <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
+                  <p id="register-error-message" class="text-white-50 mb-5"></p>
+                  <p
+                    id="register-username-email"
+                    class="text-white-50 mb-5"
+                  ></p>
+                  <p id="register-instr" class="text-white-50 mb-5">
+                    Already have an account? <a href="/login.html">Login</a>
+                  </p>
+                  <form class="register">
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="text"
+                        id="username"
+                        autocomplete="username"
+                        class="form-control form-control-lg"
+                      />
+                      <label id="label-un" class="form-label" for="username"
+                        >Username</label
+                      >
+                    </div>
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="text"
+                        id="email"
+                        autocomplete="email"
+                        class="form-control form-control-lg"
+                      />
+                      <label id="label-email" class="form-label" for="email"
+                        >Email</label
+                      >
+                    </div>
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="password"
+                        id="password"
+                        autocomplete="current-password"
+                        class="form-control form-control-lg"
+                      />
+                      <label
+                        id="label-password"
+                        class="form-label"
+                        for="password"
+                        >Password</label
+                      >
+                    </div>
+                    <div class="form-outline form-white mb-4">
+                      <input
+                        type="password"
+                        id="confirm-password"
+                        autocomplete="current-password"
+                        class="form-control form-control-lg"
+                      />
+                      <label
+                        id="label-confirm-password"
+                        class="form-label"
+                        for="confirm-password"
+                        >Confirm Password</label
+                      >
+                    </div>
+                    <button
+                      id="register-submit-btn"
+                      class="btn btn-outline-light btn-lg px-5"
+                      type="submit"
+                    >
+                      Register
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
