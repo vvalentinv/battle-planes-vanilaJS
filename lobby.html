@@ -50,17 +50,30 @@
             </li>
             
             <li class="nav-item navbar-brand">
-            <a id="header2" class="nav-link active" aria-current="page" href="#">New Challenge</a>
+              <a id="header2" 
+                class="nav-link active" 
+                aria-current="page" 
+                href="#" 
+                data-bs-toggle="tooltip" 
+                data-bs-title="Setup your own defense and open it for challengers"
+                data-bs-placement="top">
+                  New Challenge
+              </a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
     <div id="success-messages" hidden></div>
+    
     <section id="set-defense" hidden>
       <div class="card" style="width: 82rem;">
         <div id="card-body-defense" class="card-body">
-          <h5 class="card-title">Add plane to your defense</h5><br><br>
+          
+          <h5 class="card-title">Add plane to your defense</h5><br>
+          <div id="spinner2" class="spinner-border text-dark" role="status" hidden>
+            <span class="visually-hidden">Loading...</span>
+          </div><br>
           <p class="card-text">Remaining planes to be added: <span id="remaining-planes"></span></p>
             <form id="add-plane">
               
@@ -100,7 +113,12 @@
           <option class="dropdown-item" value="2">Sky Size</option>
           <option class="dropdown-item" value="3" hidden>Future Feature Private</option>
         </select>
-        <span> Filter or <a id="unchallenged-list" href="#" >refresh this list</a>  !</span>
+        <span> Filter or <a id="unchallenged-list" href="#" >refresh this list</a>  !
+          <div id="spinner1" class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </span>
+
     </div>
     
       <table id="battle-tbl" class="table">
