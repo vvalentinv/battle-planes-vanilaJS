@@ -1,4 +1,5 @@
-
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let welcome = document.getElementById('welcome');
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
@@ -284,11 +285,13 @@ function addBattlesToTable(data) {
     defenseSize.innerHTML = b[1];
     let skySize = document.createElement('td');
     skySize.innerHTML = b[3];
+    let time = document.createElement('td');
+    time.innerHTML = b[4];
 
     row.appendChild(playerName);
     row.appendChild(defenseSize);
     row.appendChild(skySize);
-
+    row.appendChild(time);
     tbody.appendChild(row);
   }
 }
