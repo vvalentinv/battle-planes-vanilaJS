@@ -1,4 +1,5 @@
-
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let welcome = document.getElementById('welcome');
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
@@ -22,6 +23,10 @@ let skyCells = document.getElementsByClassName('grid-cell');
 let unchallengedList = document.getElementById('unchallenged-list');
 let testPlane = document.getElementById('test-plane');
 let planeMessage = document.getElementById('plane-message');
+let spinner1 = document.getElementById('spinner1');
+let spinner2 = document.getElementById('spinner2');
+let defenseTimer = document.getElementById('defense-setup-timer');
+let userMenu = document.getElementById('user-menu');
 let url = `http://127.0.0.1:5000`
 let data = null;
 let nIntervId = null;
@@ -31,6 +36,7 @@ let defenseSize = null;
 
 
 const grabDataAndFeedtoPage = async () => {
+  spinner1.removeAttribute('hidden');
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
   }
@@ -48,10 +54,36 @@ const grabDataAndFeedtoPage = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
+      spinner1.setAttribute('hidden', true);
       console.log(data);
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
         unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
+        header2.innerText = '';
+        while (welcome.hasChildNodes()) {
+          welcome.removeChild(welcome.lastChild);
+        }
+        welcome.innerText = `Hi  ` + data.user + `!`;
+        const timer = setInterval(() => {
+          let now = new Date().getTime();
+          let startDate = Date.parse(data.battles.battles[0][4]);
+          let distance = startDate - now + 4 * 3600000;
+          let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          hours < 10 ? hours = "0" + hours : hours;
+          let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          minutes < 10 ? minutes = "0" + minutes : minutes;
+          let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          seconds < 10 ? seconds = "0" + seconds : seconds;
+          defenseTimer.innerText = hours + ":" + minutes + ":" + seconds;
+          if (distance < 0) {
+            clearInterval(timer);
+            defenseTimer.innerText = "00:00:00";
+            flightDirection.value = 1;
+            cockpitValue.value = 0
+            cockpitCoordinates.value = "1:A";
+            submitButton.click();
+          }
+        }, 1000);
         console.log(data.battles.battles);
         defense(data.battles.battles)
         existingDefense = data.battles.battles[0][1];
@@ -64,7 +96,7 @@ const grabDataAndFeedtoPage = async () => {
       } else if (data.battles.message == 'Please resume battle screen') {
         window.location.href = '/game.html';
       }
-      welcome.innerHTML = `Hi  <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
+      welcomeUser.innerText = `Hi  ` + data.user + `!`;
       addBattlesToTable(data);
     }
     if (res.status == 401) {
@@ -128,9 +160,12 @@ cancelButton.addEventListener('click', () => {
   grabDataAndFeedtoPage();
   planeMessage.innerText = "Finish setting up your defense within the timeframe!";
   planeMessage.style.color = 'red';
+  spinner2.setAttribute('hidden', true);
 })
 
 submitButton.addEventListener('click', async () => {
+
+  spinner2.removeAttribute('hidden');
   console.log("coockpitCoords cockpitVal Direction", cockpitCoordinates.value, cockpitValue.value, flightDirection.value);
   if (!cockpitCoordinates.value || !cockpitValue.value || flightDirection.value == 0) {
 
@@ -141,6 +176,8 @@ submitButton.addEventListener('click', async () => {
       defenseSky.removeChild(defenseSky.lastChild);
     }
     try {
+
+      spinner2.removeAttribute('hidden');
       let res = await fetch(url + `/battles/` + data.battles.battles[0][0] + `?defense=True`, {
         'credentials': 'include',
         'method': 'PUT',
@@ -156,30 +193,43 @@ submitButton.addEventListener('click', async () => {
       })
       if (res.status == 200) {
         let data = await res.json();
+        spinner2.setAttribute('hidden', true);
         if (data.message != "Defense setup complete!") {
-          success.removeAttribute('hidden');
-          success.innerText = data.message;
+          // success.removeAttribute('hidden');
+          // success.innerText = data.message;
           setTimeout(() => {
             cancelButton.click();
-            success.setAttribute('hidden', true);
+            // success.setAttribute('hidden', true);
           }, 1000)
         } else {
           window.location.href = '/game.html';
         }
-      } else if (res.status < 500) {
+
+      } else if (res.status == 400 || res.status == 403) {
         let data = await res.json();
+        spinner2.setAttribute('hidden', true);
+        if (data.message == "Time frame to add planes for defense setup elapsed.") {
+          planeMessage.innerText = data.message;
+          planeMessage.style.color = 'red';
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
         planeMessage.innerText = data.message;
         planeMessage.style.color = 'red';
         setTimeout(() => {
           cancelButton.click();
-        }, 2000)
+        }, 2000);
 
+      } if (res.status == 401) {
+        spinner2.setAttribute('hidden', true);
+        window.location.href = '/index.html';
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
-        welcome.innerHTML = "Server unreachable: contact IT Admin";
-        welcome.style.color = 'red';
-        welcome.style.fontWeight = 'bold';
+        success.innerHTML = "Server unreachable: contact IT Admin";
+        success.style.color = 'red';
+        success.style.fontWeight = 'bold';
       }
     }
   }
@@ -204,9 +254,9 @@ filter.addEventListener('change', async (e) => {
     addReimbursementsToTable(data);
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      welcome.innerHTML = "Server unreachable: contact IT Admin";
-      welcome.style.color = 'red';
-      welcome.style.fontWeight = 'bold';
+      success.innerHTML = "Server unreachable: contact IT Admin";
+      success.style.color = 'red';
+      success.style.fontWeight = 'bold';
     }
   }
 });
@@ -220,6 +270,7 @@ document.addEventListener('click', (e) => {
         tbody.removeChild(tbody.lastChild);
       }
       try {
+        spinner1.removeAttribute('hidden');
         let res = await fetch(url + `/battles/` + e.target.value + `?accepted=True`, {
           'credentials': 'include',
           'method': 'PUT',
@@ -230,9 +281,10 @@ document.addEventListener('click', (e) => {
         })
         if (res.status == 200) {
           let data = await res.json();
+          spinner1.setAttribute('hidden', true);
           success.removeAttribute('hidden');
           success.innerText = data.message;
-          setTimeout(() => { window.location.reload(); }, 3000)
+          setTimeout(() => { window.location.reload(); }, 1000)
         }
       } catch (err) {
         if (err.message == "Failed to fetch") {
@@ -260,11 +312,28 @@ function addBattlesToTable(data) {
     defenseSize.innerHTML = b[1];
     let skySize = document.createElement('td');
     skySize.innerHTML = b[3];
+    let time = document.createElement('td');
+    const timer = setInterval(() => {
+      let now = new Date().getTime();
+      let startDate = Date.parse(b[4]);
+      let distance = startDate - now + 4 * 3600000;
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      hours < 10 ? hours = "0" + hours : hours;
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      minutes < 10 ? minutes = "0" + minutes : minutes;
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      seconds < 10 ? seconds = "0" + seconds : seconds;
+      time.innerText = hours + ":" + minutes + ":" + seconds;
+      if (distance < 0) {
+        clearInterval(timer);
+        time.innerText = "EXPIRED";
+      }
+    }, 1000);
 
     row.appendChild(playerName);
     row.appendChild(defenseSize);
     row.appendChild(skySize);
-
+    row.appendChild(time);
     tbody.appendChild(row);
   }
 }
