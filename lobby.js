@@ -26,6 +26,7 @@ let planeMessage = document.getElementById('plane-message');
 let spinner1 = document.getElementById('spinner1');
 let spinner2 = document.getElementById('spinner2');
 let defenseTimer = document.getElementById('defense-setup-timer');
+let userMenu = document.getElementById('user-menu');
 let url = `http://127.0.0.1:5000`
 let data = null;
 let nIntervId = null;
@@ -58,6 +59,11 @@ const grabDataAndFeedtoPage = async () => {
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
         unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
+        header2.innerText = '';
+        while (welcome.hasChildNodes()) {
+          welcome.removeChild(welcome.lastChild);
+        }
+        welcome.innerText = `Hi  ` + data.user + `!`;
         const timer = setInterval(() => {
           let now = new Date().getTime();
           let startDate = Date.parse(data.battles.battles[0][4]);
@@ -90,7 +96,7 @@ const grabDataAndFeedtoPage = async () => {
       } else if (data.battles.message == 'Please resume battle screen') {
         window.location.href = '/game.html';
       }
-      welcome.innerHTML = `Hi  <a id="welcome-user" class="navbar-brand" href="#">` + data.user + `</a>`;
+      welcomeUser.innerText = `Hi  ` + data.user + `!`;
       addBattlesToTable(data);
     }
     if (res.status == 401) {
@@ -221,9 +227,9 @@ submitButton.addEventListener('click', async () => {
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
-        welcome.innerHTML = "Server unreachable: contact IT Admin";
-        welcome.style.color = 'red';
-        welcome.style.fontWeight = 'bold';
+        success.innerHTML = "Server unreachable: contact IT Admin";
+        success.style.color = 'red';
+        success.style.fontWeight = 'bold';
       }
     }
   }
@@ -248,9 +254,9 @@ filter.addEventListener('change', async (e) => {
     addReimbursementsToTable(data);
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      welcome.innerHTML = "Server unreachable: contact IT Admin";
-      welcome.style.color = 'red';
-      welcome.style.fontWeight = 'bold';
+      success.innerHTML = "Server unreachable: contact IT Admin";
+      success.style.color = 'red';
+      success.style.fontWeight = 'bold';
     }
   }
 });
