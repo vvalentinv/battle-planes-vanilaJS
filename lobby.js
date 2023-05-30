@@ -286,7 +286,22 @@ function addBattlesToTable(data) {
     let skySize = document.createElement('td');
     skySize.innerHTML = b[3];
     let time = document.createElement('td');
-    time.innerHTML = b[4];
+    const timer = setInterval(() => {
+      let now = new Date().getTime();
+      let startDate = Date.parse(b[4]);
+      let distance = startDate - now + 4 * 3600000;
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      hours < 10 ? hours = "0" + hours : hours;
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      minutes < 10 ? minutes = "0" + minutes : minutes;
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      seconds < 10 ? seconds = "0" + seconds : seconds;
+      time.innerText = hours + ":" + minutes + ":" + seconds;
+      if (distance < 0) {
+        clearInterval(timer);
+        time.innerText = "EXPIRED";
+      }
+    }, 1000);
 
     row.appendChild(playerName);
     row.appendChild(defenseSize);
