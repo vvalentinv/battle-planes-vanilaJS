@@ -25,6 +25,7 @@ let testPlane = document.getElementById('test-plane');
 let planeMessage = document.getElementById('plane-message');
 let spinner1 = document.getElementById('spinner1');
 let spinner2 = document.getElementById('spinner2');
+let defenseTimer = document.getElementById('defense-setup-timer');
 let url = `http://127.0.0.1:5000`
 let data = null;
 let nIntervId = null;
@@ -57,6 +58,26 @@ const grabDataAndFeedtoPage = async () => {
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
         unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
+        const timer = setInterval(() => {
+          let now = new Date().getTime();
+          let startDate = Date.parse(data.battles.battles[0][4]);
+          let distance = startDate - now + 4 * 3600000;
+          let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          hours < 10 ? hours = "0" + hours : hours;
+          let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          minutes < 10 ? minutes = "0" + minutes : minutes;
+          let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          seconds < 10 ? seconds = "0" + seconds : seconds;
+          defenseTimer.innerText = hours + ":" + minutes + ":" + seconds;
+          if (distance < 0) {
+            clearInterval(timer);
+            defenseTimer.innerText = "00:00:00";
+            flightDirection.value = 1;
+            cockpitValue.value = 0
+            cockpitCoordinates.value = "1:A";
+            submitButton.click();
+          }
+        }, 1000);
         console.log(data.battles.battles);
         defense(data.battles.battles)
         existingDefense = data.battles.battles[0][1];
