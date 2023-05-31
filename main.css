@@ -30,18 +30,22 @@ textarea {
 }
 
 div #filter,
-#card-body-defense {
+#card-body-defense,
+#card-body-defense-params {
   background-color: gainsboro;
 }
 
 #login-status,
 #header2,
+#lobby-link,
 #change-email,
 #change-password,
 #header3,
 #welcome-user,
 #filter,
 #instr,
+#set-params-btn,
+#reset-params-btn,
 #submit-btn,
 #cancel-btn,
 #unchallenged-list,
