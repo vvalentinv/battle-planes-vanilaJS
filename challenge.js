@@ -34,12 +34,24 @@ let expirationTime = null;
 
 setParams.addEventListener('click', () => {
   if (skySize.value != 0 || defenseSize.value != 0 || maxTime.value > 0) {
-    sky = skySize.value;
-    defenseSz = defenseSize.value;
-    expirationTime = maxTime.value;
+    sky = parseInt(skySize.value);
+    defenseSz = parseInt(defenseSize.value);
+    expirationTime = parseInt(maxTime.value);
     //build defense grid
     defense();
     skyCells = document.getElementsByClassName('grid-cell');
+  }
+});
+
+resetParams.addEventListener('click', () => {
+  skySize.value = 0;
+  defenseSize.value = 0;
+  maxTime.value = '';
+  sky = null;
+  defenseSz = null;
+  expirationTime = null;
+  while (defenseSky.hasChildNodes()) {
+    defenseSky.removeChild(defenseSky.lastChild);
   }
 });
 
