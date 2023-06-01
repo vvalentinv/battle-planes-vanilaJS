@@ -62,7 +62,7 @@
         </div>
       </div>
     </nav>
-    <div id="success-messages" hidden></div>
+    <div id="success-message" hidden></div>
     
     <section id="set-defense-params" >
       <div class="card" style="width: 40rem;">
@@ -95,7 +95,8 @@
               <label for="max-time">Number of minutes until challenge expires:</label>
                 <input type=text id="max-time" size="3">
           </div>
-          <a id="set-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Build Defense Sky</a>
+          <div id="params-message" hidden></div>
+          <a id="set-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Set Defense Params</a>
           <div ><a id="reset-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Reset Params</a></div>
               
         </div>
@@ -128,12 +129,20 @@
                 <input type=text id="cockpit-value" size="3" hidden>
                 
               </div>
+                   
+              <div id="defense-sky">
+
+              </div>
+              <a id="evaluate-btn" href="#" class="btn btn-outline-light btn-lg px-5">
+                Evaluate Plane 
+              </a>
               <div class="mb-3">
                 <p id="plane-message"></p>
-              </div>      
-              <div id="defense-sky"></div>
-              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placement</a>
-              <div ><a id="cancel-btn" href="#" class="btn btn-outline-light btn-lg px-5">Reset Selection</a></div>
+              </div> 
+              <div >
+                <a id="open-btn" href="#" class="btn btn-outline-light btn-lg px-5">
+                  Open Challenge</a>
+              </div>
         </div>
       </div>   
     </section>
