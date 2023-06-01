@@ -28,6 +28,7 @@ let url = `http://127.0.0.1:5000`
 // let data = null;
 // let nIntervId = null;
 let existingDefense = [];
+let defenseIDs = [];
 let sky = null;
 let defenseSz = null;
 let expirationTime = null;
@@ -62,6 +63,7 @@ resetParams.addEventListener('click', () => {
   skySize.removeAttribute('disabled');
   defenseSize.removeAttribute('disabled');
   existingDefense = [];
+  defenseIDs = [];
 });
 
 // const grabDataAndFeedtoPage = async () => {
@@ -147,15 +149,15 @@ resetParams.addEventListener('click', () => {
 // document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
 // unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
-// const displayDefense = (defense) => {
-//   if (defense.length > 0) {
-//     for (arr of defense) {
-//       Array.from(skyCells)
-//         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
-//         .forEach(el => el.setAttribute('style', 'background-color: grey'));
-//     }
-//   }
-// }
+const displayDefense = (existingDefense) => {
+  if (existingDefense.length > 0) {
+    for (arr of existingDefense) {
+      Array.from(skyCells)
+        .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
+        .forEach(el => el.setAttribute('style', 'background-color: grey'));
+    }
+  }
+}
 
 // loginStatusButton.addEventListener('click', async () => {
 //   let res = await fetch(url + '/logout', {
@@ -179,17 +181,6 @@ resetParams.addEventListener('click', () => {
 
 
 //   }
-// })
-
-
-// cancelButton.addEventListener('click', () => {
-//   cockpitCoordinates.value = '';
-//   cockpitValue.value = '';
-//   flightDirection.value = 0;
-//   grabDataAndFeedtoPage();
-//   planeMessage.innerText = "Finish setting up your defense within the timeframe!";
-//   planeMessage.style.color = 'red';
-//   spinner2.setAttribute('hidden', true);
 // })
 
 evaluatePlane.addEventListener('click', async () => {
