@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle-Planes Lobby</title>
+    <title>New Challenge</title>
     <link rel="icon" href="/static/logo-removebg-preview.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script defer type="text/javascript" src="/lobby.js"></script>
+    <script defer type="text/javascript" src="/challenge.js"></script>
     <link rel="stylesheet" href="/main.css">
   </head>
   <body>
@@ -40,33 +40,67 @@
                 User
               </a>
               <ul id="user-menu" class="dropdown-menu">
-                <li><a id="change-email" class="dropdown-item" href="#">Change Email</a></li>
-                <li><a id="change-email" class="dropdown-item" href="#">Change Password</a></li>
-                <li><hr class="dropdown-divider" /></li>
+                
                 <li>
-                  <a id="login-status" class="dropdown-item" href="#">Logout</a>
+                  <a id="logout-btn" class="dropdown-item" href="#">Logout</a>
                 </li>
               </ul>
             </li>
             
             <li class="nav-item navbar-brand">
-              <a id="header2" 
+              <a id="lobby-link" 
                 class="nav-link active" 
                 aria-current="page" 
-                href="/challenge.html" 
+                href="/lobby.html" 
                 data-bs-toggle="tooltip" 
-                data-bs-title="Setup your own defense and open it for challengers"
+                data-bs-title="Return to lobby to select a new challenge or edit profile"
                 data-bs-placement="top">
-                  New Challenge
+                  Lobby
               </a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <div id="success-messages" hidden></div>
+    <div id="success-message" hidden></div>
     
-    <section id="set-defense" hidden>
+    <section id="set-defense-params" >
+      <div class="card" style="width: 40rem;">
+        <div id="card-body-defense-params" class="card-body">
+          
+          <h5 class="card-title">Set Challenge Parameters</h5>
+          <div class="mb-3 container-fluid dropdown-center">
+            <label for="sky-size">Sky size:</label>
+            <select name="sky-size" id="sky-size">
+              <option class="dropdown-item" value="0">size</option>
+              <option class="dropdown-item" value="10">10x10</option>
+              <option class="dropdown-item" value="11">11x11</option>
+              <option class="dropdown-item" value="12">12X12</option>
+              <option class="dropdown-item" value="13">13X13</option>
+              <option class="dropdown-item" value="14">14X14</option>
+              <option class="dropdown-item" value="15">15X15</option>
+            </select>
+          </div>
+          <div class="mb-3 container-fluid dropdown-center">
+            <label for="defense-size">Number of planes</label>
+            <select name="defense-size" id="defense-size">
+              <option class="dropdown-item" value="0">size</option>
+              <option class="dropdown-item" value="3">3 planes</option>
+              <option class="dropdown-item" value="4">4 planes</option>
+              <option class="dropdown-item" value="5">5 planes</option>
+              <option class="dropdown-item" value="6">6 planes</option>
+            </select>
+          </div>
+          <div class="mb-3 container-fluid ">
+              <label for="max-time">Number of minutes until challenge expires:</label>
+                <input type=text id="max-time" size="3">
+          </div>
+          <div id="params-message" hidden></div>
+          <a id="set-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Set Defense Params</a>
+          <div ><a id="reset-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Reset Params</a></div>
+              
+        </div>
+      </div>   
       <div class="card" style="width: 82rem;">
         <div id="card-body-defense" class="card-body">
           
@@ -95,47 +129,23 @@
                 <input type=text id="cockpit-value" size="3" hidden>
                 
               </div>
+                   
+              <div id="defense-sky">
+
+              </div>
+              <a id="evaluate-btn" href="#" class="btn btn-outline-light btn-lg px-5">
+                Evaluate Plane 
+              </a>
               <div class="mb-3">
                 <p id="plane-message"></p>
-              </div>      
-              <div id="defense-sky"></div>
-              <a id="submit-btn" href="#" class="btn btn-outline-light btn-lg px-5">Submit plane Placement</a>
-              <div ><a id="cancel-btn" href="#" class="btn btn-outline-light btn-lg px-5">Reset Selection</a></div>
+              </div> 
+              <div >
+                <a id="open-btn" href="#" class="btn btn-outline-light btn-lg px-5">
+                  Open Challenge</a>
+              </div>
         </div>
       </div>   
     </section>
-    <section  id="unchallenged-battles">
-    <div id="fil" class="container-fluid dropdown-center">
-       <p>
-        Selecting a player accepts an open challenge.
-      </p>
-        <select name="status" id="filter">
-          <option class="dropdown-item" value="0">Unchallenged Battles </option>
-          <option class="dropdown-item" value="1">Defense Size</option>
-          <option class="dropdown-item" value="2">Sky Size</option>
-          <option class="dropdown-item" value="3" hidden>Future Feature Private</option>
-        </select>
-        <span> Filter or <a id="unchallenged-list" href="#" >refresh this list</a>  !
-          <div id="spinner1" class="spinner-border text-dark" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </span>
-
-    </div>
     
-      <table id="battle-tbl" class="table">
-        <thead>
-          <tr>
-            <th scope="col">Player Name</th>
-            <th scope="col">Defense Size</th>
-            <th scope="col">Sky Size</th>
-            <th scope="col">Expires</th>
-          </tr>
-        </thead>
-        <tbody id="battle-tbl-tbody">
-          <tr hidden></tr> 
-        </tbody>
-      </table>
-    </section>
   </body>
 </html>
