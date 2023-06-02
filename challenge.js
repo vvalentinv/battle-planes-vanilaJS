@@ -45,6 +45,7 @@ setParams.addEventListener('click', () => {
     [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
     skySize.setAttribute('disabled', true);
     defenseSize.setAttribute('disabled', true);
+    setParams.style.visibility = 'hidden';
   } else {
     paramMessage.innerText = 'Please set all parameters!';
     paramMessage.removeAttribute('hidden');
@@ -64,91 +65,93 @@ resetParams.addEventListener('click', () => {
   }
   skySize.removeAttribute('disabled');
   defenseSize.removeAttribute('disabled');
+  setParams.style.visibility = 'visible';
   existingDefense = [];
   defenseIDs = [];
 });
 
-// const grabDataAndFeedtoPage = async () => {
-//   spinner1.removeAttribute('hidden');
-//   while (tbody.hasChildNodes()) {
-//     tbody.removeChild(tbody.lastChild);
-//   }
-//   while (defenseSky.hasChildNodes()) {
-//     defenseSky.removeChild(defenseSky.lastChild);
-//   }
-//   try {
-//     let res = await fetch(url + '/battles', {
-//       'credentials': 'include',
-//       'method': 'GET',
-//       'headers': {
-//         'Content-Type': 'application/json',
-//         'Access-Control-Allow-Credentials': 'true'
-//       }
-//     })
-//     if (res.status == 200) {
-//       data = await res.json();
-//       spinner1.setAttribute('hidden', true);
-//       console.log(data);
-//       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
-//         unchallengedBattles.setAttribute('hidden', true);
-//         setDefense.removeAttribute('hidden');
-//         header2.innerText = '';
-//         while (welcome.hasChildNodes()) {
-//           welcome.removeChild(welcome.lastChild);
-//         }
-//         welcome.innerText = `Hi  ` + data.user + `!`;
-//         const timer = setInterval(() => {
-//           let now = new Date().getTime();
-//           let startDate = Date.parse(data.battles.battles[0][4]);
-//           let distance = startDate - now + 4 * 3600000;
-//           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-//           hours < 10 ? hours = "0" + hours : hours;
-//           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-//           minutes < 10 ? minutes = "0" + minutes : minutes;
-//           let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-//           seconds < 10 ? seconds = "0" + seconds : seconds;
-//           defenseTimer.innerText = hours + ":" + minutes + ":" + seconds;
-//           if (distance < 0) {
-//             clearInterval(timer);
-//             defenseTimer.innerText = "00:00:00";
-//             flightDirection.value = 1;
-//             cockpitValue.value = 0
-//             cockpitCoordinates.value = "1:A";
-//             submitButton.click();
-//           }
-//         }, 1000);
-//         console.log(data.battles.battles);
-//         defense(data.battles.battles)
-//         existingDefense = data.battles.battles[0][1];
-//         displayDefense(existingDefense);
-//         console.log("existingDefense", existingDefense);
-//         defenseSize = data.battles.battles[0][2];
-//         skySize = data.battles.battles[0][3];
-//         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
-//         console.log(skySize);
-//       } else if (data.battles.message == 'Please resume battle screen') {
-//         window.location.href = '/game.html';
-//       }
-//       welcomeUser.innerText = `Hi  ` + data.user + `!`;
-//       addBattlesToTable(data);
-//     }
-//     if (res.status == 401) {
-//       window.location.href = '/index.html';
-//     }
-//   } catch (err) {
-//     if (err.message == "Failed to fetch") {
-//       success.removeAttribute('hidden');
-//       success.innerText = "Server unreachable: contact IT Admin";
-//       success.style.color = 'red';
-//       success.style.fontWeight = 'bold';
-//     }
-//     else {
-//       console.log(err)
-//     }
-//   }
-// };
+const getUser = async () => {
+  //   spinner1.removeAttribute('hidden');
+  //   while (tbody.hasChildNodes()) {
+  //     tbody.removeChild(tbody.lastChild);
+  //   }
+  //   while (defenseSky.hasChildNodes()) {
+  //     defenseSky.removeChild(defenseSky.lastChild);
+  //   }
+  try {
+    let res = await fetch(url + '/users', {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      data = await res.json();
+      //       spinner1.setAttribute('hidden', true);
+      console.log(data);
+      welcomeUser.innerText = data.user;
+      //       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
+      //         unchallengedBattles.setAttribute('hidden', true);
+      //         setDefense.removeAttribute('hidden');
+      //         header2.innerText = '';
+      //         while (welcome.hasChildNodes()) {
+      //           welcome.removeChild(welcome.lastChild);
+      //         }
+      //         welcome.innerText = `Hi  ` + data.user + `!`;
+      //         const timer = setInterval(() => {
+      //           let now = new Date().getTime();
+      //           let startDate = Date.parse(data.battles.battles[0][4]);
+      //           let distance = startDate - now + 4 * 3600000;
+      //           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      //           hours < 10 ? hours = "0" + hours : hours;
+      //           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      //           minutes < 10 ? minutes = "0" + minutes : minutes;
+      //           let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      //           seconds < 10 ? seconds = "0" + seconds : seconds;
+      //           defenseTimer.innerText = hours + ":" + minutes + ":" + seconds;
+      //           if (distance < 0) {
+      //             clearInterval(timer);
+      //             defenseTimer.innerText = "00:00:00";
+      //             flightDirection.value = 1;
+      //             cockpitValue.value = 0
+      //             cockpitCoordinates.value = "1:A";
+      //             submitButton.click();
+      //           }
+      //         }, 1000);
+      //         console.log(data.battles.battles);
+      //         defense(data.battles.battles)
+      //         existingDefense = data.battles.battles[0][1];
+      //         displayDefense(existingDefense);
+      //         console.log("existingDefense", existingDefense);
+      //         defenseSize = data.battles.battles[0][2];
+      //         skySize = data.battles.battles[0][3];
+      //         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
+      //         console.log(skySize);
+      //       } else if (data.battles.message == 'Please resume battle screen') {
+      //         window.location.href = '/game.html';
+      //       }
+      //       welcomeUser.innerText = `Hi  ` + data.user + `!`;
+      //       addBattlesToTable(data);
+    }
+    if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      successMessage.removeAttribute('hidden');
+      successMessage.innerText = "Server unreachable: contact IT Admin";
+      successMessage.style.color = 'red';
+      successM.style.fontWeight = 'bold';
+    }
+    else {
+      console.log(err)
+    }
+  }
+};
 
-// document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
+document.addEventListener("DOMContentLoaded", getUser);
 // unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
 const displayDefense = (existingDefense) => {
@@ -170,13 +173,13 @@ const displayDefense = (existingDefense) => {
 //     },
 //   })
 //   if (res.status == 200) {
-//     success.removeAttribute('hidden');
-//     success.innerText += "Thank you for playing!";
-//     success.innerHTML += '<br><br>'
-//     success.innerText += "Logging you out ";
-//     success.innerHTML += '<br><br>'
+//     successMessage.removeAttribute('hidden');
+//     successMessage.innerText += "Thank you for playing!";
+//     successMessage.innerHTML += '<br><br>'
+//     successMessage.innerText += "Logging you out ";
+//     successMessage.innerHTML += '<br><br>'
 //     for (let i = 0; i < 1500; i += 300) {
-//       setTimeout(() => { success.innerText += "."; }, i)
+//       setTimeout(() => { successMessage.innerText += "."; }, i)
 //     }
 
 //     setTimeout(() => { window.location.href = '/index.html'; }, 2000)
@@ -186,35 +189,47 @@ const displayDefense = (existingDefense) => {
 // })
 
 evaluatePlane.addEventListener('click', async () => {
+  console.log("remainingPlanes.value", remainingPlanes.innerText);
   console.log("coockpitCoords cockpitVal Direction", cockpitCoordinates.value, cockpitValue.value, flightDirection.value);
-  if (!cockpitCoordinates.value || !cockpitValue.value || flightDirection.value === "0") {
+  if (!cockpitCoordinates.value && !cockpitValue.value && flightDirection.value === "0") {
     planeMessage.innerText = "flight direction and cockpit coordinates are required fields!";
     planeMessage.style.color = 'red';
-  } else {
+  } else if (parseInt(remainingPlanes.innerText) < 1) {
+    planeMessage.innerText = "Reset challenge params to add more planes";
+    planeMessage.style.color = 'red';
+  } else if (planeMessage.innerText != "Valid in the sky and current defense!") {
+    planeMessage.innerHTML = planeMessage.innerText + `<br>` + `Invalid plane placement!`;
+    planeMessage.style.color = 'red';
+  }
+  else {
     while (defenseSky.hasChildNodes()) {
       defenseSky.removeChild(defenseSky.lastChild);
     }
     try {
       spinner2.removeAttribute('hidden');
-      let res = await fetch(url + `/planes`, {
+      let res = await fetch(url + `/planes?` + `cockpit=` + parseInt(cockpitValue.value) + `&&direction=` + flightDirection.value + `&&sky=` + skySZ, {
         'credentials': 'include',
         'method': 'GET',
         'headers': {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Credentials': 'true'
         },
-        'body': JSON.stringify({
-          "cockpit": cockpitValue.value,
-          "direction": flightDirection.value,
-          "sky": data.battles.battles[0][3]
-        })
       })
       if (res.status == 200) {
         let data = await res.json();
         spinner2.setAttribute('hidden', true);
-        if (data.message != "No Match") {
-          existingDefense.push(parseInt(data.message));
+        console.log(existingDefense);
+        console.log(defenseIDs);
+        if (data.message == "No Match") {
+          planeMessage.innerText = "Failed to identify plane";
+          planeMessage.style.color = 'red';
         } else {
+          defenseIDs.push(parseInt(data.message.id));
+          existingDefense.push(data.message.plane);
+          defense();
+          displayDefense(existingDefense);
+          skyCells = document.getElementsByClassName('grid-cell');
+          [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         }
 
       } else if (res.status == 400) {
@@ -229,9 +244,9 @@ evaluatePlane.addEventListener('click', async () => {
       }
     } catch (err) {
       if (err.message == "Failed to fetch") {
-        success.innerHTML = "Server unreachable: contact site admin";
-        success.style.color = 'red';
-        success.style.fontWeight = 'bold';
+        successMessage.innerHTML = "Server unreachable: contact site admin";
+        successMessage.style.color = 'red';
+        successMessage.style.fontWeight = 'bold';
       }
     }
   }
@@ -414,8 +429,6 @@ const testPlacement = (e) => {
         break;
     }
 
-    console.log("msg cockpit coords", message, cockpit, cockpitCoordinates.value);
-    console.log("planeLength - 1 <= cockpit % skySZ && cockpit % skySZ < skySZ && cockpit > skySZ * wingSpan && cockpit < skySZ * (skySZ - wingSpan)", planeLength - 1 <= cockpit % skySZ && cockpit % skySZ < skySZ && cockpit > skySZ * wingSpan && cockpit < skySZ * (skySZ - wingSpan));
     for (p of currentDefense) {
       console.log(p);
       for (div of plane) {
