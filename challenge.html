@@ -72,7 +72,6 @@
           <div class="mb-3 container-fluid dropdown-center">
             <label for="sky-size">Sky size:</label>
             <select name="sky-size" id="sky-size">
-              <option class="dropdown-item" value="0">size</option>
               <option class="dropdown-item" value="10">10x10</option>
               <option class="dropdown-item" value="11">11x11</option>
               <option class="dropdown-item" value="12">12X12</option>
@@ -84,7 +83,6 @@
           <div class="mb-3 container-fluid dropdown-center">
             <label for="defense-size">Number of planes</label>
             <select name="defense-size" id="defense-size">
-              <option class="dropdown-item" value="0">size</option>
               <option class="dropdown-item" value="3">3 planes</option>
               <option class="dropdown-item" value="4">4 planes</option>
               <option class="dropdown-item" value="5">5 planes</option>
@@ -93,7 +91,7 @@
           </div>
           <div class="mb-3 container-fluid ">
               <label for="max-time">Number of minutes until challenge expires:</label>
-                <input type=text id="max-time" size="3">
+                <input type=text id="max-time" size="3" value="1">
           </div>
           <div id="params-message" hidden></div>
           <a id="set-params-btn" href="#" class="btn btn-outline-light btn-sm px-5">Set Defense Params</a>
@@ -105,7 +103,7 @@
         <div id="card-body-defense" class="card-body">
           
           <h5 class="card-title">Add planes to your defense</h5><br>
-          <div id="defense-setup-timer">
+          <div id="defense-setup-timer" hidden>
           </div><br>
           <div id="spinner2" class="spinner-border text-dark" role="status" hidden>
             <span class="visually-hidden">Loading...</span>
