@@ -65,7 +65,8 @@ th,
   color: rgb(235, 132, 14);
 }
 
-#defense-setup-timer {
+#defense-setup-timer,
+#defense-setup-timer1 {
   font-size: xx-large;
   margin-top: 2%;
   margin-left: 2%;
