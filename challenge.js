@@ -1,6 +1,7 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let welcome = document.getElementById('welcome');
+let home = document.getElementById('header1');
 let welcomeUser = document.getElementById('welcome-user');
 let logoutButton = document.getElementById('logout-btn');
 let setDefense = document.getElementById('set-defense');
@@ -38,6 +39,9 @@ let battle = false;
 let battleID = null;
 
 
+home.addEventListener("click", function() {
+  window.location.href = "index.html";
+});
 
 setParams.addEventListener('click', () => {
   if (skySize.value != 0 && defenseSize.value != 0 && maxTime.value > 0) {
@@ -346,16 +350,23 @@ const checkForBattle = async () => {
       let data = await res.json();
       console.log(data);
       if (data.message[2] == "Wait for your opponent's attack.") {
-        window.location.href = '/game.html';
+        setTimeout(() => {
+          window.location.href = '/battle.html';
+        }, 5000);
+
       }
-
-
     } else if (res.status == 400 || res.status == 403) {
       let data = await res.json();
-      planeMessage.innerText = data.message;
-      planeMessage.style.color = 'red';
+      if (data.message == "Use battle history") {
+        setTimeout(() => {
+          window.location.href = '/lobby.html';
+        }, 5000);
+      }
+      planeMessage.innerText = "Challenger is setting up their defense!";
+      planeMessage.style.color = 'gray';
     } else if (res.status == 401) {
       window.location.href = '/index.html';
+
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
@@ -364,7 +375,7 @@ const checkForBattle = async () => {
       successMessage.style.fontWeight = 'bold';
     }
   }
-}
+};
 
 const defense = () => {
   let layoutSize = skySZ + 1
