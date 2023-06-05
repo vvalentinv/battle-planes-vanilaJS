@@ -242,7 +242,7 @@ openChallenge.addEventListener('click', async () => {
           beginChallenger += 1000;
           let now = new Date().getTime();
           let startDate = Date.parse(data.timeStamp);
-          let distance = startDate - now + 4 * 3600000;
+          let distance = startDate - now + 4 * 3600000 + defenseSz * 60000;
           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           hours < 10 ? hours = "0" + hours : hours;
           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -253,12 +253,28 @@ openChallenge.addEventListener('click', async () => {
           if (beginChallenger % 3000 == 0 && !challenger) {
             checkForChallenger();
           }
-          if (distance < 0 || challenger) {
+          else if (distance < defenseSz * 60000 && !challenger) {
             clearInterval(timer);
             defenseTimer.innerText = "00:00:00";
-          }
-        }, 1000);
+            planeMessage.innerText = "No challenger found!";
+            planeMessage.style.color = 'red';
+            setTimeout(() => {
+              window.location.href = '/lobby.html';
+            }, 5000);
+          } else if (challenger && distance > 0) {
 
+            checkForBattle();
+          } else if (distance < 0) {
+            clearInterval(timer);
+            defenseTimer.innerText = "00:00:00";
+            planeMessage.innerText = "Challenger failed to setup their defense in time!";
+            planeMessage.style.color = 'red';
+            setTimeout(() => {
+              window.location.href = '/lobby.html';
+            }, 5000);
+          }
+
+        }, 1000);
 
         openChallenge.setAttribute('hidden', true);
       } else if (res.status == 400 || res.status == 403) {
@@ -315,65 +331,40 @@ const checkForChallenger = async () => {
   }
 }
 
-// const checkForBattle = async () => {
-//   console.log("checking for battle", battleID);
-//   try {
-//     let res = await fetch(url + `/battles/` + parseInt(battleID), {
-//       'credentials': 'include',
-//       'method': 'GET',
-//       'headers': {
-//         'Content-Type': 'application/json',
-//         'Access-Control-Allow-Credentials': 'true'
-//       }
-//     })
-//     if (res.status == 200) {
-//       let data = await res.json();
-//       console.log(data);
-//       if (data.message[2] == "Wait for your opponent's attack.") {
-//         battle = true;
-//       }
-//       let beginBattle = 0;
-//       defenseTimer.setAttribute('hidden', true);
-//       defenseTimer1.removeAttribute('hidden');
-//       const timer1 = setInterval(() => {
-//         beginBattle += 1000;
-//         let now = new Date().getTime();
-//         let startDate = new Date().getTime() + defenseSz * 60000;
-//         let distance = startDate - now;
-//         let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-//         hours < 10 ? hours = "0" + hours : hours;
-//         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-//         minutes < 10 ? minutes = "0" + minutes : minutes;
-//         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-//         seconds < 10 ? seconds = "0" + seconds : seconds;
-//         defenseTimer1.innerText = hours + ":" + minutes + ":" + seconds;
-//         if (beginBattle % 3000 == 0 && !battle) {
-//           checkForBattle();
-//         }
-//         if (distance < 0) {
-//           clearInterval(timer1);
-//           defenseTimer1.innerText = "00:00:00";
-//         } else if (battle) {
-//           clearInterval(timer1);
-//           window.location.href = '/game.html';
-//         }
-//       }, 1000);
+const checkForBattle = async () => {
+  console.log("checking for battle", battleID);
+  try {
+    let res = await fetch(url + `/battles/` + parseInt(battleID), {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      let data = await res.json();
+      console.log(data);
+      if (data.message[2] == "Wait for your opponent's attack.") {
+        window.location.href = '/game.html';
+      }
 
-//     } else if (res.status == 400 || res.status == 403) {
-//       let data = await res.json();
-//       planeMessage.innerText = data.message;
-//       planeMessage.style.color = 'red';
-//     } else if (res.status == 401) {
-//       window.location.href = '/index.html';
-//     }
-//   } catch (err) {
-//     if (err.message == "Failed to fetch") {
-//       successMessage.innerHTML = "Server unreachable: contact site admin";
-//       successMessage.style.color = 'red';
-//       successMessage.style.fontWeight = 'bold';
-//     }
-//   }
-// }
+
+    } else if (res.status == 400 || res.status == 403) {
+      let data = await res.json();
+      planeMessage.innerText = data.message;
+      planeMessage.style.color = 'red';
+    } else if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      successMessage.innerHTML = "Server unreachable: contact site admin";
+      successMessage.style.color = 'red';
+      successMessage.style.fontWeight = 'bold';
+    }
+  }
+}
 
 const defense = () => {
   let layoutSize = skySZ + 1
