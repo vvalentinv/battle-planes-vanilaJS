@@ -1,6 +1,7 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let welcome = document.getElementById('welcome');
+let home = document.getElementById("header1");
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
 let header3 = document.getElementById('header3');
@@ -33,6 +34,10 @@ let nIntervId = null;
 let existingDefense = null;
 let skySize = null;
 let defenseSize = null;
+
+home.addEventListener("click", function() {
+  window.location.href = "index.html";
+});
 
 
 const grabDataAndFeedtoPage = async () => {
