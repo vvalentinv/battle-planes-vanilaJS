@@ -11,7 +11,7 @@ let evaluatePlane = document.getElementById('evaluate-btn');
 let openChallenge = document.getElementById('open-btn');
 let error = document.getElementById('error-message');
 let serverError = document.getElementById('sever-error');
-let successMessage = document.getElementById('success-message');
+let successMessage = document.getElementById('success-messages');
 let paramMessage = document.getElementById('params-message');
 let remainingPlanes = document.getElementById('remaining-planes');
 let flightDirection = document.getElementById('flight-direction');
@@ -21,6 +21,7 @@ let skyCells = null;
 let planeMessage = document.getElementById('plane-message');
 let spinner2 = document.getElementById('spinner2');
 let defenseTimer = document.getElementById('defense-setup-timer');
+let defenseTimer1 = document.getElementById('defense-setup-timer1');
 let skySize = document.getElementById('sky-size');
 let defenseSize = document.getElementById('defense-size');
 let maxTime = document.getElementById('max-time');
@@ -32,6 +33,9 @@ let defenseIDs = [];
 let skySZ = null;
 let defenseSz = null;
 let expirationTime = null;
+let challenger = false;
+let battle = false;
+let battleID = null;
 
 
 
@@ -113,29 +117,26 @@ const displayDefense = (existingDefense) => {
   }
 }
 
-// loginStatusButton.addEventListener('click', async () => {
-//   let res = await fetch(url + '/logout', {
-//     'credentials': 'include',
-//     'method': 'POST',
-//     'headers': {
-//       'Content-Type': 'application/json'
-//     },
-//   })
-//   if (res.status == 200) {
-//     successMessage.removeAttribute('hidden');
-//     successMessage.innerText += "Thank you for playing!";
-//     successMessage.innerHTML += '<br><br>'
-//     successMessage.innerText += "Logging you out ";
-//     successMessage.innerHTML += '<br><br>'
-//     for (let i = 0; i < 1500; i += 300) {
-//       setTimeout(() => { successMessage.innerText += "."; }, i)
-//     }
-
-//     setTimeout(() => { window.location.href = '/index.html'; }, 2000)
-
-
-//   }
-// })
+logoutButton.addEventListener('click', async () => {
+  let res = await fetch(url + '/logout', {
+    'credentials': 'include',
+    'method': 'POST',
+    'headers': {
+      'Content-Type': 'application/json'
+    },
+  })
+  if (res.status == 200) {
+    successMessage.removeAttribute('hidden');
+    successMessage.innerText += "Thank you for playing!";
+    successMessage.innerHTML += "<br><br>"
+    successMessage.innerText += "Logging you out ";
+    successMessage.innerHTML += "<br><br>"
+    for (let i = 0; i < 1500; i += 300) {
+      setTimeout(() => { successMessage.innerText += "."; }, i)
+    }
+    setTimeout(() => { window.location.href = '/index.html'; }, 2000)
+  }
+})
 
 evaluatePlane.addEventListener('click', async () => {
   console.log("remainingPlanes.value", remainingPlanes.innerText);
@@ -159,6 +160,7 @@ evaluatePlane.addEventListener('click', async () => {
     while (defenseSky.hasChildNodes()) {
       defenseSky.removeChild(defenseSky.lastChild);
     }
+    planeMessage.innerText = "";
     try {
       spinner2.removeAttribute('hidden');
       let res = await fetch(url + `/planes?` + `cockpit=` + parseInt(cockpitValue.value) + `&&direction=` + flightDirection.value + `&&sky=` + skySZ, {
@@ -214,6 +216,7 @@ openChallenge.addEventListener('click', async () => {
     paramMessage.innerText = "Challenge expiration time is a required field!";
   } else {
     try {
+      spinner2.removeAttribute('hidden');
       let res = await fetch(url + `/battles`, {
         'credentials': 'include',
         'method': 'POST',
@@ -229,10 +232,14 @@ openChallenge.addEventListener('click', async () => {
         })
       })
       if (res.status == 201) {
+        spinner2.setAttribute('hidden', true);
         let data = await res.json();
         console.log(data);
+        battleID = data.battleId;
         defenseTimer.removeAttribute('hidden');
+        let beginChallenger = 0
         const timer = setInterval(() => {
+          beginChallenger += 1000;
           let now = new Date().getTime();
           let startDate = Date.parse(data.timeStamp);
           let distance = startDate - now + 4 * 3600000;
@@ -243,13 +250,19 @@ openChallenge.addEventListener('click', async () => {
           let seconds = Math.floor((distance % (1000 * 60)) / 1000);
           seconds < 10 ? seconds = "0" + seconds : seconds;
           defenseTimer.innerText = hours + ":" + minutes + ":" + seconds;
-          if (distance < 0) {
+          if (beginChallenger % 3000 == 0 && !challenger) {
+            checkForChallenger();
+          }
+          if (distance < 0 || challenger) {
             clearInterval(timer);
             defenseTimer.innerText = "00:00:00";
           }
         }, 1000);
+
+
         openChallenge.setAttribute('hidden', true);
       } else if (res.status == 400 || res.status == 403) {
+        spinner2.setAttribute('hidden', true);
         let data = await res.json();
         planeMessage.innerText = data.message;
         planeMessage.style.color = 'red';
@@ -264,8 +277,103 @@ openChallenge.addEventListener('click', async () => {
       }
     }
   }
-
 });
+
+const checkForChallenger = async () => {
+  try {
+    let res = await fetch(url + `/battles`, {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      let data = await res.json();
+      console.log(data.battles.message);
+      if (data.battles.message == "Please resume battle screen") {
+        challenger = true;
+        planeMessage.innerText = "Challenger found!";
+        planeMessage.style.color = 'green';
+        checkForBattle();
+      }
+
+    } else if (res.status == 400 || res.status == 403) {
+      let data = await res.json();
+      planeMessage.innerText = data.message;
+      planeMessage.style.color = 'red';
+    } else if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      successMessage.innerHTML = "Server unreachable: contact site admin";
+      successMessage.style.color = 'red';
+      successMessage.style.fontWeight = 'bold';
+    }
+  }
+}
+
+// const checkForBattle = async () => {
+//   console.log("checking for battle", battleID);
+//   try {
+//     let res = await fetch(url + `/battles/` + parseInt(battleID), {
+//       'credentials': 'include',
+//       'method': 'GET',
+//       'headers': {
+//         'Content-Type': 'application/json',
+//         'Access-Control-Allow-Credentials': 'true'
+//       }
+//     })
+//     if (res.status == 200) {
+//       let data = await res.json();
+//       console.log(data);
+//       if (data.message[2] == "Wait for your opponent's attack.") {
+//         battle = true;
+//       }
+//       let beginBattle = 0;
+//       defenseTimer.setAttribute('hidden', true);
+//       defenseTimer1.removeAttribute('hidden');
+//       const timer1 = setInterval(() => {
+//         beginBattle += 1000;
+//         let now = new Date().getTime();
+//         let startDate = new Date().getTime() + defenseSz * 60000;
+//         let distance = startDate - now;
+//         let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//         hours < 10 ? hours = "0" + hours : hours;
+//         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+//         minutes < 10 ? minutes = "0" + minutes : minutes;
+//         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+//         seconds < 10 ? seconds = "0" + seconds : seconds;
+//         defenseTimer1.innerText = hours + ":" + minutes + ":" + seconds;
+//         if (beginBattle % 3000 == 0 && !battle) {
+//           checkForBattle();
+//         }
+//         if (distance < 0) {
+//           clearInterval(timer1);
+//           defenseTimer1.innerText = "00:00:00";
+//         } else if (battle) {
+//           clearInterval(timer1);
+//           window.location.href = '/game.html';
+//         }
+//       }, 1000);
+
+//     } else if (res.status == 400 || res.status == 403) {
+//       let data = await res.json();
+//       planeMessage.innerText = data.message;
+//       planeMessage.style.color = 'red';
+//     } else if (res.status == 401) {
+//       window.location.href = '/index.html';
+//     }
+//   } catch (err) {
+//     if (err.message == "Failed to fetch") {
+//       successMessage.innerHTML = "Server unreachable: contact site admin";
+//       successMessage.style.color = 'red';
+//       successMessage.style.fontWeight = 'bold';
+//     }
+//   }
+// }
 
 const defense = () => {
   let layoutSize = skySZ + 1
