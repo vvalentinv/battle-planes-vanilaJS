@@ -134,6 +134,7 @@ const displayDefense = (defense) => {
 }
 
 loginStatusButton.addEventListener('click', async () => {
+
   let res = await fetch(url + '/logout', {
     'credentials': 'include',
     'method': 'POST',
@@ -144,16 +145,10 @@ loginStatusButton.addEventListener('click', async () => {
   if (res.status == 200) {
     success.removeAttribute('hidden');
     success.innerText += "Thank you for playing!";
-    success.innerHTML += '<br><br>'
-    success.innerText += "Logging you out ";
-    success.innerHTML += '<br><br>'
+    setTimeout(() => { window.location.href = '/index.html'; }, 2000)
     for (let i = 0; i < 1500; i += 300) {
       setTimeout(() => { success.innerText += "."; }, i)
     }
-
-    setTimeout(() => { window.location.href = '/index.html'; }, 2000)
-
-
   }
 })
 
