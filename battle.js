@@ -1,6 +1,7 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let home = document.getElementById("header1");
+let welcomeUser = document.getElementById("welcome-user");
 let url = `http://127.0.0.1:5000`;
 
 home.addEventListener("click", function() {
