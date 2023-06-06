@@ -72,7 +72,7 @@ const grabDataAndFeedtoPage = async () => {
         const timer = setInterval(() => {
           let now = new Date().getTime();
           let startDate = Date.parse(data.battles.battles[0][4]);
-          let distance = startDate - now + 4 * 3600000;
+          let distance = startDate - now;
           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           hours < 10 ? hours = "0" + hours : hours;
           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -316,7 +316,7 @@ function addBattlesToTable(data) {
     const timer = setInterval(() => {
       let now = new Date().getTime();
       let startDate = Date.parse(b[4]);
-      let distance = startDate - now + 4 * 3600000;
+      let distance = startDate - now;
       let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       hours < 10 ? hours = "0" + hours : hours;
       let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));

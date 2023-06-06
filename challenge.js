@@ -135,10 +135,11 @@ logoutButton.addEventListener('click', async () => {
     successMessage.innerHTML += "<br><br>"
     successMessage.innerText += "Logging you out ";
     successMessage.innerHTML += "<br><br>"
+    setTimeout(() => { window.location.href = '/index.html'; }, 2000)
     for (let i = 0; i < 1500; i += 300) {
       setTimeout(() => { successMessage.innerText += "."; }, i)
     }
-    setTimeout(() => { window.location.href = '/index.html'; }, 2000)
+
   }
 })
 
@@ -246,7 +247,7 @@ openChallenge.addEventListener('click', async () => {
           beginChallenger += 1000;
           let now = new Date().getTime();
           let startDate = Date.parse(data.timeStamp);
-          let distance = startDate - now + 4 * 3600000 + defenseSz * 60000;
+          let distance = startDate - now + defenseSz * 60000;
           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           hours < 10 ? hours = "0" + hours : hours;
           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));

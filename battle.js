@@ -2,6 +2,9 @@ const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 let home = document.getElementById("header1");
 let welcomeUser = document.getElementById("welcome-user");
+let loginStatusButton = document.getElementById("login-status");
+let spinner = document.getElementById("spinner");
+let successMessage = document.getElementById("success-messages");
 let url = `http://127.0.0.1:5000`;
 
 home.addEventListener("click", function() {
@@ -39,3 +42,18 @@ const getUser = async () => {
 };
 
 document.addEventListener("DOMContentLoaded", getUser);
+
+loginStatusButton.addEventListener('click', async () => {
+  spinner.removeAttribute('hidden');
+  let res = await fetch(url + '/logout', {
+    'credentials': 'include',
+    'method': 'POST',
+    'headers': {
+      'Content-Type': 'application/json'
+    },
+  })
+  if (res.status == 200) {
+    spinner.setAttribute('hidden', true);
+    window.location.href = '/index.html';
+  }
+})
