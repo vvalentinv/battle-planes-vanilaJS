@@ -99,7 +99,7 @@ const grabDataAndFeedtoPage = async () => {
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       } else if (data.battles.message == 'Please resume battle screen') {
-        window.location.href = '/game.html';
+        window.location.href = '/battle.html';
       }
       welcomeUser.innerText = `Hi  ` + data.user + `!`;
       addBattlesToTable(data);
@@ -202,7 +202,7 @@ submitButton.addEventListener('click', async () => {
             // success.setAttribute('hidden', true);
           }, 1000)
         } else {
-          window.location.href = '/game.html';
+          window.location.href = '/battle.html';
         }
 
       } else if (res.status == 400 || res.status == 403) {
