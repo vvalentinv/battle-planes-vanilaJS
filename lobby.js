@@ -41,7 +41,7 @@ home.addEventListener("click", function() {
 
 
 const grabDataAndFeedtoPage = async () => {
-  spinner1.removeAttribute('hidden');
+
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
   }
@@ -49,6 +49,7 @@ const grabDataAndFeedtoPage = async () => {
     defenseSky.removeChild(defenseSky.lastChild);
   }
   try {
+    spinner1.removeAttribute('hidden');
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
       'method': 'GET',
@@ -101,6 +102,7 @@ const grabDataAndFeedtoPage = async () => {
       } else if (data.battles.message == 'Please resume battle screen') {
         window.location.href = '/battle.html';
       }
+      success.innerText = '';
       welcomeUser.innerText = `Hi  ` + data.user + `!`;
       addBattlesToTable(data);
     }
@@ -110,7 +112,7 @@ const grabDataAndFeedtoPage = async () => {
   } catch (err) {
     if (err.message == "Failed to fetch") {
       success.removeAttribute('hidden');
-      success.innerText = "Server unreachable: contact IT Admin";
+      success.innerText = "Server unreachable: contact site admin";
       success.style.color = 'red';
       success.style.fontWeight = 'bold';
     }
