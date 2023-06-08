@@ -82,6 +82,22 @@ th,
   color: rgb(92, 240, 6);
 }
 
+.error-message {
+  width: 8em;
+  font-size: xx-medium;
+  margin-top: 2%;
+  margin-left: 2%;
+  color: rgb(240, 6, 6);
+}
+
+.success-message {
+  width: 8em;
+  font-size: xx-medium;
+  margin-top: 2%;
+  margin-left: 2%;
+  color: rgb(3, 150, 11);
+}
+
 #defense-sky {
   position: absolute;
   top: 50%;

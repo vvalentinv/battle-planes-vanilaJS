@@ -92,6 +92,7 @@ async function getStatus() {
   }
 }
 
+defeat.addEventListener('click', concedeDefeat);
 async function concedeDefeat() {
   try {
     let res = await fetch(url + '/battles?defeat=True', {
