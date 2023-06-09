@@ -4,7 +4,7 @@ let home = document.getElementById("header1");
 let welcomeUser = document.getElementById("welcome-user");
 let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
-let successMessage = document.getElementById("success-messages");
+let message = document.getElementById("message");
 let defeat = document.getElementById("concede-defeat");
 let url = `http://127.0.0.1:5000`;
 
@@ -31,10 +31,9 @@ const getUser = async () => {
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      successMessage.removeAttribute('hidden');
-      successMessage.innerText = "Server unreachable: contact site admin";
-      successMessage.style.color = 'red';
-      successM.style.fontWeight = 'bold';
+      message.removeAttribute('hidden');
+      message.innerText = "Server unreachable: contact site admin";
+      message.setAttribute('class', 'error-message');
     }
     else {
       console.log(err)
@@ -81,10 +80,9 @@ async function getStatus() {
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      successMessage.removeAttribute('hidden');
-      successMessage.innerText = "Server unreachable: contact site admin";
-      successMessage.style.color = 'red';
-      successM.style.fontWeight = 'bold';
+      message.removeAttribute('hidden');
+      message.innerText = "Server unreachable: contact site admin";
+      message.setAttribute('class', 'error-message');
     }
     else {
       console.log(err)
@@ -107,16 +105,18 @@ async function concedeDefeat() {
       data = await res.json();
       console.log(data);
       welcomeUser.innerText = data.user;
+      message.removeAttribute('hidden');
+      message.innerText = "You have conceded defeat, your opponent wins!";
+      message.setAttribute('class', 'error-message');
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
     }
   } catch (err) {
     if (err.message == "Failed to fetch") {
-      successMessage.removeAttribute('hidden');
-      successMessage.innerText = "Server unreachable: contact site admin";
-      successMessage.style.color = 'red';
-      successM.style.fontWeight = 'bold';
+      message.removeAttribute('hidden');
+      message.innerText = "Server unreachable: contact site admin";
+      message.setAttribute('class', 'error-message');
     }
     else {
       console.log(err)
