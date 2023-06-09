@@ -339,7 +339,7 @@ const checkForChallenger = async () => {
 const checkForBattle = async () => {
   console.log("checking for battle", battleID);
   try {
-    let res = await fetch(url + `/battles/` + parseInt(battleID), {
+    let res = await fetch(url + `/battles?defeat=False`, {
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -350,7 +350,7 @@ const checkForBattle = async () => {
     if (res.status == 200) {
       let data = await res.json();
       console.log(data);
-      if (data.message[2] == "Wait for your opponent's attack.") {
+      if (data.status[0] == "Wait for your opponent's attack.") {
         setTimeout(() => {
           window.location.href = '/battle.html';
         }, 5000);
