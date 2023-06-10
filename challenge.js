@@ -350,7 +350,7 @@ const checkForBattle = async () => {
     if (res.status == 200) {
       let data = await res.json();
       console.log(data);
-      if (data.status[0] == "Wait for your opponent's attack.") {
+      if (data.status[2].turn == "Wait for your opponent's attack.") {
         setTimeout(() => {
           window.location.href = '/battle.html';
         }, 5000);

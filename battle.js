@@ -74,6 +74,9 @@ async function getStatus() {
       data = await res.json();
       console.log(data);
       welcomeUser.innerText = data.user;
+      if (data.battles) {
+        window.location.href = '/lobby.html';
+      }
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
