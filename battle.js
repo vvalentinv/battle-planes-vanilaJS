@@ -76,7 +76,18 @@ async function getStatus() {
       welcomeUser.innerText = data.user;
       if (data.battles) {
         window.location.href = '/lobby.html';
+      } else {
+        message.removeAttribute('hidden');
+        message.innerText = data.status[2].turn;
+        //paint defense
+        //paint attack
+        //set click event on attack collection if turn is true
+        //load defense messages
+        //modify defense screen always
+        //load attack messages
+        // enable hover on attack collection 
       }
+
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
