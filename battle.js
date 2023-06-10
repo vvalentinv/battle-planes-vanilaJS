@@ -6,6 +6,10 @@ let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
 let message = document.getElementById("message");
 let defeat = document.getElementById("concede-defeat");
+let defenseSky = document.getElementById("player-defense");
+let attackSky = document.getElementById("player-attack");
+let skySZ = null;
+let defenseSz = null;
 let url = `http://127.0.0.1:5000`;
 
 home.addEventListener("click", function() {
@@ -79,8 +83,10 @@ async function getStatus() {
       } else {
         message.removeAttribute('hidden');
         message.innerText = data.status[2].turn;
-        //paint defense
-        //paint attack
+        skySZ = data.status[3].sky;
+        defenseSz = data.status[3].defense;
+        buildSky(defenseSky);
+        buildSky(attackSky);
         //set click event on attack collection if turn is true
         //load defense messages
         //modify defense screen always
@@ -136,4 +142,37 @@ async function concedeDefeat() {
       console.log(err)
     }
   }
+}
+
+const buildSky = (el) => {
+  let layoutSize = skySZ + 1
+  for (let i = 0; i < layoutSize * layoutSize; i++) {
+    if (i == 0) {
+      let cell = document.createElement('div');
+      cell.appendChild(document.createTextNode('1'));
+      cell.classList.add('grid-cell-outer-top');
+      cell.innerText = String.fromCharCode(i - 1 + 'A'.charCodeAt(0));
+      el.appendChild(cell);
+    }
+    else if (i < layoutSize && i != 0) {
+      let cell = document.createElement('div');
+      cell.appendChild(document.createTextNode('2'));
+      cell.classList.add('grid-cell-outer-top');
+      cell.innerText = String.fromCharCode(i - 1 + 'A'.charCodeAt(0));
+      el.appendChild(cell);
+    } else if (i % layoutSize == 0 && i != 0) {
+      let cell = document.createElement('div');
+      cell.appendChild(document.createTextNode('3'));
+      cell.classList.add('grid-cell-outer-side');
+      cell.innerText = i / layoutSize;
+      el.appendChild(cell);
+    } else {
+      let cell = document.createElement('div');
+      cell.appendChild(document.createTextNode(parseInt(i / layoutSize).toString() + ':' + String.fromCharCode(i % layoutSize - 1 + 'A'.charCodeAt(0))));
+      cell.classList.add('grid-cell');
+      cell.setAttribute('data-value', i - layoutSize - parseInt(i / layoutSize));
+      el.appendChild(cell);
+    }
+  }
+  el.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
 }
