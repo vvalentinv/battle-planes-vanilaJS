@@ -6,8 +6,8 @@ let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
 let message = document.getElementById("message");
 let defeat = document.getElementById("concede-defeat");
-let defenseSky = document.getElementById("player-defense");
-let attackSky = document.getElementById("player-attack");
+let defenseSky = document.getElementById("battle-defense-sky");
+let attackSky = document.getElementById("battle-attack-sky");
 let skySZ = null;
 let defenseSz = null;
 let url = `http://127.0.0.1:5000`;
@@ -29,6 +29,7 @@ const getUser = async () => {
     if (res.status == 200) {
       data = await res.json();
       welcomeUser.innerText = data.user;
+      getStatus();
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -62,9 +63,15 @@ loginStatusButton.addEventListener('click', async () => {
   }
 })
 
-setInterval(getStatus, 3000);
+// setInterval(getStatus, 3000);
 
 async function getStatus() {
+  while (defenseSky.hasChildNodes()) {
+    defenseSky.removeChild(defenseSky.lastChild);
+  }
+  while (attackSky.hasChildNodes()) {
+    attackSky.removeChild(attackSky.lastChild);
+  }
   try {
     let res = await fetch(url + '/battles?defeat=False', {
       'credentials': 'include',

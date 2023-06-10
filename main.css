@@ -61,6 +61,8 @@ th,
 #label-email,
 #label-confirm-password,
 #label-password,
+#battle-defense-title,
+#battle-attack-title,
 .card-title {
   color: rgb(235, 132, 14);
 }
@@ -104,11 +106,27 @@ th,
   left: 50%;
   transform: translate(-50%, -50%);
   display: grid;
-  /* grid-template-columns: repeat(3, auto); */
+}
+
+#battle-defense-sky {
+  position: relative;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+}
+
+#battle-attack-sky {
+  position: relative;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
 }
 
 .battle {
-  width: 30rem;
+  width: 40rem;
+  height: 50rem;
 }
 
 .grid-cell {
