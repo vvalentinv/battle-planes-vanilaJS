@@ -158,10 +158,10 @@ loginStatusButton.addEventListener('click', async () => {
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
-  flightDirection.value = 0;
+  // flightDirection.value = 0;
   grabDataAndFeedtoPage();
-  planeMessage.innerText = "Finish setting up your defense within the timeframe!";
-  planeMessage.style.color = 'red';
+  // planeMessage.innerText = "Finish setting up your defense within the timeframe!";
+  // planeMessage.style.color = 'red';
   spinner2.setAttribute('hidden', true);
 })
 
@@ -202,7 +202,7 @@ submitButton.addEventListener('click', async () => {
           setTimeout(() => {
             cancelButton.click();
             // success.setAttribute('hidden', true);
-          }, 1000)
+          }, 500)
         } else {
           window.location.href = '/battle.html';
         }
@@ -221,7 +221,7 @@ submitButton.addEventListener('click', async () => {
         planeMessage.style.color = 'red';
         setTimeout(() => {
           cancelButton.click();
-        }, 2000);
+        }, 500);
 
       } if (res.status == 401) {
         spinner2.setAttribute('hidden', true);
