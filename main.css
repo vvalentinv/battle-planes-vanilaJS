@@ -61,6 +61,8 @@ th,
 #label-email,
 #label-confirm-password,
 #label-password,
+#battle-defense-title,
+#battle-attack-title,
 .card-title {
   color: rgb(235, 132, 14);
 }
@@ -82,13 +84,49 @@ th,
   color: rgb(92, 240, 6);
 }
 
+.error-message {
+  width: 8em;
+  font-size: xx-medium;
+  margin-top: 2%;
+  margin-left: 2%;
+  color: rgb(240, 6, 6);
+}
+
+.success-message {
+  width: 8em;
+  font-size: xx-medium;
+  margin-top: 2%;
+  margin-left: 2%;
+  color: rgb(3, 150, 11);
+}
+
 #defense-sky {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: grid;
-  /* grid-template-columns: repeat(3, auto); */
+}
+
+#battle-defense-sky {
+  position: relative;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+}
+
+#battle-attack-sky {
+  position: relative;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+}
+
+.battle {
+  width: 40rem;
+  height: 50rem;
 }
 
 .grid-cell {
@@ -104,12 +142,12 @@ th,
 
 .grid-cell-outer-top {
   width: 50px;
-  text-align-last: center;
+  text-align: center;
   height: 50px;
 }
 
 .grid-cell-outer-side {
-  text-align-last: center;
+  text-align: center;
   text-align: right;
   width: 50px;
   height: 50px;

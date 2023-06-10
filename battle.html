@@ -33,6 +33,7 @@
           class="navbar-brand"
           role="button"
           src="/static/logo-flat.png"
+          alt="logo"
         />
         <button
           class="navbar-toggler"
@@ -49,7 +50,7 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown navbar-brand">
               <a
-                id="welcome"
+                id="welcome-user"
                 class="nav-link dropdown-toggle"
                 href="#"
                 role="button"
@@ -67,31 +68,34 @@
 
             <li class="nav-item navbar-brand">
               <a
-                id="header2"
+                id="concede-defeat"
                 class="nav-link active"
                 aria-current="page"
                 href="#"
                 data-bs-toggle="tooltip"
                 data-bs-title="Your opponent wins if you concede!"
                 data-bs-placement="top"
-                >Concede Battle</a
+                >Concede Defeat</a
               >
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <div id="success-messages" hidden></div>
+
+    <div id="spinner" class="spinner-border text-dark" role="status" hidden>
+      <span class="visually-hidden">Loading...</span>
+    </div>
     <div class="d-flex justify-content-center flex-wrap">
       <div class="column">
         <section id="player-defense">
-          <div class="card" style="width: 30rem">
+          <div class="card battle">
             <div class="card-body">
               <h5 class="card-title">Defense</h5>
               <br /><br />
-              <div id="defense-sky"></div>
+              <div id="battle-defense-sky"></div>
               <div>
-                <p id="defense-messages"></p>
+                <input type="textarea" id="defense-messages" disabled />
               </div>
             </div>
           </div>
@@ -99,13 +103,14 @@
       </div>
       <div class="column">
         <section id="player-attack">
-          <div class="card" style="width: 30rem">
+          <div class="card battle">
             <div class="card-body">
               <h5 class="card-title">Attack</h5>
+              <div id="message" hidden></div>
               <br /><br />
-              <div id="attack-sky"></div>
+              <div id="battle-attack-sky"></div>
               <div>
-                <p id="attack-messages"></p>
+                <input type="textarea" id="attack-messages" disabled />
               </div>
             </div>
           </div>

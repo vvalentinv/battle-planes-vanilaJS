@@ -41,7 +41,7 @@ home.addEventListener("click", function() {
 
 
 const grabDataAndFeedtoPage = async () => {
-  spinner1.removeAttribute('hidden');
+
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
   }
@@ -49,6 +49,7 @@ const grabDataAndFeedtoPage = async () => {
     defenseSky.removeChild(defenseSky.lastChild);
   }
   try {
+    spinner1.removeAttribute('hidden');
     let res = await fetch(url + '/battles', {
       'credentials': 'include',
       'method': 'GET',
@@ -72,7 +73,7 @@ const grabDataAndFeedtoPage = async () => {
         const timer = setInterval(() => {
           let now = new Date().getTime();
           let startDate = Date.parse(data.battles.battles[0][4]);
-          let distance = startDate - now + 4 * 3600000;
+          let distance = startDate - now;
           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           hours < 10 ? hours = "0" + hours : hours;
           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -99,8 +100,9 @@ const grabDataAndFeedtoPage = async () => {
         [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         console.log(skySize);
       } else if (data.battles.message == 'Please resume battle screen') {
-        window.location.href = '/game.html';
+        window.location.href = '/battle.html';
       }
+      success.innerText = '';
       welcomeUser.innerText = `Hi  ` + data.user + `!`;
       addBattlesToTable(data);
     }
@@ -110,7 +112,7 @@ const grabDataAndFeedtoPage = async () => {
   } catch (err) {
     if (err.message == "Failed to fetch") {
       success.removeAttribute('hidden');
-      success.innerText = "Server unreachable: contact IT Admin";
+      success.innerText = "Server unreachable: contact site admin";
       success.style.color = 'red';
       success.style.fontWeight = 'bold';
     }
@@ -156,10 +158,10 @@ loginStatusButton.addEventListener('click', async () => {
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
-  flightDirection.value = 0;
+  // flightDirection.value = 0;
   grabDataAndFeedtoPage();
-  planeMessage.innerText = "Finish setting up your defense within the timeframe!";
-  planeMessage.style.color = 'red';
+  // planeMessage.innerText = "Finish setting up your defense within the timeframe!";
+  // planeMessage.style.color = 'red';
   spinner2.setAttribute('hidden', true);
 })
 
@@ -200,9 +202,9 @@ submitButton.addEventListener('click', async () => {
           setTimeout(() => {
             cancelButton.click();
             // success.setAttribute('hidden', true);
-          }, 1000)
+          }, 500)
         } else {
-          window.location.href = '/game.html';
+          window.location.href = '/battle.html';
         }
 
       } else if (res.status == 400 || res.status == 403) {
@@ -219,7 +221,7 @@ submitButton.addEventListener('click', async () => {
         planeMessage.style.color = 'red';
         setTimeout(() => {
           cancelButton.click();
-        }, 2000);
+        }, 500);
 
       } if (res.status == 401) {
         spinner2.setAttribute('hidden', true);
@@ -316,7 +318,7 @@ function addBattlesToTable(data) {
     const timer = setInterval(() => {
       let now = new Date().getTime();
       let startDate = Date.parse(b[4]);
-      let distance = startDate - now + 4 * 3600000;
+      let distance = startDate - now;
       let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       hours < 10 ? hours = "0" + hours : hours;
       let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
