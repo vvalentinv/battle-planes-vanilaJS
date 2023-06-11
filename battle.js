@@ -89,6 +89,9 @@ async function getStatus() {
         window.location.href = '/lobby.html';
       } else {
         message.removeAttribute('hidden');
+        data.status[2].turn == "This is your turn to attack." ?
+          message.setAttribute('style', 'color: green;') :
+          message.setAttribute('style', 'color: red;');
         message.innerText = data.status[2].turn;
         skySZ = data.status[3].sky;
         defenseSz = data.status[3].defense;
