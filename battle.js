@@ -8,8 +8,14 @@ let message = document.getElementById("message");
 let defeat = document.getElementById("concede-defeat");
 let defenseSky = document.getElementById("battle-defense-sky");
 let attackSky = document.getElementById("battle-attack-sky");
-let skySZ = null;
-let defenseSz = null;
+let defenseCells = defenseSky.getElementsByClassName("grid-cell");
+let attackCells = attackSky.getElementsByClassName("grid-cell");
+let attackCoords = document.getElementById("attack-coords");
+let defenseMessages = document.getElementById("defense-messages");
+let attackMessages = document.getElementById("attack-messages");
+let user = null;
+let battleData = null;
+
 let url = `http://127.0.0.1:5000`;
 
 home.addEventListener("click", function() {
@@ -28,8 +34,12 @@ const getUser = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
+      user = data.user;
       welcomeUser.innerText = data.user;
-      getStatus();
+      if (user) {
+        loadBattleData();
+        [...attackCells].forEach(element => { element.addEventListener("click", attack); });
+      }
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -65,7 +75,7 @@ loginStatusButton.addEventListener('click', async () => {
 
 // setInterval(getStatus, 3000);
 
-async function getStatus() {
+const loadBattleData = async () => {
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
   }
@@ -88,15 +98,18 @@ async function getStatus() {
       if (data.battles) {
         window.location.href = '/lobby.html';
       } else {
+        battleData = data;
         message.removeAttribute('hidden');
-        data.status[2].turn == "This is your turn to attack." ?
+        battleData.status[2].turn == "This is your turn to attack." ?
           message.setAttribute('style', 'color: green;') :
           message.setAttribute('style', 'color: red;');
-        message.innerText = data.status[2].turn;
-        skySZ = data.status[3].sky;
-        defenseSz = data.status[3].defense;
+        message.innerText = battleData.status[2].turn;
         buildSky(defenseSky);
         buildSky(attackSky);
+        displayDefense(data.status[1].my_defense);
+        // loadMessagesToTextArea(data.status[0].defense_messages, defenseMessages);
+        // loadMessagesToTextArea(data.status[0].attack_messages, attackMessages);
+
         //set click event on attack collection if turn is true
         //load defense messages
         //modify defense screen always
@@ -155,7 +168,7 @@ async function concedeDefeat() {
 }
 
 const buildSky = (el) => {
-  let layoutSize = skySZ + 1
+  let layoutSize = battleData.status[3].sky + 1
   for (let i = 0; i < layoutSize * layoutSize; i++) {
     if (i == 0) {
       let cell = document.createElement('div');
@@ -185,4 +198,122 @@ const buildSky = (el) => {
     }
   }
   el.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
+}
+
+const displayDefense = (defenseArray) => {
+  if (defenseArray.length > 0) {
+    for (arr of defenseArray) {
+      Array.from(defenseCells)
+        .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
+        .forEach(el => el.setAttribute('style', 'background-color: orange;'));
+    }
+  }
+}
+
+const attack = (e) => {
+  let attack = e.target.getAttribute('data-value');
+  attackCoords.value = e.target.innerText;
+  if (battleData.status[2].my_attacks.includes(attack)) {
+    let originalMessage = message.innerText;
+    message.innerText = "You have already attacked this position";
+    setTimeout(() => {
+      message.innerText = originalMessage;
+    }, 2500);
+  } else {
+    fetchAttack(attack);
+  }
+}
+
+const fetchAttack = async (attack) => {
+  try {
+    let res = await fetch(url + '/battles?attack=True', {
+      'credentials': 'include',
+      'method': 'PUT',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      },
+      'body': JSON.stringify({
+        'attack': attack
+      }),
+    })
+    if (res.status == 200) {
+      data = await res.json();
+      console.log(data);
+      refreshData();
+    }
+    if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      message.removeAttribute('hidden');
+      message.innerText = "Server unreachable: contact site admin";
+      message.setAttribute('class', 'error-message');
+    }
+    else {
+      console.log(err)
+    }
+  }
+}
+
+const refreshData = async () => {
+  if (!user) {
+    window.location.href = '/index.html';
+  } else {
+    try {
+      let res = await fetch(url + '/battles?defeat=False', {
+        'credentials': 'include',
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Credentials': 'true'
+        }
+      })
+      if (res.status == 200) {
+        data = await res.json();
+        console.log(data);
+        if (data.battles) {
+          window.location.href = '/lobby.html';
+        } else if (battleData != data) {
+          battleData = data;
+          data.status[2].turn == "This is your turn to attack." ?
+            message.setAttribute('style', 'color: green;') :
+            message.setAttribute('style', 'color: red;');
+          message.innerText = data.status[2].turn;
+          if (data.status[2].turn == "Wait for your opponent's attack.") {
+
+            //reset attack cells background color
+            //repaint attack cells with new data
+            loadMessagesToTextArea(data.status[0].attack_messages, attackMessages);
+          } else {
+            //reset defense cells background color
+            //repaint defense cells with new data
+            loadMessagesToTextArea(data.status[0].defense_messages, defenseMessages);
+          }
+        }
+      }
+      else if (res.status == 401) {
+        window.location.href = '/index.html';
+      }
+
+    } catch (err) {
+      if (err.message == "Failed to fetch") {
+        message.removeAttribute('hidden');
+        message.innerText = "Server unreachable: contact site admin";
+        message.setAttribute('class', 'error-message');
+      }
+      else {
+        console.log(err)
+      }
+    }
+  }
+}
+
+const loadMessagesToTextArea = (msg, el) => {
+  for (const m of msg) {
+    let message = document.createElement('p');
+    message.innerText = m;
+    el.appendChild(message);
+  }
 }

@@ -159,7 +159,7 @@ th,
   height: 50px;
 }
 
-#defense-sky,
+#defense-sky .grid-cell:hover,
 #battle-attack-sky .grid-cell:hover {
   background-color: red;
   cursor: pointer;
