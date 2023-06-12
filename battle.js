@@ -1,6 +1,6 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-let home = document.getElementById("header1");
+let home = document.getElementById("home");
 let welcomeUser = document.getElementById("welcome-user");
 let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
@@ -107,9 +107,7 @@ const loadBattleData = async () => {
         buildSky(defenseSky);
         buildSky(attackSky);
         displayDefense(data.status[1].my_defense);
-        // loadMessagesToTextArea(data.status[0].defense_messages, defenseMessages);
-        // loadMessagesToTextArea(data.status[0].attack_messages, attackMessages);
-
+        [...attackCells].forEach(element => { element.addEventListener("click", attack); });
         //set click event on attack collection if turn is true
         //load defense messages
         //modify defense screen always
@@ -212,8 +210,10 @@ const displayDefense = (defenseArray) => {
 
 const attack = (e) => {
   let attack = e.target.getAttribute('data-value');
+  console.log(attack);
   attackCoords.value = e.target.innerText;
-  if (battleData.status[2].my_attacks.includes(attack)) {
+  console.log(battleData);
+  if (battleData.status[1].my_attacks.includes(attack)) {
     let originalMessage = message.innerText;
     message.innerText = "You have already attacked this position";
     setTimeout(() => {
@@ -226,7 +226,7 @@ const attack = (e) => {
 
 const fetchAttack = async (attack) => {
   try {
-    let res = await fetch(url + '/battles?attack=True', {
+    let res = await fetch(url + `/battles/` + battleData.battleID + `?attack=True`, {
       'credentials': 'include',
       'method': 'PUT',
       'headers': {
@@ -239,7 +239,7 @@ const fetchAttack = async (attack) => {
     })
     if (res.status == 200) {
       data = await res.json();
-      console.log(data);
+      console.log("fetch attack", data);
       refreshData();
     }
     if (res.status == 401) {
@@ -280,16 +280,16 @@ const refreshData = async () => {
           data.status[2].turn == "This is your turn to attack." ?
             message.setAttribute('style', 'color: green;') :
             message.setAttribute('style', 'color: red;');
-          message.innerText = data.status[2].turn;
-          if (data.status[2].turn == "Wait for your opponent's attack.") {
+          message.innerText = battleData.status[2].turn;
+          if (battleData.status[2].turn == "Wait for your opponent's attack.") {
 
             //reset attack cells background color
             //repaint attack cells with new data
-            loadMessagesToTextArea(data.status[0].attack_messages, attackMessages);
+            loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
           } else {
             //reset defense cells background color
             //repaint defense cells with new data
-            loadMessagesToTextArea(data.status[0].defense_messages, defenseMessages);
+            loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
           }
         }
       }
@@ -312,8 +312,6 @@ const refreshData = async () => {
 
 const loadMessagesToTextArea = (msg, el) => {
   for (const m of msg) {
-    let message = document.createElement('p');
-    message.innerText = m;
-    el.appendChild(message);
+    el.innerText += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`) + ` is a ` + m[1] + `!\n`;
   }
 }
