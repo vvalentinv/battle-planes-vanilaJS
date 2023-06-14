@@ -38,7 +38,6 @@ const getUser = async () => {
       welcomeUser.innerText = data.user;
       if (user) {
         loadBattleData();
-        // [...attackCells].forEach(element => { element.addEventListener("click", attack); });
       }
     }
     if (res.status == 401) {
@@ -107,12 +106,18 @@ const loadBattleData = async () => {
         buildSky(defenseSky);
         buildSky(attackSky);
         displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
-        [...attackCells].forEach(element => { element.addEventListener("click", attack); });
-        //set click event on attack collection if turn is true
-        //load defense messages
-        //modify defense screen always
-        //load attack messages
-        // enable hover on attack collection 
+
+        [...attackCells]
+          .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+          .forEach(element => { element.addEventListener("click", attack); });
+        // [...attackCells]
+        //   .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+        //   .forEach(element => {
+        //     element.removeEventListener("click", attack);
+        //     element.setAttribute('class', 'grid-cell-attacked');
+        //   });
+
+        displayAttack(battleData.status[0].attack_messages);
       }
 
     }
@@ -208,6 +213,7 @@ const displayDefense = (defenseArray, opponentAttacks) => {
   }
   if (opponentAttacks.length) {
     let killedPlanes = [];
+    let cockpits = [];
     let hitPlaneParts = [];
     let notInDefense = true;
     let missedAttacks = [];
@@ -216,6 +222,7 @@ const displayDefense = (defenseArray, opponentAttacks) => {
       for (const arr of defenseArray) {
         if (arr[0] == attack) {
           killedPlanes.push(arr);
+          cockpits.push(attack);
           notInDefense = false;
         }
         else if (arr.includes(attack)) {
@@ -233,6 +240,16 @@ const displayDefense = (defenseArray, opponentAttacks) => {
     for (const arr of killedPlanes) {
       Array.from(defenseCells)
         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
+        .forEach(el => el.setAttribute('style', 'background-color: grey;'));
+    }
+    for (const c of cockpits) {
+      Array.from(defenseCells)
+        .filter(el => c == parseInt(el.getAttribute('data-value')))
+        .forEach(el => el.setAttribute('style', 'background-color: black;'));
+    }
+    for (const hit of hitPlaneParts) {
+      Array.from(defenseCells)
+        .filter(el => hit == parseInt(el.getAttribute('data-value')))
         .forEach(el => el.setAttribute('style', 'background-color: red;'));
     }
     for (const part of nonKilledPlaneParts) {
@@ -252,10 +269,11 @@ const attack = (e) => {
   let attack = e.target.getAttribute('data-value');
   console.log(attack);
   attackCoords.value = e.target.innerText;
-  console.log(battleData);
-  if (battleData.status[1].my_attacks.includes(attack)) {
+  console.log(battleData.status[1].my_attacks.includes(parseInt(attack)));
+  if (battleData.status[1].my_attacks.includes(parseInt(attack))) {
     let originalMessage = message.innerText;
     message.innerText = "You have already attacked this position";
+    message.setAttribute('style', 'color: red;');
     setTimeout(() => {
       message.innerText = originalMessage;
     }, 2500);
@@ -322,6 +340,16 @@ const refreshData = async () => {
             message.setAttribute('style', 'color: red;');
           message.innerText = battleData.status[2].turn;
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
+          [...attackCells]
+            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+            .forEach(element => { element.addEventListener("click", attack); });
+          [...attackCells]
+            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+            .forEach(element => {
+              element.removeEventListener("click", attack);
+              element.setAttribute('class', 'grid-cell-attacked');
+            });
+          displayAttack(battleData.status[0].attack_messages);
         }
       }
       else if (res.status == 401) {
@@ -342,8 +370,38 @@ const refreshData = async () => {
 }
 
 setInterval(refreshData, 3000);
-const loadMessagesToTextArea = (msg, el) => {
-  for (const m of msg) {
-    el.innerText += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`) + ` is a ` + m[1] + `!\n`;
+// const loadMessagesToTextArea = (msg, el) => {
+//   for (const m of msg) {
+//     el.innerText += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`) + ` is a ` + m[1] + `!\n`;
+//   }
+// }
+
+const displayAttack = (messages) => {
+  let kills = [];
+  let hits = [];
+  let misses = [];
+  for (const m of messages) {
+    switch (m[1]) {
+      case "Kill":
+        kills.push(m[0]);
+        break;
+      case "Hit":
+        hits.push(m[0]);
+        break;
+      case "Miss":
+        misses.push(m[0]);
+        break;
+      default:
+        break;
+    }
   }
+  [...attackCells]
+    .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
+    .forEach(el => el.setAttribute('style', 'background-color: black;'));
+  [...attackCells]
+    .filter(el => hits.includes(parseInt(el.getAttribute('data-value'))))
+    .forEach(el => el.setAttribute('style', 'background-color: red;'));
+  [...attackCells]
+    .filter(el => misses.includes(parseInt(el.getAttribute('data-value'))))
+    .forEach(el => el.setAttribute('style', 'background-color: blue;'));
 }
