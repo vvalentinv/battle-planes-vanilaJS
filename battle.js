@@ -38,7 +38,7 @@ const getUser = async () => {
       welcomeUser.innerText = data.user;
       if (user) {
         loadBattleData();
-        [...attackCells].forEach(element => { element.addEventListener("click", attack); });
+        // [...attackCells].forEach(element => { element.addEventListener("click", attack); });
       }
     }
     if (res.status == 401) {
@@ -73,7 +73,7 @@ loginStatusButton.addEventListener('click', async () => {
   }
 })
 
-// setInterval(getStatus, 3000);
+
 
 const loadBattleData = async () => {
   while (defenseSky.hasChildNodes()) {
@@ -106,7 +106,7 @@ const loadBattleData = async () => {
         message.innerText = battleData.status[2].turn;
         buildSky(defenseSky);
         buildSky(attackSky);
-        displayDefense(data.status[1].my_defense);
+        displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
         [...attackCells].forEach(element => { element.addEventListener("click", attack); });
         //set click event on attack collection if turn is true
         //load defense messages
@@ -198,12 +198,52 @@ const buildSky = (el) => {
   el.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
 }
 
-const displayDefense = (defenseArray) => {
+const displayDefense = (defenseArray, opponentAttacks) => {
   if (defenseArray.length > 0) {
     for (arr of defenseArray) {
       Array.from(defenseCells)
         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
         .forEach(el => el.setAttribute('style', 'background-color: orange;'));
+    }
+  }
+  if (opponentAttacks.length) {
+    let killedPlanes = [];
+    let hitPlaneParts = [];
+    let notInDefense = true;
+    let missedAttacks = [];
+
+    for (const attack of opponentAttacks) {
+      for (const arr of defenseArray) {
+        if (arr[0] == attack) {
+          killedPlanes.push(arr);
+          notInDefense = false;
+        }
+        else if (arr.includes(attack)) {
+          hitPlaneParts.push(attack);
+          notInDefense = false;
+        }
+      }
+      if (notInDefense) {
+        missedAttacks.push(attack);
+      }
+      notInDefense = true;
+    }
+    let nonKilledPlaneParts = hitPlaneParts
+      .filter(el => !killedPlanes.flat().includes(el));
+    for (const arr of killedPlanes) {
+      Array.from(defenseCells)
+        .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
+        .forEach(el => el.setAttribute('style', 'background-color: red;'));
+    }
+    for (const part of nonKilledPlaneParts) {
+      Array.from(defenseCells)
+        .filter(el => part == parseInt(el.getAttribute('data-value')))
+        .forEach(el => el.setAttribute('style', 'background-color: red;'));
+    }
+    for (const missed of missedAttacks) {
+      Array.from(defenseCells)
+        .filter(el => missed == parseInt(el.getAttribute('data-value')))
+        .forEach(el => el.setAttribute('style', 'background-color: blue;'));
     }
   }
 }
@@ -275,22 +315,13 @@ const refreshData = async () => {
         console.log(data);
         if (data.battles) {
           window.location.href = '/lobby.html';
-        } else if (battleData != data) {
+        } else if (data.status) {
           battleData = data;
           data.status[2].turn == "This is your turn to attack." ?
             message.setAttribute('style', 'color: green;') :
             message.setAttribute('style', 'color: red;');
           message.innerText = battleData.status[2].turn;
-          if (battleData.status[2].turn == "Wait for your opponent's attack.") {
-
-            //reset attack cells background color
-            //repaint attack cells with new data
-            loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
-          } else {
-            //reset defense cells background color
-            //repaint defense cells with new data
-            loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
-          }
+          displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
         }
       }
       else if (res.status == 401) {
@@ -310,6 +341,7 @@ const refreshData = async () => {
   }
 }
 
+setInterval(refreshData, 3000);
 const loadMessagesToTextArea = (msg, el) => {
   for (const m of msg) {
     el.innerText += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`) + ` is a ` + m[1] + `!\n`;
