@@ -395,13 +395,15 @@ const displayAttack = (messages) => {
         break;
     }
   }
-  [...attackCells]
+  console.log("kills, hits, misses", kills, hits, misses);
+  console.log("attackCells", [...attackCells]);
+  [...document.querySelectorAll('.grid-cell-attacked')]
     .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: black;'));
-  [...attackCells]
+  [...document.querySelectorAll('.grid-cell-attacked')]
     .filter(el => hits.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: red;'));
-  [...attackCells]
+  [...document.querySelectorAll('.grid-cell-attacked')]
     .filter(el => misses.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: blue;'));
 }
