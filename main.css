@@ -118,11 +118,15 @@ th,
 }
 
 #defense-messages {
+  width: 300px;
+  height: 50px;
+  overflow-y: auto;
   position: absolute;
   top: 90%;
   left: 13%;
   transform: translate(-50%, -50%);
-  display: grid;
+  display: flex;
+  white-space: pre-wrap;
 }
 
 #battle-attack-sky {
@@ -133,12 +137,17 @@ th,
   transform: translate(-50%, -50%);
   display: grid;
 }
+
 #attack-messages {
+  width: 185px;
+  height: 100px;
+  overflow-y: auto;
   position: absolute;
   top: 90%;
   left: 58%;
   transform: translate(-50%, -50%);
   display: grid;
+  white-space: pre-wrap;
 }
 
 #message {

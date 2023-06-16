@@ -110,6 +110,9 @@ const loadBattleData = async () => {
           .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
           .forEach(element => { element.addEventListener("click", attack); });
         displayAttack(battleData.status[0].attack_messages);
+        loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
+        loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
+
       }
 
     }
@@ -378,14 +381,15 @@ const refreshData = async () => {
   }
 }
 
-setInterval(refreshData, 3000);
+// setInterval(refreshData, 3000);
 
 const loadMessagesToTextArea = (msg, el) => {
   el.value = "";
   for (const m of msg) {
-    el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + `!\n`;
+    el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + ` `;
   }
   console.log(el.value);
+  el.scrollTop = el.scrollHeight;
 }
 
 const displayAttack = (messages) => {
