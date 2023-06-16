@@ -381,9 +381,11 @@ const refreshData = async () => {
 setInterval(refreshData, 3000);
 
 const loadMessagesToTextArea = (msg, el) => {
+  el.value = "";
   for (const m of msg) {
     el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + `!\n`;
   }
+  console.log(el.value);
 }
 
 const displayAttack = (messages) => {
