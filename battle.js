@@ -106,17 +106,9 @@ const loadBattleData = async () => {
         buildSky(defenseSky);
         buildSky(attackSky);
         displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
-
         [...attackCells]
           .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
           .forEach(element => { element.addEventListener("click", attack); });
-        // [...attackCells]
-        //   .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-        //   .forEach(element => {
-        //     element.removeEventListener("click", attack);
-        //     element.setAttribute('class', 'grid-cell-attacked');
-        //   });
-
         displayAttack(battleData.status[0].attack_messages);
       }
 
@@ -206,7 +198,7 @@ const buildSky = (el) => {
 const displayDefense = (defenseArray, opponentAttacks) => {
   if (defenseArray.length > 0) {
     for (arr of defenseArray) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
         .forEach(el => el.setAttribute('style', 'background-color: orange;'));
     }
@@ -253,27 +245,27 @@ const displayDefense = (defenseArray, opponentAttacks) => {
     let nonKilledPlaneParts = hitPlaneParts
       .filter(el => !killedPlanes.flat().includes(el));
     for (const arr of killedPlanes) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
         .forEach(el => el.setAttribute('style', 'background-color: grey;'));
     }
     for (const c of cockpits) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => c == parseInt(el.getAttribute('data-value')))
         .forEach(el => el.setAttribute('style', 'background-color: black;'));
     }
     for (const hit of hitPlaneParts) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => hit == parseInt(el.getAttribute('data-value')))
         .forEach(el => el.setAttribute('style', 'background-color: red;'));
     }
     for (const part of nonKilledPlaneParts) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => part == parseInt(el.getAttribute('data-value')))
         .forEach(el => el.setAttribute('style', 'background-color: red;'));
     }
     for (const missed of missedAttacks) {
-      Array.from(defenseCells)
+      [...defenseCells]
         .filter(el => missed == parseInt(el.getAttribute('data-value')))
         .forEach(el => el.setAttribute('style', 'background-color: blue;'));
     }
@@ -365,6 +357,8 @@ const refreshData = async () => {
               element.setAttribute('class', 'grid-cell-attacked');
             });
           displayAttack(battleData.status[0].attack_messages);
+          loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
+          loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
         }
       }
       else if (res.status == 401) {
@@ -385,11 +379,12 @@ const refreshData = async () => {
 }
 
 setInterval(refreshData, 3000);
-// const loadMessagesToTextArea = (msg, el) => {
-//   for (const m of msg) {
-//     el.innerText += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`) + ` is a ` + m[1] + `!\n`;
-//   }
-// }
+
+const loadMessagesToTextArea = (msg, el) => {
+  for (const m of msg) {
+    el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + `!\n`;
+  }
+}
 
 const displayAttack = (messages) => {
   let kills = [];
