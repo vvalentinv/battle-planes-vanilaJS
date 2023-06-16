@@ -235,6 +235,21 @@ const displayDefense = (defenseArray, opponentAttacks) => {
       }
       notInDefense = true;
     }
+    for (const plane of defenseArray) {
+      let planeParts = plane.slice(1);
+      let partCount = 0;
+      for (const p of planeParts) {
+        if (opponentAttacks.includes(p)) {
+          partCount++;
+          if (partCount == 9) {
+            cockpits.push(p);
+          }
+        }
+      }
+      if (partCount == 9) {
+        killedPlanes.push(plane);
+      }
+    }
     let nonKilledPlaneParts = hitPlaneParts
       .filter(el => !killedPlanes.flat().includes(el));
     for (const arr of killedPlanes) {
@@ -396,7 +411,6 @@ const displayAttack = (messages) => {
     }
   }
   console.log("kills, hits, misses", kills, hits, misses);
-  console.log("attackCells", [...attackCells]);
   [...document.querySelectorAll('.grid-cell-attacked')]
     .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: black;'));
