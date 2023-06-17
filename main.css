@@ -118,8 +118,8 @@ th,
 }
 
 #defense-messages {
-  width: 300px;
-  height: 50px;
+  width: 190px;
+  height: 100px;
   overflow-y: auto;
   position: absolute;
   top: 90%;
@@ -139,7 +139,7 @@ th,
 }
 
 #attack-messages {
-  width: 185px;
+  width: 190px;
   height: 100px;
   overflow-y: auto;
   position: absolute;
