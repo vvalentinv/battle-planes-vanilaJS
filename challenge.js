@@ -63,6 +63,7 @@ setParams.addEventListener('click', () => {
 });
 
 resetParams.addEventListener('click', () => {
+  defenseSky.setAttribute('style', 'display: block;')
   skySize.value = 0;
   defenseSize.value = 0;
   maxTime.value = '';
@@ -92,6 +93,7 @@ const getUser = async () => {
     if (res.status == 200) {
       data = await res.json();
       welcomeUser.innerText = data.user;
+      setParams.click();
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -114,7 +116,7 @@ document.addEventListener("DOMContentLoaded", getUser);
 const displayDefense = (existingDefense) => {
   if (existingDefense.length > 0) {
     for (arr of existingDefense) {
-      Array.from(skyCells)
+      [...skyCells]
         .filter(el => arr.includes(parseInt(el.getAttribute('data-value'))))
         .forEach(el => el.setAttribute('style', 'background-color: grey'));
     }
@@ -408,7 +410,8 @@ const defense = () => {
       defenseSky.appendChild(cell);
     }
   }
-  defenseSky.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
+  defenseSky.setAttribute('style', `width: ` + layoutSize * 50 + `px; height: ` + layoutSize * 50 + `px;`);
+  // defenseSky.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
   // set remaining planes
   if (defenseSz) {
     let currentDefenseSize = existingDefense.length;

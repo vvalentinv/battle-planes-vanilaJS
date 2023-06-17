@@ -101,19 +101,20 @@ th,
 }
 
 #defense-sky {
-  position: absolute;
+  display: block;
+
+  /* position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: grid;
+  display: grid; */
 }
 
 #battle-defense-sky {
-  padding: 10%;
-  position: absolute;
-  top: 51%;
-  left: 23%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  top: 20%;
+  left: 12%;
+  /* transform: translate(-50%, -50%); */
   display: grid;
 }
 
@@ -133,17 +134,16 @@ th,
   position: absolute;
   top: 90%;
   left: 13%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   display: flex;
   white-space: pre-wrap;
 }
 
 #battle-attack-sky {
-  padding: 10%;
   position: absolute;
-  top: 51%;
-  left: 68%;
-  transform: translate(-50%, -50%);
+  top: 20%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
   display: grid;
 }
 
@@ -171,10 +171,22 @@ th,
   background-color: white;
 }
 
-.grid-cell {
+/* .grid-cell {
   border: 1px solid #000;
   width: 50px;
   height: 50px;
+} */
+
+.grid-cell {
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+  border: solid 1px #000;
 }
 
 .grid-cell-attacked {
@@ -189,16 +201,38 @@ th,
   cursor: pointer;
 }
 
+.column *:not(div) {
+  padding-left: 10px;
+}
+
 .grid-cell-outer-top {
   width: 50px;
-  padding: 20px;
   height: 50px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+  /* border-bottom: solid 1px #000; */
+  /* width: 50px;
+  padding: 20px;
+  height: 50px; */
 }
 
 .grid-cell-outer-side {
-  padding: 20px;
   width: 50px;
   height: 50px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+  border-right: solid 1px #000;
+  /* padding: 20px;
+  width: 50px;
+  height: 50px; */
 }
 
 /* .display-3 {
