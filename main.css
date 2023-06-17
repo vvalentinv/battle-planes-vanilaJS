@@ -117,6 +117,15 @@ th,
   display: grid;
 }
 
+#opponent-name {
+  position: absolute;
+  top: 90%;
+  left: 25%;
+  transform: translate(-20%, -50%);
+  font-size: xx-large;
+  color: rgb(240, 6, 6);
+}
+
 #defense-messages {
   width: 190px;
   height: 100px;

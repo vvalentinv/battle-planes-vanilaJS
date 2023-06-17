@@ -13,6 +13,7 @@ let attackCells = attackSky.getElementsByClassName("grid-cell");
 let attackCoords = document.getElementById("attack-coords");
 let defenseMessages = document.getElementById("defense-messages");
 let attackMessages = document.getElementById("attack-messages");
+let opponentName = document.getElementById("opponent-name");
 let user = null;
 let battleData = null;
 
@@ -98,11 +99,15 @@ const loadBattleData = async () => {
         window.location.href = '/lobby.html';
       } else {
         battleData = data;
+        opponentName.innerText = battleData.opponent + ' attack list';
         message.removeAttribute('hidden');
         battleData.status[2].turn == "This is your turn to attack." ?
           message.setAttribute('style', 'color: green;') :
           message.setAttribute('style', 'color: red;');
-        message.innerText = battleData.status[2].turn;
+        battleData.status[2].turn == "This is your turn to attack." ?
+          message.innerText = battleData.status[2].turn :
+          message.innerText = "Waiting for " + battleData.opponent + " to attack.";
+        // message.innerText = battleData.status[2].turn;
         buildSky(defenseSky);
         buildSky(attackSky);
         displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
@@ -348,7 +353,10 @@ const refreshData = async () => {
           data.status[2].turn == "This is your turn to attack." ?
             message.setAttribute('style', 'color: green;') :
             message.setAttribute('style', 'color: red;');
-          message.innerText = battleData.status[2].turn;
+          battleData.status[2].turn == "This is your turn to attack." ?
+            message.innerText = battleData.status[2].turn :
+            message.innerText = "Waiting for " + battleData.opponent + " to attack.";
+          // message.innerText = battleData.status[2].turn;
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
           [...attackCells]
             .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
