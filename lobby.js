@@ -166,8 +166,6 @@ cancelButton.addEventListener('click', () => {
 })
 
 submitButton.addEventListener('click', async () => {
-
-  spinner2.removeAttribute('hidden');
   console.log("coockpitCoords cockpitVal Direction", cockpitCoordinates.value, cockpitValue.value, flightDirection.value);
   if (!cockpitCoordinates.value || !cockpitValue.value || flightDirection.value == 0) {
 
@@ -336,7 +334,8 @@ function addBattlesToTable(data) {
     row.appendChild(defenseSize);
     row.appendChild(skySize);
     row.appendChild(time);
-    tbody.appendChild(row);
+    if (b[2] != data.user)
+      tbody.appendChild(row);
   }
 }
 
@@ -370,7 +369,9 @@ function defense(b) {
       defenseSky.appendChild(cell);
     }
   }
-  defenseSky.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
+  defenseSky.setAttribute('style', `width: ` + layoutSize * 50 + `px; height: ` + layoutSize * 50 + `px;`);
+
+  // defenseSky.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
   //set remaining planes
   if (b[0][1]) {
     let currentDefenseSize = b[0][1].length;
