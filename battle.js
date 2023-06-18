@@ -4,7 +4,8 @@ let home = document.getElementById("home");
 let welcomeUser = document.getElementById("welcome-user");
 let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
-let message = document.getElementById("message");
+let userTurn = document.getElementById("user-turn-message");
+let opponentTurn = document.getElementById("opponent-turn-message");
 let defeat = document.getElementById("concede-defeat");
 let defenseSky = document.getElementById("battle-defense-sky");
 let attackSky = document.getElementById("battle-attack-sky");
@@ -100,21 +101,20 @@ const loadBattleData = async () => {
       } else {
         battleData = data;
         opponentName.innerText = battleData.opponent + ' attack list';
-        message.removeAttribute('hidden');
-        battleData.status[2].turn == "This is your turn to attack." ?
-          message.setAttribute('style', 'color: green;') :
-          message.setAttribute('style', 'color: red;');
-        battleData.status[2].turn == "This is your turn to attack." ?
-          message.innerText = battleData.status[2].turn :
-          message.innerText = "Waiting for " + battleData.opponent + " to attack.";
-        // message.innerText = battleData.status[2].turn;
+        setTurnMessage();
         buildSky(defenseSky);
         buildSky(attackSky);
         displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
         [...attackCells]
           .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-          .forEach(element => { element.addEventListener("click", attack); });
+          .forEach(element => {
+            element.addEventListener("click", attack);
+            element.addEventListener("mouseover", (e) => {
+              attackCoords.value = e.target.innerText;
+            });
+          });
         displayAttack(battleData.status[0].attack_messages);
+
         loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
         loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
 
@@ -200,7 +200,7 @@ const buildSky = (el) => {
       el.appendChild(cell);
     }
   }
-  el.setAttribute('style', `grid-template-columns: repeat(` + layoutSize + `, auto);`)
+  el.setAttribute('style', `width: ` + layoutSize * 50 + `px; height: ` + layoutSize * 50 + `px;`);
 }
 
 const displayDefense = (defenseArray, opponentAttacks) => {
@@ -283,14 +283,14 @@ const displayDefense = (defenseArray, opponentAttacks) => {
 const attack = (e) => {
   let attack = e.target.getAttribute('data-value');
   console.log(attack);
-  attackCoords.value = e.target.innerText;
+  // attackCoords.value = e.target.innerText;
   console.log(battleData.status[1].my_attacks.includes(parseInt(attack)));
   if (battleData.status[1].my_attacks.includes(parseInt(attack))) {
-    let originalMessage = message.innerText;
-    message.innerText = "You have already attacked this position";
-    message.setAttribute('style', 'color: red;');
+    let originalMessage = userTurn.innerText;
+    userTurn.innerText = `You have already attacked ` + e.target.innerText + ` !`;
+    userTurn.setAttribute('style', 'color: red;');
     setTimeout(() => {
-      message.innerText = originalMessage;
+      userTurn.innerText = originalMessage;
     }, 2500);
   } else {
     fetchAttack(attack);
@@ -350,21 +350,16 @@ const refreshData = async () => {
           window.location.href = '/lobby.html';
         } else if (data.status) {
           battleData = data;
-          data.status[2].turn == "This is your turn to attack." ?
-            message.setAttribute('style', 'color: green;') :
-            message.setAttribute('style', 'color: red;');
-          battleData.status[2].turn == "This is your turn to attack." ?
-            message.innerText = battleData.status[2].turn :
-            message.innerText = "Waiting for " + battleData.opponent + " to attack.";
-          // message.innerText = battleData.status[2].turn;
+          setTurnMessage();
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
           [...attackCells]
-            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+            .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
             .forEach(element => { element.addEventListener("click", attack); });
           [...attackCells]
             .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
             .forEach(element => {
               element.removeEventListener("click", attack);
+              // element.removeAttribute('class', 'grid-cell');
               element.setAttribute('class', 'grid-cell-attacked');
             });
           displayAttack(battleData.status[0].attack_messages);
@@ -389,7 +384,7 @@ const refreshData = async () => {
   }
 }
 
-// setInterval(refreshData, 3000);
+setInterval(refreshData, 5000);
 
 const loadMessagesToTextArea = (msg, el) => {
   el.value = "";
@@ -420,13 +415,28 @@ const displayAttack = (messages) => {
     }
   }
   console.log("kills, hits, misses", kills, hits, misses);
-  [...document.querySelectorAll('.grid-cell-attacked')]
+  [...attackSky.querySelectorAll('.grid-cell-attacked')]
     .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
-    .forEach(el => el.setAttribute('style', 'background-color: black;'));
-  [...document.querySelectorAll('.grid-cell-attacked')]
+    .forEach(el => el.setAttribute('style', 'background-color: black; color: white;'));
+  [...attackSky.querySelectorAll('.grid-cell-attacked')]
     .filter(el => hits.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: red;'));
-  [...document.querySelectorAll('.grid-cell-attacked')]
+  [...attackSky.querySelectorAll('.grid-cell-attacked')]
     .filter(el => misses.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: blue;'));
+}
+
+const setTurnMessage = () => {
+  if (battleData.status[2].turn == "This is your turn to attack.") {
+    userTurn.removeAttribute('hidden');
+    userTurn.innerText = "It's your turn to attack!";
+    userTurn.setAttribute('style', 'color: green;');
+    opponentTurn.setAttribute('hidden', true);
+
+  } else {
+    opponentTurn.removeAttribute('hidden');
+    opponentTurn.innerText = "Waiting for " + battleData.opponent + " to attack...";
+    opponentTurn.setAttribute('style', 'color: red;');
+    userTurn.setAttribute('hidden', true);
+  }
 }

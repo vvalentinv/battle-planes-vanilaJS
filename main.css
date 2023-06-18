@@ -2,10 +2,7 @@
   background: url(https://images.unsplash.com/photo-1477948879622-5f16e220fa42?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fG1vdW50YWluJTIwcmFuZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=1000&q=60)
     center center / cover no-repeat;
 }
-body {
-  background-color: gainsboro;
-}
-
+body,
 nav {
   background-color: gainsboro;
 }
@@ -31,6 +28,7 @@ textarea {
 
 div #filter,
 #card-body-defense,
+#card-body-attack,
 #card-body-defense-params {
   background-color: gainsboro;
 }
@@ -100,84 +98,27 @@ th,
   color: rgb(3, 150, 11);
 }
 
-#defense-sky {
+#defense-sky #attack-sky {
   display: block;
-
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: grid; */
 }
 
-#battle-defense-sky {
-  position: relative;
-  top: 20%;
-  left: 12%;
-  /* transform: translate(-50%, -50%); */
-  display: grid;
-}
-
-#opponent-name {
-  position: absolute;
-  top: 90%;
-  left: 25%;
-  transform: translate(-20%, -50%);
-  font-size: xx-large;
-  color: rgb(240, 6, 6);
-}
-
-#defense-messages {
-  width: 190px;
-  height: 100px;
-  overflow-y: auto;
-  position: absolute;
-  top: 90%;
-  left: 13%;
-  /* transform: translate(-50%, -50%); */
-  display: flex;
-  white-space: pre-wrap;
-}
-
-#battle-attack-sky {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  /* transform: translate(-50%, -50%); */
-  display: grid;
-}
-
+#defense-messages,
 #attack-messages {
   width: 190px;
   height: 100px;
   overflow-y: auto;
-  position: absolute;
-  top: 90%;
-  left: 58%;
-  transform: translate(-50%, -50%);
-  display: grid;
+  display: flex;
   white-space: pre-wrap;
 }
 
-#message {
+#opponent-turn-message,
+#user-turn-message {
   font-style: bold;
   font-size: 1.5rem;
 }
 
-.battle {
-  padding: 2%;
-  width: 40rem;
-  height: 50rem;
-  background-color: white;
-}
-
-/* .grid-cell {
-  border: 1px solid #000;
-  width: 50px;
-  height: 50px;
-} */
-
-.grid-cell {
+.grid-cell,
+.grid-cell-attacked {
   width: 50px;
   height: 50px;
   box-sizing: border-box;
@@ -189,19 +130,17 @@ th,
   border: solid 1px #000;
 }
 
-.grid-cell-attacked {
-  border: 1px solid #000;
-  width: 50px;
-  height: 50px;
-}
-
 #defense-sky .grid-cell:hover,
 #battle-attack-sky .grid-cell:hover {
-  background-color: red;
+  background-color: rgb(206, 7, 233);
   cursor: pointer;
 }
 
-.column *:not(div) {
+#battle-attack-sky .grid-cell-attacked:hover {
+  background-color: rgb(206, 7, 233);
+}
+
+.column *:not(div, textarea, input) {
   padding-left: 20px;
 }
 
@@ -214,10 +153,6 @@ th,
   justify-content: center;
   align-items: center;
   float: left;
-  /* border-bottom: solid 1px #000; */
-  /* width: 50px;
-  padding: 20px;
-  height: 50px; */
 }
 
 .grid-cell-outer-side {
@@ -230,17 +165,7 @@ th,
   align-items: center;
   float: left;
   border-right: solid 1px #000;
-  /* padding: 20px;
-  width: 50px;
-  height: 50px; */
 }
-
-/* .display-3 {
-  color: rgb(0, 0, 0);
-  align-items: center;
-  margin-top: 2%;
-  margin-inline: 10%;
-} */
 
 .lead {
   color: rgb(0, 0, 0);
