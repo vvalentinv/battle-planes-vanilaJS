@@ -81,7 +81,7 @@
         </div>
       </div>
     </nav>
-
+    <p id="message"></p>
     <div id="spinner" class="spinner-border text-dark" role="status" hidden>
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -91,6 +91,7 @@
           <div class="card">
             <div id="card-body-defense" class="card-body">
               <h5 class="card-title">Your Defense Sky</h5>
+              <p id="opponent-timer" hidden></p>
               <p id="opponent-turn-message" hidden></p>
               <div id="battle-defense-sky"></div>
               <section>
@@ -110,6 +111,7 @@
           <div class="card">
             <div id="card-body-attack" class="card-body">
               <h5 class="card-title">Attack</h5>
+              <p id="user-timer" hidden></p>
               <p id="user-turn-message" hidden></p>
               <label for="coords">Click to attack:</label>
               <input

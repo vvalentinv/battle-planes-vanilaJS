@@ -4,6 +4,7 @@ let home = document.getElementById("home");
 let welcomeUser = document.getElementById("welcome-user");
 let loginStatusButton = document.getElementById("login-status");
 let spinner = document.getElementById("spinner");
+let message = document.getElementById("message");
 let userTurn = document.getElementById("user-turn-message");
 let opponentTurn = document.getElementById("opponent-turn-message");
 let defeat = document.getElementById("concede-defeat");
@@ -15,6 +16,8 @@ let attackCoords = document.getElementById("attack-coords");
 let defenseMessages = document.getElementById("defense-messages");
 let attackMessages = document.getElementById("attack-messages");
 let opponentName = document.getElementById("opponent-name");
+let opponentTimer = document.getElementById("opponent-timer");
+let userTimer = document.getElementById("user-timer");
 let user = null;
 let battleData = null;
 
@@ -112,6 +115,12 @@ const loadBattleData = async () => {
             element.addEventListener("mouseover", (e) => {
               attackCoords.value = e.target.innerText;
             });
+          });
+        [...attackCells]
+          .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+          .forEach(element => {
+            element.removeEventListener("click", attack);
+            element.setAttribute('class', 'grid-cell-attacked');
           });
         displayAttack(battleData.status[0].attack_messages);
 
@@ -313,7 +322,8 @@ const fetchAttack = async (attack) => {
     if (res.status == 200) {
       data = await res.json();
       console.log("fetch attack", data);
-      refreshData();
+      window.location.reload();
+      // refreshData();
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -359,7 +369,6 @@ const refreshData = async () => {
             .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
             .forEach(element => {
               element.removeEventListener("click", attack);
-              // element.removeAttribute('class', 'grid-cell');
               element.setAttribute('class', 'grid-cell-attacked');
             });
           displayAttack(battleData.status[0].attack_messages);
@@ -391,7 +400,6 @@ const loadMessagesToTextArea = (msg, el) => {
   for (const m of msg) {
     el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + ` `;
   }
-  console.log(el.value);
   el.scrollTop = el.scrollHeight;
 }
 
@@ -414,7 +422,6 @@ const displayAttack = (messages) => {
         break;
     }
   }
-  console.log("kills, hits, misses", kills, hits, misses);
   [...attackSky.querySelectorAll('.grid-cell-attacked')]
     .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: black; color: white;'));
@@ -428,15 +435,42 @@ const displayAttack = (messages) => {
 
 const setTurnMessage = () => {
   if (battleData.status[2].turn == "This is your turn to attack.") {
+    userTimer.removeAttribute('hidden');
+    opponentTimer.setAttribute('hidden', true);
     userTurn.removeAttribute('hidden');
     userTurn.innerText = "It's your turn to attack!";
     userTurn.setAttribute('style', 'color: green;');
     opponentTurn.setAttribute('hidden', true);
+    displayTimer(userTimer, battleData.status[3].time);
 
   } else {
+    userTimer.setAttribute('hidden', true);
+    opponentTimer.removeAttribute('hidden');
     opponentTurn.removeAttribute('hidden');
     opponentTurn.innerText = "Waiting for " + battleData.opponent + " to attack...";
     opponentTurn.setAttribute('style', 'color: red;');
     userTurn.setAttribute('hidden', true);
+    displayTimer(opponentTimer, battleData.status[3].time);
   }
+}
+
+const displayTimer = (el, time) => {
+  el.removeAttribute('hidden');
+  const timer = setInterval(() => {
+    let now = new Date().getTime();
+    let startDate = Date.parse(time);
+    let distance = startDate - now;
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    hours < 10 ? hours = "0" + hours : hours;
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    minutes < 10 ? minutes = "0" + minutes : minutes;
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    seconds < 10 ? seconds = "0" + seconds : seconds;
+    el.innerText = hours + ":" + minutes + ":" + seconds;
+    if (distance < 0) {
+      clearInterval(timer);
+      el.innerText = "System auto-attack";
+      el.setAttribute('hidden', true);
+    }
+  }, 1000);
 }
