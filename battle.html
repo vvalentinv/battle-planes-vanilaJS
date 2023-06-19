@@ -81,39 +81,54 @@
         </div>
       </div>
     </nav>
-
+    <p id="message"></p>
     <div id="spinner" class="spinner-border text-dark" role="status" hidden>
       <span class="visually-hidden">Loading...</span>
     </div>
     <div class="d-flex justify-content-center flex-wrap">
       <div class="column">
         <section id="player-defense">
-          <div class="battle">
-            <div>
-              <h5 class="card-title">Defense</h5>
-              <p>Your opponent's attacks will appear here</p>
-              <br />
+          <div class="card">
+            <div id="card-body-defense" class="card-body">
+              <h5 class="card-title">Your Defense Sky</h5>
+              <p id="opponent-timer" hidden></p>
+              <p id="opponent-turn-message" hidden></p>
               <div id="battle-defense-sky"></div>
-              <div>
-                <input type="textarea" id="defense-messages" disabled />
-              </div>
+              <section>
+                <br />
+                <div id="opponent-name" class="card-title"></div>
+                <span>
+                  <textarea style="resize: none" id="defense-messages" disabled>
+                  </textarea>
+                </span>
+              </section>
             </div>
           </div>
         </section>
       </div>
       <div class="column">
         <section id="player-attack">
-          <div class="battle">
-            <div>
+          <div class="card">
+            <div id="card-body-attack" class="card-body">
               <h5 class="card-title">Attack</h5>
-              <div id="message" hidden>
-                <input id="attack-coords" disabled />
-              </div>
-              <br /><br />
+              <p id="user-timer" hidden></p>
+              <p id="user-turn-message" hidden></p>
+              <label for="coords">Click to attack:</label>
+              <input
+                name="coords"
+                id="attack-coords"
+                disabled
+                style="width: 3rem"
+              />
               <div id="battle-attack-sky"></div>
-              <div>
-                <input type="textarea" id="attack-messages" disabled />
-              </div>
+              <section>
+                <br />
+                <textarea
+                  style="resize: none"
+                  id="attack-messages"
+                  disabled
+                ></textarea>
+              </section>
             </div>
           </div>
         </section>
