@@ -28,7 +28,19 @@ let spinner1 = document.getElementById('spinner1');
 let spinner2 = document.getElementById('spinner2');
 let defenseTimer = document.getElementById('defense-setup-timer');
 let userMenu = document.getElementById('user-menu');
+let changeEmailLink = document.getElementById('change-email-link');
+let changeEmailSection = document.getElementById('change-email');
+let changeEmailMessages = document.getElementById('change-email-messages');
+let currentEmailInput = document.getElementById('current-email');
+let newEmailInput = document.getElementById('new-email');
+let emailPasswordInput = document.getElementById('email-password');
+let changeEmailButton = document.getElementById('change-email-btn');
+let cancelEmailButton = document.getElementById('cancel-email-btn');
+let changePasswordLink = document.getElementById('change-password-link');
+let changePasswordSection = document.getElementById('change-password');
+
 let url = `http://127.0.0.1:5000`
+let user = null;
 let data = null;
 let nIntervId = null;
 let existingDefense = null;
@@ -39,6 +51,38 @@ home.addEventListener("click", function() {
   window.location.href = "index.html";
 });
 
+const getUser = async () => {
+  try {
+    let res = await fetch(url + '/users', {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      data = await res.json();
+      user = data;
+      welcomeUser.innerText = user.username;
+      if (user) {
+        grabDataAndFeedtoPage();
+      }
+    }
+    if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      message.removeAttribute('hidden');
+      message.innerText = "Server unreachable: contact site admin";
+      message.setAttribute('class', 'error-message');
+    }
+    else {
+      console.log(err)
+    }
+  }
+};
 
 const grabDataAndFeedtoPage = async () => {
 
@@ -122,7 +166,7 @@ const grabDataAndFeedtoPage = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", grabDataAndFeedtoPage);
+document.addEventListener("DOMContentLoaded", getUser);
 unchallengedList.addEventListener("click", grabDataAndFeedtoPage);
 
 const displayDefense = (defense) => {
@@ -152,6 +196,64 @@ loginStatusButton.addEventListener('click', async () => {
       setTimeout(() => { success.innerText += "."; }, i)
     }
   }
+})
+
+changeEmailLink.addEventListener('click', async () => {
+  if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!unchallengedBattles.hasAttribute('hidden')) {
+    unchallengedBattles.setAttribute('hidden', true);
+  }
+  changeEmailSection.removeAttribute('hidden');
+  currentEmailInput.value = user.email;
+  changeEmailButton.addEventListener('click', async (e) => {
+    // e.preventDefault();
+    if (!newEmailInput.value || !emailPasswordInput.value) {
+
+      changeEmailMessages.innerText = "Please fill both fields";
+      changeEmailMessages.style.color = 'red';
+      changeEmailMessages.style.fontWeight = 'bold';
+    } else {
+      changeEmailMessages.innerText = "";
+      try {
+        let res = await fetch(url + `/users`, {
+          'credentials': 'include',
+          'method': 'PUT',
+          'headers': {
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify({
+            'email': newEmailInput.value,
+            'password': emailPasswordInput.value
+          })
+        })
+        if (res.status == 200) {
+          changeEmailMessages.innerText += "Email changed successfully! Re-authenticate to confirm changes.... Click cancel to return to the Lobby";
+          changeEmailMessages.style.color = 'green';
+          newEmailInput.value = '';
+          emailPasswordInput.value = '';
+        } else if (res.status == 400) {
+        } else if (res.status == 401) {
+          window.location.href = '/index.html';
+        }
+      } catch (err) {
+        if (err.message == "Failed to fetch") {
+          changeEmailMessages.removeAttribute('hidden');
+          changeEmailMessages.innerText = "Server unreachable: contact site admin";
+          changeEmailMessages.style.color = 'red';
+          changeEmailMessages.style.fontWeight = 'bold';
+        }
+        else {
+          console.log(err)
+        }
+      }
+    }
+  })
+  cancelEmailButton.addEventListener('click', () => {
+    changeEmailSection.setAttribute('hidden', true);
+    unchallengedBattles.removeAttribute('hidden');
+    getUser();
+  })
 })
 
 
