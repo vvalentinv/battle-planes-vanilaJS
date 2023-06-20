@@ -322,8 +322,8 @@ const fetchAttack = async (attack) => {
     if (res.status == 200) {
       data = await res.json();
       console.log("fetch attack", data);
-      window.location.reload();
-      // refreshData();
+      // window.location.reload();
+      refreshData();
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -467,6 +467,11 @@ const displayTimer = (el, time) => {
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
     seconds < 10 ? seconds = "0" + seconds : seconds;
     el.innerText = hours + ":" + minutes + ":" + seconds;
+    if (battleData.status[3].time != time) {
+      clearInterval(timer);
+      el.innerText = "Execute opponent attack";
+      el.setAttribute('hidden', true);
+    }
     if (distance < 0) {
       clearInterval(timer);
       el.innerText = "System auto-attack";
