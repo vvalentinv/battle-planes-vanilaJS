@@ -23,8 +23,8 @@ const getUser = async () => {
       navbarSupportedContent.removeAttribute('hidden');
       loginLink.style.visibility = 'hidden';
       data = await res.json();
-      welcomeUser.innerText = data.user;
-      console.log(data.user);
+      welcomeUser.innerText = data.username;
+      console.log(data.username);
     }
     if (res.status == 401) {
       navbarSupportedContent.style.visibility = 'hidden';

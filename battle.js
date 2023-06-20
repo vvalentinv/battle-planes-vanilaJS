@@ -39,8 +39,8 @@ const getUser = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
-      user = data.user;
-      welcomeUser.innerText = data.user;
+      user = data.username;
+      welcomeUser.innerText = data.username;
       if (user) {
         loadBattleData();
       }
