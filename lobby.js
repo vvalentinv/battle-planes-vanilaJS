@@ -256,6 +256,17 @@ changeEmailLink.addEventListener('click', async () => {
   })
 })
 
+newEmailInput.addEventListener('change', (e) => {
+  changeEmailMessages.innerText = "";
+  let email = newEmailInput.value;
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    changeEmailMessages.innerText = "Invalid email format";
+    changeEmailMessages.style.color = 'red';
+    changeEmailMessages.style.fontWeight = 'bold';
+  }
+});
+
 
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
