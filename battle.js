@@ -18,6 +18,7 @@ let attackMessages = document.getElementById("attack-messages");
 let opponentName = document.getElementById("opponent-name");
 let opponentTimer = document.getElementById("opponent-timer");
 let userTimer = document.getElementById("user-timer");
+let battleID = null;
 let user = null;
 let battleData = null;
 
@@ -356,10 +357,13 @@ const refreshData = async () => {
       if (res.status == 200) {
         data = await res.json();
         console.log(data);
-        if (data.battles) {
+        if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
+        } else if (data.battles && battleID) {
+          getBattleResult();
         } else if (data.status) {
           battleData = data;
+          battleID = data.battleID;
           setTurnMessage();
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
           [...attackCells]
