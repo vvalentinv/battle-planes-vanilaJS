@@ -232,7 +232,11 @@ changeEmailLink.addEventListener('click', async () => {
           changeEmailMessages.style.color = 'green';
           newEmailInput.value = '';
           emailPasswordInput.value = '';
-        } else if (res.status == 400) {
+        } else if (res.status == 400 || res.status == 403) {
+          data = await res.json();
+          changeEmailMessages.innerText = data.message;
+          changeEmailMessages.style.color = 'red';
+          changeEmailMessages.style.fontWeight = 'bold';
         } else if (res.status == 401) {
           window.location.href = '/index.html';
         }
@@ -255,6 +259,17 @@ changeEmailLink.addEventListener('click', async () => {
     getUser();
   })
 })
+
+newEmailInput.addEventListener('change', (e) => {
+  changeEmailMessages.innerText = "";
+  let email = newEmailInput.value;
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    changeEmailMessages.innerText = "Invalid email format";
+    changeEmailMessages.style.color = 'red';
+    changeEmailMessages.style.fontWeight = 'bold';
+  }
+});
 
 
 cancelButton.addEventListener('click', () => {

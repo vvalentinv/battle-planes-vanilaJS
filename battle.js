@@ -18,6 +18,7 @@ let attackMessages = document.getElementById("attack-messages");
 let opponentName = document.getElementById("opponent-name");
 let opponentTimer = document.getElementById("opponent-timer");
 let userTimer = document.getElementById("user-timer");
+let battleID = null;
 let user = null;
 let battleData = null;
 
@@ -39,8 +40,8 @@ const getUser = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
-      user = data.user;
-      welcomeUser.innerText = data.user;
+      user = data.username;
+      welcomeUser.innerText = data.username;
       if (user) {
         loadBattleData();
       }
@@ -322,8 +323,8 @@ const fetchAttack = async (attack) => {
     if (res.status == 200) {
       data = await res.json();
       console.log("fetch attack", data);
-      window.location.reload();
-      // refreshData();
+      // window.location.reload();
+      refreshData();
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -356,10 +357,13 @@ const refreshData = async () => {
       if (res.status == 200) {
         data = await res.json();
         console.log(data);
-        if (data.battles) {
+        if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
+        } else if (data.battles && battleID) {
+          getBattleResult();
         } else if (data.status) {
           battleData = data;
+          battleID = data.battleID;
           setTurnMessage();
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
           [...attackCells]
@@ -467,6 +471,11 @@ const displayTimer = (el, time) => {
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
     seconds < 10 ? seconds = "0" + seconds : seconds;
     el.innerText = hours + ":" + minutes + ":" + seconds;
+    if (battleData.status[3].time != time) {
+      clearInterval(timer);
+      el.innerText = "Execute opponent attack";
+      el.setAttribute('hidden', true);
+    }
     if (distance < 0) {
       clearInterval(timer);
       el.innerText = "System auto-attack";
