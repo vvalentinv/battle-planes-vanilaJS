@@ -92,7 +92,7 @@ const getUser = async () => {
     })
     if (res.status == 200) {
       data = await res.json();
-      welcomeUser.innerText = data.user;
+      welcomeUser.innerText = data.username;
       setParams.click();
     }
     if (res.status == 401) {
