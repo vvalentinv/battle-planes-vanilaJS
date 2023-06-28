@@ -483,3 +483,59 @@ const displayTimer = (el, time) => {
     }
   }, 1000);
 }
+
+const getBattleResult = async () => {
+  if (!user) {
+    window.location.href = '/index.html';
+  } else {
+    try {
+      let res = await fetch(url + '/battles?defeat=False', {
+        'credentials': 'include',
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Credentials': 'true'
+        }
+      })
+      if (res.status == 200) {
+        data = await res.json();
+        console.log(data);
+        if (data.battles && !battleID) {
+          window.location.href = '/lobby.html';
+        } else if (data.battles && battleID) {
+          getBattleResult();
+        } else if (data.status) {
+          battleData = data;
+          battleID = data.battleID;
+          setTurnMessage();
+          displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
+          [...attackCells]
+            .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+            .forEach(element => { element.addEventListener("click", attack); });
+          [...attackCells]
+            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+            .forEach(element => {
+              element.removeEventListener("click", attack);
+              element.setAttribute('class', 'grid-cell-attacked');
+            });
+          displayAttack(battleData.status[0].attack_messages);
+          loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
+          loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
+        }
+      }
+      else if (res.status == 401) {
+        window.location.href = '/index.html';
+      }
+
+    } catch (err) {
+      if (err.message == "Failed to fetch") {
+        message.removeAttribute('hidden');
+        message.innerText = "Server unreachable: contact site admin";
+        message.setAttribute('class', 'error-message');
+      }
+      else {
+        console.log(err)
+      }
+    }
+  }
+}
