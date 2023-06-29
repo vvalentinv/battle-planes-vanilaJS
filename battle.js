@@ -270,7 +270,7 @@ const displayDefense = (defenseArray, opponentAttacks) => {
     for (const c of cockpits) {
       [...defenseCells]
         .filter(el => c == parseInt(el.getAttribute('data-value')))
-        .forEach(el => el.setAttribute('style', 'background-color: black;'));
+        .forEach(el => el.setAttribute('style', 'background-color: black; color: white;'));
     }
     for (const hit of hitPlaneParts) {
       [...defenseCells]
