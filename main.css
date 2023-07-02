@@ -3,6 +3,7 @@
     center center / cover no-repeat;
 }
 body,
+body div,
 nav {
   background-color: gainsboro;
 }
@@ -34,6 +35,8 @@ div #filter,
 }
 
 #login-status,
+#login,
+#logout,
 #header2,
 #lobby-link,
 #change-email-link,
@@ -186,4 +189,9 @@ th,
   background: -webkit-linear-gradient(#ffb700, #38ef5d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.navbar {
+  --bs-navbar-padding-x: 0;
+  --bs-navbar-padding-y: 0;
 }
