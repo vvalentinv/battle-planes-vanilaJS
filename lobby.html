@@ -204,43 +204,96 @@
         <div id="card-body-defense" class="card-body">
           <div class="card-title">Change Email</div>
           <p id="change-email-messages"></p>
-          <div class="d-flex justify-content-center flex-wrap">
+          <div>
             <div class="column">
-              <div class="change-email">
+              <div class="chg-email">
                 <label for="current-email">Current email: </label>
                 <input
                   type="email"
                   id="current-email"
                   name="current-email"
-                  size="30"
+                  size="20"
                   disabled
                   value=""
                 />
               </div>
-              <div class="change-email">
+              <div class="chg-email">
                 <label for="new-email">New email: </label>
-                <input type="email" id="new-email" name="new-email" size="30" />
+                <input type="email" id="new-email" name="new-email" size="20" />
               </div>
-              <div class="change-email">
+              <div class="chg-email">
                 <label for="email-password">Current password: </label>
                 <input
                   type="password"
                   id="email-password"
                   name="email-password"
-                  size="30"
+                  size="20"
                 />
               </div>
-              <div class="change-email">
+              <div class="chg-email">
                 <a
                   id="change-email-btn"
                   href="#"
-                  class="btn btn-outline-light btn-lg px-5"
+                  class="btn btn-outline-light btn-med px-4"
                   >Change Email</a
                 >
                 <a
                   id="cancel-email-btn"
                   href="#"
-                  class="btn btn-outline-light btn-lg px-5"
+                  class="btn btn-outline-light btn-med px-4"
+                  >Cancel</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="change-password" hidden>
+      <div class="card">
+        <div id="card-body-defense" class="card-body">
+          <div class="card-title">Change Password</div>
+          <p id="change-password-messages"></p>
+          <div>
+            <div class="column">
+              <div class="chg-pass">
+                <label for="current-password">Current Password: </label>
+                <input
+                  type="password"
+                  id="current-password"
+                  name="current-password"
+                  size="20"
+                />
+              </div>
+              <div class="chg-pass">
+                <label for="new-password">New Password: </label>
+                <input
+                  type="password"
+                  id="new-password"
+                  name="new-password"
+                  size="20"
+                />
+              </div>
+              <div class="chg-pass">
+                <label for="confirm-password">Confirm Password: </label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                  size="20"
+                />
+              </div>
+              <div class="chg-pass">
+                <a
+                  id="change-password-btn"
+                  href="#"
+                  class="btn btn-outline-light btn-med px-3"
+                  >Change Password</a
+                >
+                <a
+                  id="cancel-password-btn"
+                  href="#"
+                  class="btn btn-outline-light btn-med px-3"
                   >Cancel</a
                 >
               </div>
