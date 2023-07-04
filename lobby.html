@@ -104,15 +104,7 @@
             </div>
             <div class="column">
               <h5 class="card-title">Add planes to your defense</h5>
-              <p id="defense-setup-timer"></p>
-              <div
-                id="spinner2"
-                class="spinner-border text-dark"
-                role="status"
-                hidden
-              >
-                <span class="visually-hidden">Loading...</span>
-              </div>
+
               <p class="card-text">
                 Remaining planes to be added:
                 <span id="remaining-planes"></span>
@@ -121,7 +113,9 @@
                 <div class="mb-3 container-fluid dropdown-center">
                   <label for="flight-direction">Flight direction:</label>
                   <select name="flight-direction" id="flight-direction">
-                    <option class="dropdown-item" value="0">Direction</option>
+                    <option class="dropdown-item" value="0" hidden>
+                      Direction
+                    </option>
                     <option class="dropdown-item" value="1">North</option>
                     <option class="dropdown-item" value="2">East</option>
                     <option class="dropdown-item" value="3">South</option>
@@ -137,6 +131,15 @@
                     disabled
                   />
                   <input type="text" id="cockpit-value" size="3" hidden />
+                </div>
+                <p id="defense-setup-timer"></p>
+                <div
+                  id="spinner2"
+                  class="spinner-border text-dark"
+                  role="status"
+                  hidden
+                >
+                  <span class="visually-hidden">Loading...</span>
                 </div>
                 <div class="mb-3">
                   <p id="plane-message"></p>
