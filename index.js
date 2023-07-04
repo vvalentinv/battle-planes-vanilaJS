@@ -4,7 +4,7 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 let navbarSupportedContent = document.getElementById("navbarSupportedContent");
 let welcomeUser = document.getElementById("welcome-user");
 let loginLink = document.getElementById("login-link");
-let loginStatusButton = document.getElementById("login-status");
+let logout = document.getElementById("logout");
 let url = `http://127.0.0.1:5000`
 let successMessageDiv = document.getElementById("success-messages");
 let spinner = document.getElementById("spinner");
@@ -28,9 +28,9 @@ const getUser = async () => {
     }
     if (res.status == 401) {
       navbarSupportedContent.style.visibility = 'hidden';
-      loginLink.style.visibility = 'visible';
     }
   } catch (err) {
+    navbarSupportedContent.style.visibility = 'hidden';
     if (err.message == "Failed to fetch") {
       successMessageDiv.removeAttribute('hidden');
       successMessageDiv.innerText = "Server unreachable: contact site admin";
@@ -45,7 +45,7 @@ const getUser = async () => {
 
 document.addEventListener("DOMContentLoaded", getUser);
 
-loginStatusButton.addEventListener('click', async () => {
+logout.addEventListener('click', async () => {
   spinner.removeAttribute('hidden');
   let res = await fetch(url + '/logout', {
     'credentials': 'include',

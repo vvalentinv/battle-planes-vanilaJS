@@ -38,7 +38,12 @@ let changeEmailButton = document.getElementById('change-email-btn');
 let cancelEmailButton = document.getElementById('cancel-email-btn');
 let changePasswordLink = document.getElementById('change-password-link');
 let changePasswordSection = document.getElementById('change-password');
-
+let changePasswordMessages = document.getElementById('change-password-messages');
+let currentPasswordInput = document.getElementById('current-password');
+let newPasswordInput = document.getElementById('new-password');
+let confirmPasswordInput = document.getElementById('confirm-password');
+let changePasswordButton = document.getElementById('change-password-btn');
+let cancelPasswordButton = document.getElementById('cancel-password-btn');
 let url = `http://127.0.0.1:5000`
 let user = null;
 let data = null;
@@ -203,6 +208,8 @@ changeEmailLink.addEventListener('click', async () => {
     setDefense.setAttribute('hidden', true);
   } else if (!unchallengedBattles.hasAttribute('hidden')) {
     unchallengedBattles.setAttribute('hidden', true);
+  } else if (!changePasswordSection.hasAttribute('hidden')) {
+    changePasswordSection.setAttribute('hidden', true);
   }
   changeEmailSection.removeAttribute('hidden');
   currentEmailInput.value = user.email;
@@ -271,6 +278,113 @@ newEmailInput.addEventListener('change', (e) => {
   }
 });
 
+changePasswordLink.addEventListener('click', async () => {
+  if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!unchallengedBattles.hasAttribute('hidden')) {
+    unchallengedBattles.setAttribute('hidden', true);
+  } else if (!changeEmailSection.hasAttribute('hidden')) {
+    changeEmailSection.setAttribute('hidden', true);
+  }
+  changePasswordSection.removeAttribute('hidden');
+  changePasswordButton.addEventListener('click', async (e) => {
+    // e.preventDefault();
+    if (!newPasswordInput.value || !confirmPasswordInput.value || !currentPasswordInput.value) {
+
+      changePasswordMessages.innerText = "Please fill all fields without errors";
+      changePasswordMessages.style.color = 'red';
+      changePasswordMessages.style.fontWeight = 'bold';
+    } else {
+      changePasswordMessages.innerText = "";
+      try {
+        let res = await fetch(url + `/users`, {
+          'credentials': 'include',
+          'method': 'PUT',
+          'headers': {
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify({
+            'current-password': currentPasswordInput.value,
+            'new-password': newPasswordInput.value
+          })
+        })
+        if (res.status == 200) {
+          changePasswordMessages.innerText += "Email changed successfully! We will log you out to confirm changes....";
+          changePasswordMessages.style.color = 'green';
+          currentPasswordInput.value = '';
+          newPasswordInput.value = '';
+          confirmPasswordInput.value = '';
+          setTimeout(() => { loginStatusButton.click(); }, 2000)
+        } else if (res.status == 400 || res.status == 403) {
+          data = await res.json();
+          changePasswordMessages.innerText = data.message;
+          changePasswordMessages.style.color = 'red';
+          changePasswordMessages.style.fontWeight = 'bold';
+        } else if (res.status == 401) {
+          window.location.href = '/index.html';
+        }
+      } catch (err) {
+        if (err.message == "Failed to fetch") {
+          changePasswordMessages.removeAttribute('hidden');
+          changePasswordMessages.innerText = "Server unreachable: contact site admin";
+          changePasswordMessages.style.color = 'red';
+          changePasswordMessages.style.fontWeight = 'bold';
+        }
+        else {
+          console.log(err)
+        }
+      }
+    }
+  })
+  cancelPasswordButton.addEventListener('click', () => {
+    changePasswordSection.setAttribute('hidden', true);
+    unchallengedBattles.removeAttribute('hidden');
+    getUser();
+  })
+})
+
+newPasswordInput.addEventListener('change', (e) => {
+  changePasswordMessages.innerText = "";
+  let password = newPasswordInput.value;
+  let confirmPassword = confirmPasswordInput.value;
+  if (!password.match(/[a-z]/g)) {
+    changePasswordMessages.innerText = "Password must contain at least one lowercase letter";
+    changePasswordMessages.classList.add('b-error');
+  }
+  else if (!password.match(/[A-Z]/g)) {
+    changePasswordMessages.innerText = "Password must contain at least one uppercase letter";
+    changePasswordMessages.classList.add('b-error');
+  }
+  else if (!password.match(/[0-9]/g)) {
+    changePasswordMessages.innerText = "Password must contain at least one number";
+    changePasswordMessages.classList.add('b-error');
+  }
+  else if (!password.match(/[!@#$%^&*.]/g)) {
+    changePasswordMessages.innerText = "Password must contain at least one special character";
+    changePasswordMessages.classList.add('b-error');
+  }
+
+  else if (password.length < 8 || password.length > 20) {
+    changePasswordMessages.innerText = "Password length must be between 8 and 20 characters";
+    changePasswordMessages.classList.add('b-error');
+  } else {
+    changePasswordMessages.innerText = "";
+    changePasswordMessages.classList.remove('b-error');
+  }
+});
+
+confirmPasswordInput.addEventListener('change', (e) => {
+  changePasswordMessages.innerText = "";
+  let password = newPasswordInput.value;
+  let confirmPassword = confirmPasswordInput.value;
+  if (password != confirmPassword) {
+    changePasswordMessages.innerText = "Passwords do not match";
+    changePasswordMessages.classList.add('b-error');
+  } else {
+    changePasswordMessages.innerText = "";
+    changePasswordMessages.classList.remove('b-error');
+  }
+});
 
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';

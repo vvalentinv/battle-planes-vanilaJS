@@ -34,12 +34,16 @@ div #filter,
 }
 
 #login-status,
+#login,
+#logout,
 #header2,
 #lobby-link,
 #change-email-link,
 #change-password-link,
 #change-email-btn,
 #cancel-email-btn,
+#change-password-btn,
+#cancel-password-btn,
 #header3,
 #logout-btn,
 #welcome-user,
@@ -186,4 +190,33 @@ th,
   background: -webkit-linear-gradient(#ffb700, #38ef5d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.navbar {
+  --bs-navbar-padding-x: 0;
+  --bs-navbar-padding-y: 0;
+}
+
+.container-fluid {
+  background-color: gainsboro;
+}
+
+#change-email,
+#change-password {
+  max-width: 420px;
+}
+
+.chg-email,
+.chg-pass {
+  justify-content: space-between;
+  display: flex;
+  padding-top: 5px;
+}
+
+.b-error {
+  color: red;
+}
+
+.b-success {
+  color: green;
 }

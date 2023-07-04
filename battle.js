@@ -21,6 +21,7 @@ let userTimer = document.getElementById("user-timer");
 let battleID = null;
 let user = null;
 let battleData = null;
+let concluded = false;
 
 let url = `http://127.0.0.1:5000`;
 
@@ -88,7 +89,7 @@ const loadBattleData = async () => {
     attackSky.removeChild(attackSky.lastChild);
   }
   try {
-    let res = await fetch(url + '/battles?defeat=False', {
+    let res = await fetch(url + `/battles?defeat=False&battleID=True`, {
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -104,6 +105,7 @@ const loadBattleData = async () => {
         window.location.href = '/lobby.html';
       } else {
         battleData = data;
+        battleID = data.battleID;
         opponentName.innerText = battleData.opponent + ' attack list';
         setTurnMessage();
         buildSky(defenseSky);
@@ -130,6 +132,8 @@ const loadBattleData = async () => {
 
       }
 
+    } if (res.status == 400) {
+      window.location.href = '/lobby.html';
     }
     if (res.status == 401) {
       window.location.href = '/index.html';
@@ -318,7 +322,7 @@ const fetchAttack = async (attack) => {
       },
       'body': JSON.stringify({
         'attack': attack
-      }),
+      })
     })
     if (res.status == 200) {
       data = await res.json();
@@ -346,7 +350,7 @@ const refreshData = async () => {
     window.location.href = '/index.html';
   } else {
     try {
-      let res = await fetch(url + '/battles?defeat=False', {
+      let res = await fetch(url + `/battles?defeat=False&battleID=` + battleID, {
         'credentials': 'include',
         'method': 'GET',
         'headers': {
@@ -359,8 +363,29 @@ const refreshData = async () => {
         console.log(data);
         if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
-        } else if (data.battles && battleID) {
-          getBattleResult();
+        } else if (data.outcome) {
+          console.log("outcome", data);
+          displayDefense(data.outcome.data.my_defense, data.outcome.data.opponent_attacks);
+
+          [...attackCells]
+            .forEach(element => {
+              element.removeEventListener("click", attack);
+              element.setAttribute('class', 'grid-cell-attacked');
+            });
+          displayAttack(data.outcome.messages.attack_messages);
+          if (data.outcome.messages.attack_messages.length >
+            data.outcome.messages.defense_messages.length) {
+            opponentTurn.innerText = "";
+            userTurn.removeAttribute('hidden');
+            userTurn.innerText = "You won!";
+          } else {
+            opponentTurn.removeAttribute('hidden');
+            opponentTurn.innerText = "You lost!";
+            userTurn.setAttribute('hidden', 'true');
+          }
+          loadMessagesToTextArea(data.outcome.messages.attack_messages, attackMessages);
+          loadMessagesToTextArea(data.outcome.messages.defense_messages, defenseMessages);
+          concluded = true;
         } else if (data.status) {
           battleData = data;
           battleID = data.battleID;
@@ -397,12 +422,24 @@ const refreshData = async () => {
   }
 }
 
-setInterval(refreshData, 5000);
+setInterval(() => {
+  if (!concluded) {
+    refreshData();
+  }
+}, 3000);
+
+
+
+// setInterval(refreshData, 3000, concluded);
 
 const loadMessagesToTextArea = (msg, el) => {
   el.value = "";
   for (const m of msg) {
-    el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + ` `;
+    if (m.length == 2) {
+      el.value += `Attack @ ` + attackSky.querySelector(`[data-value="${m[0]}"]`).innerText + ` is a ` + m[1] + ` `;
+    } else {
+      el.value += m;
+    }
   }
   el.scrollTop = el.scrollHeight;
 }
@@ -412,20 +449,17 @@ const displayAttack = (messages) => {
   let hits = [];
   let misses = [];
   for (const m of messages) {
-    switch (m[1]) {
-      case "Kill":
+    if (m.length == 2) {
+      if (m[1] == "Kill") {
         kills.push(m[0]);
-        break;
-      case "Hit":
+      } else if (m[1] == "Hit") {
         hits.push(m[0]);
-        break;
-      case "Miss":
+      } else if (m[1] == "Miss") {
         misses.push(m[0]);
-        break;
-      default:
-        break;
+      }
     }
   }
+  console.log("kills, hits, misses", kills, hits, misses);
   [...attackSky.querySelectorAll('.grid-cell-attacked')]
     .filter(el => kills.includes(parseInt(el.getAttribute('data-value'))))
     .forEach(el => el.setAttribute('style', 'background-color: black; color: white;'));
@@ -473,69 +507,18 @@ const displayTimer = (el, time) => {
     el.innerText = hours + ":" + minutes + ":" + seconds;
     if (battleData.status[3].time != time) {
       clearInterval(timer);
-      el.innerText = "Execute opponent attack";
+      el.innerText = "";
       el.setAttribute('hidden', true);
     }
-    if (distance < 0) {
+    if (distance < 0 && !concluded) {
       clearInterval(timer);
       el.innerText = "System auto-attack";
       el.setAttribute('hidden', true);
     }
-  }, 1000);
-}
-
-const getBattleResult = async () => {
-  if (!user) {
-    window.location.href = '/index.html';
-  } else {
-    try {
-      let res = await fetch(url + '/battles?defeat=False', {
-        'credentials': 'include',
-        'method': 'GET',
-        'headers': {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Credentials': 'true'
-        }
-      })
-      if (res.status == 200) {
-        data = await res.json();
-        console.log(data);
-        if (data.battles && !battleID) {
-          window.location.href = '/lobby.html';
-        } else if (data.battles && battleID) {
-          getBattleResult();
-        } else if (data.status) {
-          battleData = data;
-          battleID = data.battleID;
-          setTurnMessage();
-          displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
-          [...attackCells]
-            .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-            .forEach(element => { element.addEventListener("click", attack); });
-          [...attackCells]
-            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-            .forEach(element => {
-              element.removeEventListener("click", attack);
-              element.setAttribute('class', 'grid-cell-attacked');
-            });
-          displayAttack(battleData.status[0].attack_messages);
-          loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
-          loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
-        }
-      }
-      else if (res.status == 401) {
-        window.location.href = '/index.html';
-      }
-
-    } catch (err) {
-      if (err.message == "Failed to fetch") {
-        message.removeAttribute('hidden');
-        message.innerText = "Server unreachable: contact site admin";
-        message.setAttribute('class', 'error-message');
-      }
-      else {
-        console.log(err)
-      }
+    if (concluded) {
+      clearInterval(timer);
+      el.innerText = "battle concluded";
+      el.setAttribute('hidden', true);
     }
-  }
+  }, 1000);
 }
