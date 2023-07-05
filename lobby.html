@@ -89,6 +89,19 @@
                 New Challenge
               </a>
             </li>
+            <li class="nav-item navbar-brand">
+              <a
+                id="battle-history"
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="tooltip"
+                data-bs-title="Review your battle history"
+                data-bs-placement="top"
+              >
+                Battle History
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -199,6 +212,39 @@
           </tr>
         </thead>
         <tbody id="battle-tbl-tbody">
+          <tr hidden></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="battle-history">
+      <div id="filter" class="container-fluid dropdown-center">
+        <p>Selecting a player accepts an open challenge.</p>
+        <select name="history-filter" id="history-filter">
+          <option class="dropdown-item" value="0">Username</option>
+          <option class="dropdown-item" value="1">Defense Size</option>
+          <option class="dropdown-item" value="2">Sky Size</option>
+          <option class="dropdown-item" value="4">Outcome</option>
+          <option class="dropdown-item" value="3" hidden>
+            Future Feature Private
+          </option>
+        </select>
+      </div>
+      <table
+        id="battle-history-tbl"
+        class="table"
+        style="min-width: 420px; max-width: min-content"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Opponent</th>
+            <th scope="col">Outcome</th>
+            <th scope="col">Defense Size</th>
+            <th scope="col">Sky Size</th>
+            <th scope="col">Time</th>
+            <th scope="col">Disconnected user?</th>
+          </tr>
+        </thead>
+        <tbody id="battle-history-tbl-tbody">
           <tr hidden></tr>
         </tbody>
       </table>
