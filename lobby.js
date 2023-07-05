@@ -4,7 +4,9 @@ let welcome = document.getElementById('welcome');
 let home = document.getElementById("header1");
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
-let header3 = document.getElementById('header3');
+let battleHistoryLink = document.getElementById('battle-history-link');
+let battleHistorySection = document.getElementById('battle-history');
+let lobbyLink = document.getElementById('lobby-link-container');
 let newChallenge = document.getElementById('new-challenge');
 let unchallengedBattles = document.getElementById('unchallenged-battles');
 let setDefense = document.getElementById('set-defense');
@@ -385,6 +387,73 @@ confirmPasswordInput.addEventListener('change', (e) => {
     changePasswordMessages.classList.remove('b-error');
   }
 });
+
+battleHistoryLink.addEventListener('click', async () => {
+  if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!unchallengedBattles.hasAttribute('hidden')) {
+    unchallengedBattles.setAttribute('hidden', true);
+  } else if (!changePasswordSection.hasAttribute('hidden')) {
+    changePasswordSection.setAttribute('hidden', true);
+  } else if (!changeEmailSection.hasAttribute('hidden')) {
+    changeEmailSection.setAttribute('hidden', true);
+  }
+  battleHistorySection.removeAttribute('hidden');
+  lobbyLink.removeAttribute('hidden');
+  // currentEmailInput.value = user.email;
+  // changeEmailButton.addEventListener('click', async (e) => {
+  //   // e.preventDefault();
+  //   if (!newEmailInput.value || !emailPasswordInput.value) {
+
+  //     changeEmailMessages.innerText = "Please fill both fields";
+  //     changeEmailMessages.style.color = 'red';
+  //     changeEmailMessages.style.fontWeight = 'bold';
+  //   } else {
+  //     changeEmailMessages.innerText = "";
+  //     try {
+  //       let res = await fetch(url + `/users`, {
+  //         'credentials': 'include',
+  //         'method': 'PUT',
+  //         'headers': {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         'body': JSON.stringify({
+  //           'email': newEmailInput.value,
+  //           'password': emailPasswordInput.value
+  //         })
+  //       })
+  //       if (res.status == 200) {
+  //         changeEmailMessages.innerText += "Email changed successfully! Re-authenticate to confirm changes.... Click cancel to return to the Lobby";
+  //         changeEmailMessages.style.color = 'green';
+  //         newEmailInput.value = '';
+  //         emailPasswordInput.value = '';
+  //       } else if (res.status == 400 || res.status == 403) {
+  //         data = await res.json();
+  //         changeEmailMessages.innerText = data.message;
+  //         changeEmailMessages.style.color = 'red';
+  //         changeEmailMessages.style.fontWeight = 'bold';
+  //       } else if (res.status == 401) {
+  //         window.location.href = '/index.html';
+  //       }
+  //     } catch (err) {
+  //       if (err.message == "Failed to fetch") {
+  //         changeEmailMessages.removeAttribute('hidden');
+  //         changeEmailMessages.innerText = "Server unreachable: contact site admin";
+  //         changeEmailMessages.style.color = 'red';
+  //         changeEmailMessages.style.fontWeight = 'bold';
+  //       }
+  //       else {
+  //         console.log(err)
+  //       }
+  //     }
+  //   }
+  // })
+  // cancelEmailButton.addEventListener('click', () => {
+  //   changeEmailSection.setAttribute('hidden', true);
+  //   unchallengedBattles.removeAttribute('hidden');
+  //   getUser();
+  // })
+})
 
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';

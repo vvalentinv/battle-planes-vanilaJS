@@ -91,7 +91,7 @@
             </li>
             <li class="nav-item navbar-brand">
               <a
-                id="battle-history"
+                id="battle-history-link"
                 class="nav-link active"
                 aria-current="page"
                 href="#"
@@ -100,6 +100,19 @@
                 data-bs-placement="top"
               >
                 Battle History
+              </a>
+            </li>
+            <li id="lobby-link-container" class="nav-item navbar-brand" hidden>
+              <a
+                id="lobby-link"
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="tooltip"
+                data-bs-title="Back to lobby!"
+                data-bs-placement="top"
+              >
+                Back to Lobby
               </a>
             </li>
           </ul>
@@ -216,9 +229,9 @@
         </tbody>
       </table>
     </section>
-    <section id="battle-history">
-      <div id="filter" class="container-fluid dropdown-center">
-        <p>Selecting a player accepts an open challenge.</p>
+    <section id="battle-history" hidden>
+      <div class="container-fluid dropdown-center">
+        <p>The list of your previous battles!</p>
         <select name="history-filter" id="history-filter">
           <option class="dropdown-item" value="0">Username</option>
           <option class="dropdown-item" value="1">Defense Size</option>
