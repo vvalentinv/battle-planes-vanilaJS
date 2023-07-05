@@ -5,7 +5,7 @@ let home = document.getElementById("header1");
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
 let header3 = document.getElementById('header3');
-let header2 = document.getElementById('header2');
+let newChallenge = document.getElementById('new-challenge');
 let unchallengedBattles = document.getElementById('unchallenged-battles');
 let setDefense = document.getElementById('set-defense');
 let defenseSky = document.getElementById('defense-sky');
@@ -114,7 +114,7 @@ const grabDataAndFeedtoPage = async () => {
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
         unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
-        header2.innerText = '';
+        newChallenge.innerText = '';
         while (welcome.hasChildNodes()) {
           welcome.removeChild(welcome.lastChild);
         }
