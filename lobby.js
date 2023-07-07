@@ -12,6 +12,7 @@ let unchallengedBattles = document.getElementById('unchallenged-battles');
 let setDefense = document.getElementById('set-defense');
 let defenseSky = document.getElementById('defense-sky');
 let tbody = document.getElementById('battle-tbl-tbody');
+let tHistoryBody = document.getElementById('battle-history-tbl-tbody');
 let submitButton = document.getElementById('submit-btn');
 let cancelButton = document.getElementById('cancel-btn');
 let filter = document.getElementById('filter');
@@ -28,6 +29,7 @@ let testPlane = document.getElementById('test-plane');
 let planeMessage = document.getElementById('plane-message');
 let spinner1 = document.getElementById('spinner1');
 let spinner2 = document.getElementById('spinner2');
+let spinner3 = document.getElementById('spinner3');
 let defenseTimer = document.getElementById('defense-setup-timer');
 let userMenu = document.getElementById('user-menu');
 let changeEmailLink = document.getElementById('change-email-link');
@@ -95,6 +97,9 @@ const grabDataAndFeedtoPage = async () => {
 
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
+  }
+  while (tHistoryBody.hasChildNodes()) {
+    tHistoryBody.removeChild(tHistoryBody.lastChild);
   }
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
@@ -400,59 +405,37 @@ battleHistoryLink.addEventListener('click', async () => {
   }
   battleHistorySection.removeAttribute('hidden');
   lobbyLink.removeAttribute('hidden');
-  // currentEmailInput.value = user.email;
-  // changeEmailButton.addEventListener('click', async (e) => {
-  //   // e.preventDefault();
-  //   if (!newEmailInput.value || !emailPasswordInput.value) {
-
-  //     changeEmailMessages.innerText = "Please fill both fields";
-  //     changeEmailMessages.style.color = 'red';
-  //     changeEmailMessages.style.fontWeight = 'bold';
-  //   } else {
-  //     changeEmailMessages.innerText = "";
-  //     try {
-  //       let res = await fetch(url + `/users`, {
-  //         'credentials': 'include',
-  //         'method': 'PUT',
-  //         'headers': {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         'body': JSON.stringify({
-  //           'email': newEmailInput.value,
-  //           'password': emailPasswordInput.value
-  //         })
-  //       })
-  //       if (res.status == 200) {
-  //         changeEmailMessages.innerText += "Email changed successfully! Re-authenticate to confirm changes.... Click cancel to return to the Lobby";
-  //         changeEmailMessages.style.color = 'green';
-  //         newEmailInput.value = '';
-  //         emailPasswordInput.value = '';
-  //       } else if (res.status == 400 || res.status == 403) {
-  //         data = await res.json();
-  //         changeEmailMessages.innerText = data.message;
-  //         changeEmailMessages.style.color = 'red';
-  //         changeEmailMessages.style.fontWeight = 'bold';
-  //       } else if (res.status == 401) {
-  //         window.location.href = '/index.html';
-  //       }
-  //     } catch (err) {
-  //       if (err.message == "Failed to fetch") {
-  //         changeEmailMessages.removeAttribute('hidden');
-  //         changeEmailMessages.innerText = "Server unreachable: contact site admin";
-  //         changeEmailMessages.style.color = 'red';
-  //         changeEmailMessages.style.fontWeight = 'bold';
-  //       }
-  //       else {
-  //         console.log(err)
-  //       }
-  //     }
-  //   }
-  // })
-  // cancelEmailButton.addEventListener('click', () => {
-  //   changeEmailSection.setAttribute('hidden', true);
-  //   unchallengedBattles.removeAttribute('hidden');
-  //   getUser();
-  // })
+  try {
+    spinner3.removeAttribute('hidden');
+    let res = await fetch(url + '/battles?history=True', {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      data = await res.json();
+      spinner3.setAttribute('hidden', true);
+      console.log(data);
+      success.innerText = '';
+      addBattleResultsToTable(data.history);
+    }
+    if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      success.removeAttribute('hidden');
+      success.innerText = "Server unreachable: contact site admin";
+      success.style.color = 'red';
+      success.style.fontWeight = 'bold';
+    }
+    else {
+      console.log(err)
+    }
+  }
 })
 
 cancelButton.addEventListener('click', () => {
@@ -636,6 +619,49 @@ function addBattlesToTable(data) {
     row.appendChild(time);
     if (b[2] != data.user)
       tbody.appendChild(row);
+  }
+}
+
+function addBattleResultsToTable(data) {
+  for (b of data) {
+    let row = document.createElement('tr');
+
+    let details = document.createElement('td');
+    details.innerHTML = `<a name="view-battle" class="view-battle" data-value="` + b.id + `"> View Details</a>`;
+    let opponent = document.createElement('td');
+    opponent.innerText = b.opponent;
+    let outcome = document.createElement('td');
+    if (b.winner != "Unavailable") {
+      if (b.winner != b.opponent) {
+        outcome.innerText = "Victory";
+        outcome.style.color = "green";
+      }
+      else {
+        outcome.innerText = "Defeat";
+        outcome.style.color = "red";
+      }
+    } else {
+      outcome.innerText = "Inconclusive";
+    }
+    let defenseSize = document.createElement('td');
+    defenseSize.innerText = b.defenseSize;
+    let skySize = document.createElement('td');
+    skySize.innerText = b.skySize;
+    let concludedAt = document.createElement('td');
+
+    concludedAt.innerText = (new Date(b.concludedAt)).toLocaleString();
+    concludedAt.style.flexWrap = "no-wrap";
+    let disconnected = document.createElement('td');
+    disconnected.innerText = b.disconnected;
+
+    row.appendChild(details);
+    row.appendChild(opponent);
+    row.appendChild(outcome);
+    row.appendChild(defenseSize);
+    row.appendChild(skySize);
+    row.appendChild(concludedAt);
+    row.appendChild(disconnected);
+    tHistoryBody.appendChild(row);
   }
 }
 
