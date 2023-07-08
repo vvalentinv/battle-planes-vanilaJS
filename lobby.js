@@ -393,6 +393,23 @@ confirmPasswordInput.addEventListener('change', (e) => {
   }
 });
 
+lobbyLink.addEventListener('click', () => {
+  if (!battleHistorySection.hasAttribute('hidden')) {
+    battleHistorySection.setAttribute('hidden', true);
+  } else if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!changePasswordSection.hasAttribute('hidden')) {
+    changePasswordSection.setAttribute('hidden', true);
+  } else if (!changeEmailSection.hasAttribute('hidden')) {
+    changeEmailSection.setAttribute('hidden', true);
+  }
+  unchallengedBattles.removeAttribute('hidden');
+  unchallengedList.click();
+  lobbyLink.setAttribute('hidden', true);
+  battleHistoryLink.removeAttribute('hidden');
+});
+
+
 battleHistoryLink.addEventListener('click', async () => {
   if (!setDefense.hasAttribute('hidden')) {
     setDefense.setAttribute('hidden', true);
@@ -404,6 +421,7 @@ battleHistoryLink.addEventListener('click', async () => {
     changeEmailSection.setAttribute('hidden', true);
   }
   battleHistorySection.removeAttribute('hidden');
+  battleHistoryLink.setAttribute('hidden', true);
   lobbyLink.removeAttribute('hidden');
   try {
     spinner3.removeAttribute('hidden');
