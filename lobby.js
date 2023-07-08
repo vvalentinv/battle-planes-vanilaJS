@@ -627,7 +627,7 @@ function addBattleResultsToTable(data) {
     let row = document.createElement('tr');
 
     let details = document.createElement('td');
-    details.innerHTML = `<a name="view-battle" class="view-battle" data-value="` + b.id + `"> View Details</a>`;
+    details.innerHTML = `<a name="view-battle" class="view-battle text-nowrap" data-value="` + b.id + `"> View Details</a>`;
     let opponent = document.createElement('td');
     opponent.innerText = b.opponent;
     let outcome = document.createElement('td');
@@ -650,7 +650,7 @@ function addBattleResultsToTable(data) {
     let concludedAt = document.createElement('td');
 
     concludedAt.innerText = (new Date(b.concludedAt)).toLocaleString();
-    concludedAt.style.flexWrap = "no-wrap";
+    concludedAt.classList.add('text-nowrap');
     let disconnected = document.createElement('td');
     disconnected.innerText = b.disconnected;
 
