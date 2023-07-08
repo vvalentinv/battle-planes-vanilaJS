@@ -645,7 +645,7 @@ function addBattleResultsToTable(data) {
     let row = document.createElement('tr');
 
     let details = document.createElement('td');
-    details.innerHTML = `<a name="view-battle" class="view-battle text-nowrap" data-value="` + b.id + `"> View Details</a>`;
+    details.innerHTML = `<a name="view-battle" href="/battle.html" class="cursor-pointer view-battle text-nowrap" data-value-battleID="` + b.id + `" data-value-sky="` + b.skySize + `" data-value-defense="` + b.defenseSize + `"> View Details</a>`;
     let opponent = document.createElement('td');
     opponent.innerText = b.opponent;
     let outcome = document.createElement('td');
@@ -681,6 +681,49 @@ function addBattleResultsToTable(data) {
     row.appendChild(disconnected);
     tHistoryBody.appendChild(row);
   }
+  document.querySelectorAll('a[name="view-battle"]').forEach((e) => {
+    e.addEventListener('click', async (e) => {
+
+      console.log(e.target.getAttribute('data-value'));
+      localStorage.setItem('battleID', e.target.getAttribute('data-value-battleID'));
+      localStorage.setItem('skySize', e.target.getAttribute('data-value-sky'));
+      localStorage.setItem('defenseSize', e.target.getAttribute('data-value-defense'));
+      // while (tHistoryBody.hasChildNodes()) {
+      //   tHistoryBody.removeChild(tHistoryBody.lastChild);
+      // }
+      // battleHistorySection.setAttribute('hidden', true);
+      // battleDetailsSection.removeAttribute('hidden');
+      // try {
+      //   spinner4.removeAttribute('hidden');
+      //   let res = await fetch(url + `/battles?battleID=` + e.target.getAttribute('data-value'), {
+      //     'credentials': 'include',
+      //     'method': 'GET',
+      //     'headers': {
+      //       'Content-Type': 'application/json',
+      //       'Access-Control-Allow-Credentials': 'true'
+      //     }
+      //   })
+      //   if (res.status == 200) {
+      //     let data = await res.json();
+      //     spinner4.setAttribute('hidden', true);
+      //     success.removeAttribute('hidden');
+      //     success.innerText = data.message;
+      //     setTimeout(() => { window.location; }, 1000)
+      //   }
+      // } catch (err) {
+      //   if (err.message == "Failed to fetch") {
+      //     success.removeAttribute('hidden');
+      //     success.innerText = "Server unreachable: contact IT Admin";
+      //     success.style.color = 'red';
+      //     success.style.fontWeight = 'bold';
+      //   }
+      //   else {
+      //     console.log(err)
+      //   }
+      // }
+
+    })
+  })
 }
 
 function defense(b) {

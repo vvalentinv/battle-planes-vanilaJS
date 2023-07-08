@@ -227,3 +227,7 @@ th,
 .text-nowrap {
   text-wrap: nowrap;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

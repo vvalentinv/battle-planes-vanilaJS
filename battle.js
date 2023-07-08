@@ -18,7 +18,9 @@ let attackMessages = document.getElementById("attack-messages");
 let opponentName = document.getElementById("opponent-name");
 let opponentTimer = document.getElementById("opponent-timer");
 let userTimer = document.getElementById("user-timer");
-let battleID = null;
+let battleID = localStorage.getItem('battleID') || "True";
+let skySize = localStorage.getItem('skySize') || null;
+let defenseSize = localStorage.getItem('defenseSize') || null;
 let user = null;
 let battleData = null;
 let concluded = false;
@@ -43,8 +45,12 @@ const getUser = async () => {
       data = await res.json();
       user = data.username;
       welcomeUser.innerText = data.username;
-      if (user) {
+      if (user && battleID == "True") {
         loadBattleData();
+      } else if (user && battleID != "True") {
+        buildSky(defenseSky);
+        buildSky(attackSky);
+        refreshData();
       }
     }
     if (res.status == 401) {
@@ -89,7 +95,8 @@ const loadBattleData = async () => {
     attackSky.removeChild(attackSky.lastChild);
   }
   try {
-    let res = await fetch(url + `/battles?defeat=False&battleID=True`, {
+
+    let res = await fetch(url + `/battles?defeat=False&battleID=` + battleID, {
       'credentials': 'include',
       'method': 'GET',
       'headers': {
@@ -105,6 +112,7 @@ const loadBattleData = async () => {
         window.location.href = '/lobby.html';
       } else {
         battleData = data;
+        skySize = battleData.status[3].sky
         battleID = data.battleID;
         opponentName.innerText = battleData.opponent + ' attack list';
         setTurnMessage();
@@ -185,7 +193,7 @@ async function concedeDefeat() {
 }
 
 const buildSky = (el) => {
-  let layoutSize = battleData.status[3].sky + 1
+  let layoutSize = parseInt(skySize) + 1;
   for (let i = 0; i < layoutSize * layoutSize; i++) {
     if (i == 0) {
       let cell = document.createElement('div');
