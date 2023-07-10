@@ -4,12 +4,15 @@ let welcome = document.getElementById('welcome');
 let home = document.getElementById("header1");
 let welcomeUser = document.getElementById('welcome-user');
 let loginStatusButton = document.getElementById('login-status');
-let header3 = document.getElementById('header3');
-let header2 = document.getElementById('header2');
+let battleHistoryLink = document.getElementById('battle-history-link');
+let battleHistorySection = document.getElementById('battle-history');
+let lobbyLink = document.getElementById('lobby-link-container');
+let newChallenge = document.getElementById('new-challenge');
 let unchallengedBattles = document.getElementById('unchallenged-battles');
 let setDefense = document.getElementById('set-defense');
 let defenseSky = document.getElementById('defense-sky');
 let tbody = document.getElementById('battle-tbl-tbody');
+let tHistoryBody = document.getElementById('battle-history-tbl-tbody');
 let submitButton = document.getElementById('submit-btn');
 let cancelButton = document.getElementById('cancel-btn');
 let filter = document.getElementById('filter');
@@ -26,6 +29,7 @@ let testPlane = document.getElementById('test-plane');
 let planeMessage = document.getElementById('plane-message');
 let spinner1 = document.getElementById('spinner1');
 let spinner2 = document.getElementById('spinner2');
+let spinner3 = document.getElementById('spinner3');
 let defenseTimer = document.getElementById('defense-setup-timer');
 let userMenu = document.getElementById('user-menu');
 let changeEmailLink = document.getElementById('change-email-link');
@@ -94,6 +98,9 @@ const grabDataAndFeedtoPage = async () => {
   while (tbody.hasChildNodes()) {
     tbody.removeChild(tbody.lastChild);
   }
+  while (tHistoryBody.hasChildNodes()) {
+    tHistoryBody.removeChild(tHistoryBody.lastChild);
+  }
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
   }
@@ -114,7 +121,7 @@ const grabDataAndFeedtoPage = async () => {
       if (data.battles.message == 'Finish your current battle engagement, before attempting a new one!') {
         unchallengedBattles.setAttribute('hidden', true);
         setDefense.removeAttribute('hidden');
-        header2.innerText = '';
+        newChallenge.innerText = '';
         while (welcome.hasChildNodes()) {
           welcome.removeChild(welcome.lastChild);
         }
@@ -386,6 +393,69 @@ confirmPasswordInput.addEventListener('change', (e) => {
   }
 });
 
+lobbyLink.addEventListener('click', () => {
+  if (!battleHistorySection.hasAttribute('hidden')) {
+    battleHistorySection.setAttribute('hidden', true);
+  } else if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!changePasswordSection.hasAttribute('hidden')) {
+    changePasswordSection.setAttribute('hidden', true);
+  } else if (!changeEmailSection.hasAttribute('hidden')) {
+    changeEmailSection.setAttribute('hidden', true);
+  }
+  unchallengedBattles.removeAttribute('hidden');
+  unchallengedList.click();
+  lobbyLink.setAttribute('hidden', true);
+  battleHistoryLink.removeAttribute('hidden');
+});
+
+
+battleHistoryLink.addEventListener('click', async () => {
+  if (!setDefense.hasAttribute('hidden')) {
+    setDefense.setAttribute('hidden', true);
+  } else if (!unchallengedBattles.hasAttribute('hidden')) {
+    unchallengedBattles.setAttribute('hidden', true);
+  } else if (!changePasswordSection.hasAttribute('hidden')) {
+    changePasswordSection.setAttribute('hidden', true);
+  } else if (!changeEmailSection.hasAttribute('hidden')) {
+    changeEmailSection.setAttribute('hidden', true);
+  }
+  battleHistorySection.removeAttribute('hidden');
+  battleHistoryLink.setAttribute('hidden', true);
+  lobbyLink.removeAttribute('hidden');
+  try {
+    spinner3.removeAttribute('hidden');
+    let res = await fetch(url + '/battles?history=True', {
+      'credentials': 'include',
+      'method': 'GET',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+    if (res.status == 200) {
+      data = await res.json();
+      spinner3.setAttribute('hidden', true);
+      console.log(data);
+      success.innerText = '';
+      addBattleResultsToTable(data.history);
+    }
+    if (res.status == 401) {
+      window.location.href = '/index.html';
+    }
+  } catch (err) {
+    if (err.message == "Failed to fetch") {
+      success.removeAttribute('hidden');
+      success.innerText = "Server unreachable: contact site admin";
+      success.style.color = 'red';
+      success.style.fontWeight = 'bold';
+    }
+    else {
+      console.log(err)
+    }
+  }
+})
+
 cancelButton.addEventListener('click', () => {
   cockpitCoordinates.value = '';
   cockpitValue.value = '';
@@ -568,6 +638,92 @@ function addBattlesToTable(data) {
     if (b[2] != data.user)
       tbody.appendChild(row);
   }
+}
+
+function addBattleResultsToTable(data) {
+  for (b of data) {
+    let row = document.createElement('tr');
+
+    let details = document.createElement('td');
+    details.innerHTML = `<a name="view-battle" href="/battle.html" class="cursor-pointer view-battle text-nowrap" data-value-battleID="` + b.id + `" data-value-sky="` + b.skySize + `" data-value-defense="` + b.defenseSize + `"> View Details</a>`;
+    let opponent = document.createElement('td');
+    opponent.innerText = b.opponent;
+    let outcome = document.createElement('td');
+    if (b.winner != "Unavailable") {
+      if (b.winner != b.opponent) {
+        outcome.innerText = "Victory";
+        outcome.style.color = "green";
+      }
+      else {
+        outcome.innerText = "Defeat";
+        outcome.style.color = "red";
+      }
+    } else {
+      outcome.innerText = "Inconclusive";
+    }
+    let defenseSize = document.createElement('td');
+    defenseSize.innerText = b.defenseSize;
+    let skySize = document.createElement('td');
+    skySize.innerText = b.skySize;
+    let concludedAt = document.createElement('td');
+
+    concludedAt.innerText = (new Date(b.concludedAt)).toLocaleString();
+    concludedAt.classList.add('text-nowrap');
+    let disconnected = document.createElement('td');
+    disconnected.innerText = b.disconnected;
+
+    row.appendChild(details);
+    row.appendChild(opponent);
+    row.appendChild(outcome);
+    row.appendChild(defenseSize);
+    row.appendChild(skySize);
+    row.appendChild(concludedAt);
+    row.appendChild(disconnected);
+    tHistoryBody.appendChild(row);
+  }
+  document.querySelectorAll('a[name="view-battle"]').forEach((e) => {
+    e.addEventListener('click', async (e) => {
+
+      console.log(e.target.getAttribute('data-value'));
+      localStorage.setItem('battleID', e.target.getAttribute('data-value-battleID'));
+      localStorage.setItem('skySize', e.target.getAttribute('data-value-sky'));
+      localStorage.setItem('defenseSize', e.target.getAttribute('data-value-defense'));
+      // while (tHistoryBody.hasChildNodes()) {
+      //   tHistoryBody.removeChild(tHistoryBody.lastChild);
+      // }
+      // battleHistorySection.setAttribute('hidden', true);
+      // battleDetailsSection.removeAttribute('hidden');
+      // try {
+      //   spinner4.removeAttribute('hidden');
+      //   let res = await fetch(url + `/battles?battleID=` + e.target.getAttribute('data-value'), {
+      //     'credentials': 'include',
+      //     'method': 'GET',
+      //     'headers': {
+      //       'Content-Type': 'application/json',
+      //       'Access-Control-Allow-Credentials': 'true'
+      //     }
+      //   })
+      //   if (res.status == 200) {
+      //     let data = await res.json();
+      //     spinner4.setAttribute('hidden', true);
+      //     success.removeAttribute('hidden');
+      //     success.innerText = data.message;
+      //     setTimeout(() => { window.location; }, 1000)
+      //   }
+      // } catch (err) {
+      //   if (err.message == "Failed to fetch") {
+      //     success.removeAttribute('hidden');
+      //     success.innerText = "Server unreachable: contact IT Admin";
+      //     success.style.color = 'red';
+      //     success.style.fontWeight = 'bold';
+      //   }
+      //   else {
+      //     console.log(err)
+      //   }
+      // }
+
+    })
+  })
 }
 
 function defense(b) {

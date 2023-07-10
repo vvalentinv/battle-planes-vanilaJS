@@ -36,7 +36,10 @@ div #filter,
 #login-status,
 #login,
 #logout,
-#header2,
+#new-challenge,
+#battle-history,
+#battle-history-link,
+#lobby-link,
 #lobby-link,
 #change-email-link,
 #change-password-link,
@@ -219,4 +222,12 @@ th,
 
 .b-success {
   color: green;
+}
+
+.text-nowrap {
+  text-wrap: nowrap;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

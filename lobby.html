@@ -78,7 +78,7 @@
 
             <li class="nav-item navbar-brand">
               <a
-                id="header2"
+                id="new-challenge"
                 class="nav-link active"
                 aria-current="page"
                 href="/challenge.html"
@@ -87,6 +87,32 @@
                 data-bs-placement="top"
               >
                 New Challenge
+              </a>
+            </li>
+            <li class="nav-item navbar-brand">
+              <a
+                id="battle-history-link"
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="tooltip"
+                data-bs-title="Review your battle history"
+                data-bs-placement="top"
+              >
+                Battle History
+              </a>
+            </li>
+            <li id="lobby-link-container" class="nav-item navbar-brand" hidden>
+              <a
+                id="lobby-link"
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="tooltip"
+                data-bs-title="Back to lobby!"
+                data-bs-placement="top"
+              >
+                Back to Lobby
               </a>
             </li>
           </ul>
@@ -199,6 +225,43 @@
           </tr>
         </thead>
         <tbody id="battle-tbl-tbody">
+          <tr hidden></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="battle-history" hidden>
+      <div class="container-fluid dropdown-center">
+        <p>The list of your previous battles!</p>
+        <div id="spinner3" class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <select name="history-filter" id="history-filter">
+          <option class="dropdown-item" value="0">Username</option>
+          <option class="dropdown-item" value="1">Defense Size</option>
+          <option class="dropdown-item" value="2">Sky Size</option>
+          <option class="dropdown-item" value="4">Outcome</option>
+          <option class="dropdown-item" value="3" hidden>
+            Future Feature Private
+          </option>
+        </select>
+      </div>
+      <table
+        id="battle-history-tbl"
+        class="table"
+        style="min-width: 420px; max-width: min-content"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Details</th>
+            <th scope="col">Opponent</th>
+            <th scope="col">Outcome</th>
+            <th scope="col">Defense Size</th>
+            <th scope="col">Sky Size</th>
+            <th scope="col">Time</th>
+            <th scope="col">Disconnected user?</th>
+          </tr>
+        </thead>
+        <tbody id="battle-history-tbl-tbody">
           <tr hidden></tr>
         </tbody>
       </table>
