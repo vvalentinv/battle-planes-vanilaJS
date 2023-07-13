@@ -373,6 +373,7 @@ const refreshData = async () => {
           window.location.href = '/lobby.html';
         } else if (data.outcome) {
           console.log("outcome", data);
+          opponentName.innerText = data.outcome.data.opponent_name;
           displayDefense(data.outcome.data.my_defense, data.outcome.data.opponent_attacks);
 
           [...attackCells]
@@ -397,11 +398,17 @@ const refreshData = async () => {
         } else if (data.status) {
           battleData = data;
           battleID = data.battleID;
+          opponentName.innerText = data.opponent + " Attack List:";
           setTurnMessage();
           displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
           [...attackCells]
             .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-            .forEach(element => { element.addEventListener("click", attack); });
+            .forEach(element => {
+              element.addEventListener("click", attack);
+              element.addEventListener("mouseover", (e) => {
+                attackCoords.value = e.target.innerText;
+              });
+            });
           [...attackCells]
             .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
             .forEach(element => {
@@ -483,19 +490,22 @@ const setTurnMessage = () => {
   if (battleData.status[2].turn == "This is your turn to attack.") {
     userTimer.removeAttribute('hidden');
     opponentTimer.setAttribute('hidden', true);
-    userTurn.removeAttribute('hidden');
+    // userTurn.removeAttribute('hidden');
     userTurn.innerText = "It's your turn to attack!";
     userTurn.setAttribute('style', 'color: green;');
-    opponentTurn.setAttribute('hidden', true);
+    // opponentTurn.removeAttribute('hidden');
+    opponentTurn.innerText = "It's your turn to attack!";
+    opponentTurn.setAttribute('style', 'color: green;');
     displayTimer(userTimer, battleData.status[3].time);
 
   } else {
     userTimer.setAttribute('hidden', true);
     opponentTimer.removeAttribute('hidden');
-    opponentTurn.removeAttribute('hidden');
-    opponentTurn.innerText = "Waiting for " + battleData.opponent + " to attack...";
+    // opponentTurn.removeAttribute('hidden');
+    opponentTurn.innerText = battleData.opponent + " is attacking ...";
     opponentTurn.setAttribute('style', 'color: red;');
-    userTurn.setAttribute('hidden', true);
+    userTurn.innerText = battleData.opponent + " is attacking ...";
+    userTurn.setAttribute('style', 'color: red;');
     displayTimer(opponentTimer, battleData.status[3].time);
   }
 }

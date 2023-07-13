@@ -91,16 +91,27 @@
           <div class="card">
             <div id="card-body-defense" class="card-body">
               <h5 class="card-title">Your Defense Sky</h5>
-              <p id="opponent-timer" hidden></p>
-              <p id="opponent-turn-message" hidden></p>
+
               <div id="battle-defense-sky"></div>
               <section>
                 <br />
-                <div id="opponent-name" class="card-title"></div>
-                <span>
-                  <textarea style="resize: none" id="defense-messages" disabled>
-                  </textarea>
-                </span>
+                <div class="d-flex justify-content-center flex-wrap">
+                  <div class="column">
+                    <div id="opponent-name" class="card-title"></div>
+                    <span>
+                      <textarea
+                        style="resize: none"
+                        id="defense-messages"
+                        disabled
+                      >
+                      </textarea>
+                    </span>
+                  </div>
+                  <div class="column">
+                    <p id="opponent-timer" hidden></p>
+                    <p id="opponent-turn-message" ></p>
+                  </div>
+                </div>
               </section>
             </div>
           </div>
@@ -110,24 +121,34 @@
         <section id="player-attack">
           <div class="card">
             <div id="card-body-attack" class="card-body">
-              <h5 class="card-title">Attack</h5>
-              <p id="user-timer" hidden></p>
-              <p id="user-turn-message" hidden></p>
-              <label for="coords">Click to attack:</label>
-              <input
-                name="coords"
-                id="attack-coords"
-                disabled
-                style="width: 3rem"
-              />
+              <h5 class="card-title">Attack Sky</h5>
+              
               <div id="battle-attack-sky"></div>
               <section>
                 <br />
-                <textarea
-                  style="resize: none"
-                  id="attack-messages"
-                  disabled
-                ></textarea>
+                <label for="coords">Click to attack:</label>
+                <input
+                      name="coords"
+                      id="attack-coords"
+                      disabled
+                      style="width: 3rem"
+                />
+                <div class="d-flex justify-content-center flex-wrap">
+                  <div class="column">
+                    <br />
+                    <textarea
+                      style="resize: none"
+                      id="attack-messages"
+                      disabled
+                    ></textarea>
+                  </div>
+                  <div class="column">
+                    <br />
+                    <p id="user-timer" hidden></p>
+                    <p id="user-turn-message" > </p>
+                    
+                    
+                  </div>
               </section>
             </div>
           </div>
