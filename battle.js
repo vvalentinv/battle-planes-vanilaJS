@@ -372,8 +372,11 @@ const refreshData = async () => {
         if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
         } else if (data.outcome) {
-          console.log("outcome", data);
-          opponentName.innerText = data.outcome.data.opponent_name;
+          if (localStorage.getItem('battleID')) {
+            defeat.setAttribute('hidden', 'true');
+            // reveal link back to history
+          }
+          opponentName.innerText = data.outcome.opponent + " Attacks:";
           displayDefense(data.outcome.data.my_defense, data.outcome.data.opponent_attacks);
 
           [...attackCells]
