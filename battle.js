@@ -372,8 +372,11 @@ const refreshData = async () => {
         if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
         } else if (data.outcome) {
-          console.log("outcome", data);
-          opponentName.innerText = data.outcome.data.opponent_name;
+          if (localStorage.getItem('battleID')) {
+            defeat.setAttribute('hidden', 'true');
+            // reveal link back to history
+          }
+          opponentName.innerText = data.outcome.opponent + " Attacks:";
           displayDefense(data.outcome.data.my_defense, data.outcome.data.opponent_attacks);
 
           [...attackCells]
@@ -384,17 +387,23 @@ const refreshData = async () => {
           displayAttack(data.outcome.messages.attack_messages);
           if (data.outcome.messages.attack_messages.length >
             data.outcome.messages.defense_messages.length) {
-            opponentTurn.innerText = "";
-            userTurn.removeAttribute('hidden');
-            userTurn.innerText = "You won!";
+            opponentTurn.innerText = "Win!";
+            userTurn.innerText = "Win!";
+            opponentTurn.classList.add('b-success');
+            userTurn.classList.add('b-success');
           } else {
             opponentTurn.removeAttribute('hidden');
-            opponentTurn.innerText = "You lost!";
-            userTurn.setAttribute('hidden', 'true');
+            opponentTurn.innerText = "Defeat!";
+            userTurn.innerText = "Defeat!";
+            opponentTurn.classList.add('b-error');
+            userTurn.classList.add('b-error');
           }
           loadMessagesToTextArea(data.outcome.messages.attack_messages, attackMessages);
           loadMessagesToTextArea(data.outcome.messages.defense_messages, defenseMessages);
           concluded = true;
+          localStorage.removeItem('battleID');
+          localStorage.removeItem('skySize');
+          localStorage.removeItem('defenseSize');
         } else if (data.status) {
           battleData = data;
           battleID = data.battleID;
@@ -423,7 +432,8 @@ const refreshData = async () => {
       else if (res.status == 401) {
         window.location.href = '/index.html';
       }
-
+      message.innerText = "";
+      message.setAttribute('hidden', 'true');
     } catch (err) {
       if (err.message == "Failed to fetch") {
         message.removeAttribute('hidden');
