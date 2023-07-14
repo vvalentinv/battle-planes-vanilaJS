@@ -387,17 +387,23 @@ const refreshData = async () => {
           displayAttack(data.outcome.messages.attack_messages);
           if (data.outcome.messages.attack_messages.length >
             data.outcome.messages.defense_messages.length) {
-            opponentTurn.innerText = "";
-            userTurn.removeAttribute('hidden');
-            userTurn.innerText = "You won!";
+            opponentTurn.innerText = "Win!";
+            userTurn.innerText = "Win!";
+            opponentTurn.classList.add('b-success');
+            userTurn.classList.add('b-success');
           } else {
             opponentTurn.removeAttribute('hidden');
-            opponentTurn.innerText = "You lost!";
-            userTurn.setAttribute('hidden', 'true');
+            opponentTurn.innerText = "Defeat!";
+            userTurn.innerText = "Defeat!";
+            opponentTurn.classList.add('b-error');
+            userTurn.classList.add('b-error');
           }
           loadMessagesToTextArea(data.outcome.messages.attack_messages, attackMessages);
           loadMessagesToTextArea(data.outcome.messages.defense_messages, defenseMessages);
           concluded = true;
+          localStorage.removeItem('battleID');
+          localStorage.removeItem('skySize');
+          localStorage.removeItem('defenseSize');
         } else if (data.status) {
           battleData = data;
           battleID = data.battleID;
