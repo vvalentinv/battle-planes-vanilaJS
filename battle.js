@@ -432,7 +432,8 @@ const refreshData = async () => {
       else if (res.status == 401) {
         window.location.href = '/index.html';
       }
-
+      message.innerText = "";
+      message.setAttribute('hidden', 'true');
     } catch (err) {
       if (err.message == "Failed to fetch") {
         message.removeAttribute('hidden');
