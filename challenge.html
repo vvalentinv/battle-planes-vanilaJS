@@ -118,7 +118,11 @@
                 <label for="max-time"
                   >Number of minutes until challenge expires:</label
                 >
-                <input type="text" id="max-time" size="3" value="1" />
+                <input type="number" id="max-time" size="3" value="10" />
+              </div>
+              <div class="mb-3 container-fluid">
+                <label for="turn-time">Turn duration (in minutes):</label>
+                <input type="number" id="turn-time" size="3" value="3" />
               </div>
               <div id="params-message" hidden></div>
               <section>
@@ -179,7 +183,7 @@
                 <a
                   id="evaluate-btn"
                   href="#"
-                  class="btn btn-outline-light btn-lg px-5"
+                  class="btn btn-outline-light btn-med px-5"
                 >
                   Evaluate Plane
                 </a>
@@ -191,6 +195,7 @@
                     id="open-btn"
                     href="#"
                     class="btn btn-outline-light btn-lg px-5"
+                    hidden
                   >
                     Open Challenge</a
                   >

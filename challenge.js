@@ -26,11 +26,13 @@ let defenseTimer1 = document.getElementById('defense-setup-timer1');
 let skySize = document.getElementById('sky-size');
 let defenseSize = document.getElementById('defense-size');
 let maxTime = document.getElementById('max-time');
+let turnTime = document.getElementById('turn-time');
 let url = `http://127.0.0.1:5000`
 // let data = null;
 // let nIntervId = null;
 let existingDefense = [];
 let defenseIDs = [];
+let turnTimeValue = null;
 let skySZ = null;
 let defenseSz = null;
 let expirationTime = null;
@@ -44,16 +46,22 @@ home.addEventListener("click", function() {
 });
 
 setParams.addEventListener('click', () => {
-  if (skySize.value != 0 && defenseSize.value != 0 && maxTime.value > 0) {
+  if (skySize && skySize.value != 0 &&
+    defenseSize && defenseSize.value != 0 &&
+    maxTime && maxTime.value > 0 &&
+    turnTime && turnTime.value > 0) {
     paramMessage.innerText = '';
     skySZ = parseInt(skySize.value);
     defenseSz = parseInt(defenseSize.value);
     expirationTime = parseInt(maxTime.value);
+    turnTimeValue = parseInt(turnTime.value);
     defense();
     skyCells = document.getElementsByClassName('grid-cell');
     [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
     skySize.setAttribute('disabled', true);
     defenseSize.setAttribute('disabled', true);
+    maxTime.setAttribute('disabled', true);
+    turnTime.setAttribute('disabled', true);
     setParams.style.visibility = 'hidden';
   } else {
     paramMessage.innerText = 'Please set all parameters!';
@@ -67,14 +75,18 @@ resetParams.addEventListener('click', () => {
   skySize.value = 0;
   defenseSize.value = 0;
   maxTime.value = '';
+  turnTime.value = '';
   skySZ = null;
   defenseSz = null;
   expirationTime = null;
+  turnTimeValue = null;
   while (defenseSky.hasChildNodes()) {
     defenseSky.removeChild(defenseSky.lastChild);
   }
   skySize.removeAttribute('disabled');
   defenseSize.removeAttribute('disabled');
+  maxTime.removeAttribute('disabled');
+  turnTime.removeAttribute('disabled');
   setParams.style.visibility = 'visible';
   existingDefense = [];
   defenseIDs = [];
@@ -148,7 +160,7 @@ logoutButton.addEventListener('click', async () => {
 evaluatePlane.addEventListener('click', async () => {
   console.log("remainingPlanes.value", remainingPlanes.innerText);
   console.log("coockpitCoords cockpitVal Direction", cockpitCoordinates.value, cockpitValue.value, flightDirection.value);
-  if (!skySZ || !defenseSz || !expirationTime) {
+  if (!skySZ || !defenseSz || !expirationTime || !turnTimeValue) {
     console.log("Set challenge params first!", skySZ, defenseSz, expirationTime);
     planeMessage.innerText = "Set challenge params first!";
     planeMessage.style.color = 'red';
@@ -233,6 +245,7 @@ openChallenge.addEventListener('click', async () => {
         },
         body: JSON.stringify({
           "max-time": parseInt(maxTime.value),
+          "turn-time": parseInt(turnTimeValue),
           "defense": defenseIDs,
           "defense-size": defenseSz,
           "sky-size": skySZ

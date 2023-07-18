@@ -21,9 +21,12 @@ loginSubmitButton.addEventListener('click', async (e) => {
     if (res.status == 200) {
       window.location.href = '/lobby.html';
     } else if (res.status == 401) {
+      if (loginErrorMessageDiv.hasChildNodes()) {
+        loginErrorMessageDiv.removeChild(loginErrorMessageDiv.firstChild);
+      }
       let data = await res.json();
       let errorElement = document.createElement('p');
-      errorElement.innerHTML = data.message;
+      errorElement.innerText = data.message;
       errorElement.style.color = 'red';
       errorElement.style.fontWeight = 'bold';
       loginErrorMessageDiv.appendChild(errorElement);
