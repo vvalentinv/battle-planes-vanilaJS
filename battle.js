@@ -7,6 +7,7 @@ let spinner = document.getElementById("spinner");
 let message = document.getElementById("message");
 let userTurn = document.getElementById("user-turn-message");
 let opponentTurn = document.getElementById("opponent-turn-message");
+let backToHistory = document.getElementById("back-to-history");
 let defeat = document.getElementById("concede-defeat");
 let defenseSky = document.getElementById("battle-defense-sky");
 let attackSky = document.getElementById("battle-attack-sky");
@@ -192,6 +193,12 @@ async function concedeDefeat() {
   }
 }
 
+backToHistory.addEventListener('click', () => {
+  backToHistory.setAttribute('hidden', true);
+  window.location.href = '/lobby.html';
+});
+
+
 const buildSky = (el) => {
   let layoutSize = parseInt(skySize) + 1;
   for (let i = 0; i < layoutSize * layoutSize; i++) {
@@ -372,10 +379,8 @@ const refreshData = async () => {
         if (data.battles && !battleID) {
           window.location.href = '/lobby.html';
         } else if (data.outcome) {
-          if (localStorage.getItem('battleID')) {
-            defeat.setAttribute('hidden', 'true');
-            // reveal link back to history
-          }
+          backToHistory.removeAttribute('hidden');
+          defeat.setAttribute('hidden', 'true');
           opponentName.innerText = data.outcome.opponent + " Attacks:";
           displayDefense(data.outcome.data.my_defense, data.outcome.data.opponent_attacks);
 
