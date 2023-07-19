@@ -206,6 +206,10 @@ evaluatePlane.addEventListener('click', async () => {
           skyCells = document.getElementsByClassName('grid-cell');
           [...skyCells].forEach(element => { element.addEventListener("click", testPlacement); });
         }
+        if (remainingPlanes.innerText == 0) {
+          openChallenge.removeAttribute('hidden');
+        }
+
 
       } else if (res.status == 400) {
         let data = await res.json();
@@ -262,7 +266,7 @@ openChallenge.addEventListener('click', async () => {
           beginChallenger += 1000;
           let now = new Date().getTime();
           let startDate = Date.parse(data.timeStamp);
-          let distance = startDate - now + defenseSz * 60000;
+          let distance = startDate - now;
           let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           hours < 10 ? hours = "0" + hours : hours;
           let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -364,12 +368,8 @@ const checkForBattle = async () => {
     })
     if (res.status == 200) {
       let data = await res.json();
-      console.log(data);
-      if (data.status[2].turn == "Wait for your opponent's attack.") {
-        setTimeout(() => {
-          window.location.href = '/battle.html';
-        }, 5000);
-
+      if (data.battles.message == 'Please resume battle screen') {
+        window.location.href = '/battle.html';
       }
     } else if (res.status == 400 || res.status == 403) {
       let data = await res.json();
@@ -378,8 +378,7 @@ const checkForBattle = async () => {
           window.location.href = '/lobby.html';
         }, 5000);
       }
-      planeMessage.innerText = "Challenger is setting up their defense!";
-      planeMessage.style.color = 'gray';
+
     } else if (res.status == 401) {
       window.location.href = '/index.html';
 
