@@ -371,10 +371,6 @@ const checkForBattle = async () => {
       if (data.battles.message == 'Please resume battle screen') {
         window.location.href = '/battle.html';
       }
-      if (data.battles.message == "Finish your current battle engagement, before attempting a new one!") {
-        planeMessage.innerText = "Challenger is setting up their defense!";
-        planeMessage.style.color = 'gray';
-      }
     } else if (res.status == 400 || res.status == 403) {
       let data = await res.json();
       if (data.message == "Use battle history") {
