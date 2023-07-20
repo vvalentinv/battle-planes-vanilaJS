@@ -115,7 +115,7 @@ const loadBattleData = async () => {
         battleData = data;
         skySize = battleData.status[3].sky
         battleID = data.battleID;
-        opponentName.innerText = battleData.opponent + ' attack list';
+        battleData.opponent != "default-challenger" ? opponentName.innerText = battleData.opponent + ' attack list' : opponentName.innerText = 'Waiting for opponent to join ...';
         setTurnMessage();
         buildSky(defenseSky);
         buildSky(attackSky);
@@ -390,7 +390,7 @@ const refreshData = async () => {
               element.setAttribute('class', 'grid-cell-attacked');
             });
           displayAttack(data.outcome.messages.attack_messages);
-          if (data.outcome.messages.attack_messages.length >
+          if (data.outcome.messages.attack_messages.length >=
             data.outcome.messages.defense_messages.length) {
             opponentTurn.innerText = "Win!";
             userTurn.innerText = "Win!";
@@ -410,28 +410,31 @@ const refreshData = async () => {
           localStorage.removeItem('skySize');
           localStorage.removeItem('defenseSize');
         } else if (data.status) {
-          battleData = data;
-          battleID = data.battleID;
-          opponentName.innerText = data.opponent + " Attack List:";
-          setTurnMessage();
-          displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
-          [...attackCells]
-            .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-            .forEach(element => {
-              element.addEventListener("click", attack);
-              element.addEventListener("mouseover", (e) => {
-                attackCoords.value = e.target.innerText;
+          if (battleData.status[2].turn != data.status[2].turn) {
+            console.log(battleData.status[2].turn == data.status[2].turn);
+            battleData = data;
+            battleID = data.battleID;
+            opponentName.innerText = data.opponent + " Attack List:";
+            setTurnMessage();
+            displayDefense(battleData.status[1].my_defense, battleData.status[1].opponent_attacks);
+            [...attackCells]
+              .filter(el => !battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+              .forEach(element => {
+                element.addEventListener("click", attack);
+                element.addEventListener("mouseover", (e) => {
+                  attackCoords.value = e.target.innerText;
+                });
               });
-            });
-          [...attackCells]
-            .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
-            .forEach(element => {
-              element.removeEventListener("click", attack);
-              element.setAttribute('class', 'grid-cell-attacked');
-            });
-          displayAttack(battleData.status[0].attack_messages);
-          loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
-          loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
+            [...attackCells]
+              .filter(el => battleData.status[1].my_attacks.includes(parseInt(el.getAttribute('data-value'))))
+              .forEach(element => {
+                element.removeEventListener("click", attack);
+                element.setAttribute('class', 'grid-cell-attacked');
+              });
+            displayAttack(battleData.status[0].attack_messages);
+            loadMessagesToTextArea(battleData.status[0].attack_messages, attackMessages);
+            loadMessagesToTextArea(battleData.status[0].defense_messages, defenseMessages);
+          }
         }
       }
       else if (res.status == 401) {
@@ -457,10 +460,6 @@ setInterval(() => {
     refreshData();
   }
 }, 3000);
-
-
-
-// setInterval(refreshData, 3000, concluded);
 
 const loadMessagesToTextArea = (msg, el) => {
   el.value = "";
@@ -502,26 +501,35 @@ const displayAttack = (messages) => {
 }
 
 const setTurnMessage = () => {
-  if (battleData.status[2].turn == "This is your turn to attack.") {
-    userTimer.removeAttribute('hidden');
-    opponentTimer.setAttribute('hidden', true);
-    // userTurn.removeAttribute('hidden');
-    userTurn.innerText = "It's your turn to attack!";
-    userTurn.setAttribute('style', 'color: green;');
-    // opponentTurn.removeAttribute('hidden');
-    opponentTurn.innerText = "It's your turn to attack!";
-    opponentTurn.setAttribute('style', 'color: green;');
-    displayTimer(userTimer, battleData.status[3].time);
-
-  } else {
+  if (opponentName.innerText == "Waiting for opponent to join ...") {
     userTimer.setAttribute('hidden', true);
     opponentTimer.removeAttribute('hidden');
     // opponentTurn.removeAttribute('hidden');
-    opponentTurn.innerText = battleData.opponent + " is attacking ...";
-    opponentTurn.setAttribute('style', 'color: red;');
-    userTurn.innerText = battleData.opponent + " is attacking ...";
-    userTurn.setAttribute('style', 'color: red;');
+    opponentTurn.innerText = "Waiting for an opponent to accept your challenge, setup their defenses, and perform their attack!";
+    opponentTurn.setAttribute('style', 'color: purple;');
     displayTimer(opponentTimer, battleData.status[3].time);
+  } else {
+    if (battleData.status[2].turn == "This is your turn to attack.") {
+      userTimer.removeAttribute('hidden');
+      opponentTimer.setAttribute('hidden', true);
+      // userTurn.removeAttribute('hidden');
+      userTurn.innerText = "It's your turn to attack!";
+      userTurn.setAttribute('style', 'color: green;');
+      // opponentTurn.removeAttribute('hidden');
+      opponentTurn.innerText = "It's your turn to attack!";
+      opponentTurn.setAttribute('style', 'color: green;');
+      displayTimer(userTimer, battleData.status[3].time);
+
+    } else {
+      userTimer.setAttribute('hidden', true);
+      opponentTimer.removeAttribute('hidden');
+      // opponentTurn.removeAttribute('hidden');
+      opponentTurn.innerText = battleData.opponent + " is attacking ...";
+      opponentTurn.setAttribute('style', 'color: red;');
+      userTurn.innerText = battleData.opponent + " is attacking ...";
+      userTurn.setAttribute('style', 'color: red;');
+      displayTimer(opponentTimer, battleData.status[3].time);
+    }
   }
 }
 

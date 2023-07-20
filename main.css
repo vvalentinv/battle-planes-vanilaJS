@@ -233,3 +233,7 @@ th,
 .cursor-pointer {
   cursor: pointer;
 }
+
+.home-card {
+  height: 550px;
+}
